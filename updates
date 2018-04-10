@@ -1,26 +1,28 @@
-<div class="col-md-12">
-	<div class="card">
-		<div class="header">
-			<h4 class="title">Staff Panel Update</h4>
-			<p class="category">Date: 3/11/2018</p>
-		</div>
-		<div class="content">
-			<h4>Trust Score</h4>
-			<p style="font-size: 14px;">
-			</p><ul>
-				<li>
-					Score scores are a new way to view how active and how trusted a player within our community is. Trust score ranges from 0 - 100 percent. When a new player joins our community their trust score starts at 75% and will gain 1% every hour of playtime on any of our servers. If a player is warned their trust score goes down by 1%, if kicked 3% and if banned 6%. 
-				</li>
-			</ul>
-			<p></p>
-			<h4>Kick For Staff Button</h4>
-			<p style="font-size: 14px;">
-			</p><ul>
-				<li>
-					The orange "Kick For Staff" button on a servers page will kick the most recent connected player to allow for a staff member to join the server. This kick does not count against their record.
-				</li>
-			</ul>
-			<p></p>
+<div class="row">
+	<div class="col-md-12">
+		<div class="card">
+			<div class="header">
+				<h4 class="title">Staff Panel Update</h4>
+				<p class="category">Date: 3/11/2018</p>
+			</div>
+			<div class="content">
+				<h4>Trust Score</h4>
+				<p style="font-size: 14px;">
+				</p><ul>
+					<li>
+						Score scores are a new way to view how active and how trusted a player within our community is. Trust score ranges from 0 - 100 percent. When a new player joins our community their trust score starts at 75% and will gain 1% every hour of playtime on any of our servers. If a player is warned their trust score goes down by 1%, if kicked 3% and if banned 6%. 
+					</li>
+				</ul>
+				<p></p>
+				<h4>Kick For Staff Button</h4>
+				<p style="font-size: 14px;">
+				</p><ul>
+					<li>
+						The orange "Kick For Staff" button on a servers page will kick the most recent connected player to allow for a staff member to join the server. This kick does not count against their record.
+					</li>
+				</ul>
+				<p></p>
+			</div>
 		</div>
 	</div>
 </div>
