@@ -5,6 +5,9 @@
   <h3 align="center">
       This means issues will occur. Please read below to see what this can do at this time.
   </h3>
+  <h4 align="center">
+      If you would like to report an issue or request a feature. Join our <a href="https://discord.gg/EgWrfBy">Discord</a> or create an issue.
+  </h4>
 </p>
 
 <br/>
