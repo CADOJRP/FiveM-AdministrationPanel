@@ -1,3 +1,12 @@
+<p align="center">
+  <h1 align="center">
+      THIS IS IN BETA!
+  </h1>
+  <h3 align="center">
+      This means issues will occur. Please read below to see what this can do at this time.
+  </h3>
+</p>
+
 # FiveM-AdministrationPanel
 An Administration Panel for FiveM Servers
 
@@ -8,12 +17,24 @@ An Administration Panel for FiveM Servers
 * Temporary Banning
 * Permanent Banning
 * Playtime Tracking
-* Staff Tracking
 * Trust Score System
+* Indepth Web-UI
+* Indepth API
+* Custom Server Action Buttons
+* Some Statistics
+* Multiple Servers
+* First Joined
+* Last Played
+* Warnings/Kicks/Bans Logging
+
+### Upcoming Features
+* Staff Tracking
 * Permissions Based
 * In-Game Commands
-* Indepth Web-UI
-
+* Unban Button
+* Add/Remove Staff **Menu**
+* Add/Remove Server **Menu**
+* Installer
 
 ### Requirements
 * Web Server w/ PHP
