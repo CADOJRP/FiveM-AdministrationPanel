@@ -1,0 +1,35 @@
+html, body {
+	background: #F7F7F8;
+}
+
+.cn {
+  display: table-cell;
+  height: 100vh;
+  width: 100%;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.inner {
+  display: inline-block;
+  color: #FFF;
+}
+
+.panel-error-heading {
+	border-bottom: 1px solid #f2f2f2 !important;
+	font-size: 2em;
+}
+
+.panel-error-heading > h4 {
+	font-size: 36px;
+}
+
+.btn-error {
+	border-top-left-radius: 0px;
+	border-top-right-radius: 0px;
+}
+
+.panel-error {
+	border: 1px SOLID #CCC;
+	color: #000;
+}
