@@ -27,14 +27,22 @@ function steamLogin() {
 					include('userInfo.php');
 					$ProfileName = $steamprofile['personaname'];
 					$ProfileID = $steamprofile['steamid'];
-					dbquery('INSERT INTO users (name, steamid) VALUES ("'.$ProfileName.'", "'.$ProfileID.'") ON DUPLICATE KEY UPDATE name = "'.$ProfileName.'"', false);
-					header('Location: '.$GLOBALS['loginpage']);
+					if(file_exists('../installer.lock')) {
+						dbquery('INSERT INTO users (name, steamid) VALUES ("'.$ProfileName.'", "'.$ProfileID.'") ON DUPLICATE KEY UPDATE name = "'.$ProfileName.'"', false);
+					} else {
+						dbquery('INSERT INTO users (name, steamid, rank) VALUES ("'.$ProfileName.'", "'.$ProfileID.'", "owner") ON DUPLICATE KEY UPDATE name = "'.$ProfileName.'"', false);
+					}
+					header('Location: '.$GLOBALS['domainname']);
 					exit;
 				} else {
 					include('userInfo.php');
 					$ProfileName = $steamprofile['personaname'];
 					$ProfileID = $steamprofile['steamid'];
-					dbquery('INSERT INTO users (name, steamid) VALUES ("'.$ProfileName.'", "'.$ProfileID.'") ON DUPLICATE KEY UPDATE name = "'.$ProfileName.'"', false);
+					if(file_exists('../installer.lock')) {
+						dbquery('INSERT INTO users (name, steamid) VALUES ("'.$ProfileName.'", "'.$ProfileID.'") ON DUPLICATE KEY UPDATE name = "'.$ProfileName.'"', false);
+					} else {
+						dbquery('INSERT INTO users (name, steamid, rank) VALUES ("'.$ProfileName.'", "'.$ProfileID.'", "owner") ON DUPLICATE KEY UPDATE name = "'.$ProfileName.'"', false);
+					}
 					exit;
 				}
 			} else {
@@ -50,7 +58,7 @@ if (isset($_GET['logout'])){
 	session_unset();
 	session_destroy();
 	require(getcwd() . '/config.php');
-	header('Location: '.$GLOBALS['logoutpage']);
+	header('Location: '.$GLOBALS['domainname']);
 	exit;
 }
 
