@@ -12,6 +12,7 @@ local website = "https://arthurmitchell.xyz/beta"
 ------- DO NOT EDIT BELOW THIS LINE -------
 AddEventHandler( "playerConnecting", function(name, setReason, deferrals)
 	if string.find(GetPlayerIdentifiers(source)[1], "steam:") then
+		PerformHttpRequest(website .. '/api/adduser?name=' .. GetPlayerName(source) .. '&license=' .. GetPlayerIdentifiers(source)[2], function(statusCode, response, headers) end)
 		deferrals.defer()
 		deferrals.update("Checking Player Information. Please Wait.")
 		PerformHttpRequest(website .. '/api/checkban?license=' .. GetPlayerIdentifiers(source)[2], function(statusCode, response, headers)
