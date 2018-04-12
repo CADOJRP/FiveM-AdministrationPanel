@@ -33,6 +33,10 @@
 										<div class="author">
 											<?php
 												$data = json_decode(file_get_contents('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=' . $GLOBALS['apikey'] . '&steamids=' . hex2dec(strtoupper(str_replace('steam:', '', $this->userinfo['steam'])))));
+												if($this->userinfo['lastplayed'] == null || $this->userinfo['firstjoined'] == null) {
+													$this->userinfo['firstjoined'] = time(); 
+													$this->userinfo['lastplayed'] = time();
+												}
 											?>
 											<img class="avatar border-gray" id="profile-avatar" src="<?php echo $data->response->players[0]->avatarfull; ?>" alt="Profile Image" onerror="this.src='https://steamuserimages-a.akamaihd.net/ugc/885384897182110030/F095539864AC9E94AE5236E04C8CA7C2725BCEFF/'" draggable="false">
 											<h4 class="title" id="profile-username"><?php echo $this->userinfo['name']; ?></h4>
