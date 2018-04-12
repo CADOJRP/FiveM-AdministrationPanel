@@ -1,6 +1,5 @@
 Options -MultiViews
 
 RewriteEngine On
-RewriteBase /beta/
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^ index.php [L]
