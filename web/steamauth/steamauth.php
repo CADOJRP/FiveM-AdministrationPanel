@@ -1,6 +1,5 @@
 <?php
 ob_start();
-session_start();
 
 function logoutbutton() {
 	echo "<form action='' method='get'><button name='logout' type='submit'>Logout</button></form>"; //logout button
