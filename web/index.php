@@ -255,7 +255,7 @@ $klein->respond('GET', '/api',function($request,$response,$service){
 	echo json_encode(array("response"=>"400","message"=>"Invalid API Endpoint"));
 });
 
-$klein->respond('GET', '/api/[staff|players|servers|bans|warns|kicks|cron|checkban:action]',function($request,$response,$service){ 
+$klein->respond('GET', '/api/[staff|players|servers|bans|warns|kicks|cron|checkban|adduser:action]',function($request,$response,$service){ 
 	header('Content-Type: application/json');
 	switch($request->action){
 		case "staff":
@@ -314,6 +314,13 @@ $klein->respond('GET', '/api/[staff|players|servers|bans|warns|kicks|cron|checkb
 						"banned"=>"false"
 					));
 				}
+			}
+		break;
+		case "adduser":
+			if($request->param('license') == null || $request->param('name') == null) {
+				echo json_encode(array("response"=>"400","message"=>"Missing Parameters"));
+			} else {
+				dbquery('INSERT INTO players (name, license, playtime, firstjoined, lastplayed) VALUES ("'.escapestring($request->param('name')).'", "'.escapestring($request->param('license')).'", "0", "'.time().'", "'.time().'")', false);
 			}
 		break;
 	}
