@@ -25,7 +25,7 @@
 	</head>
 	<body>
 		<div class="wrapper">
-			<div class="sidebar" data-color="blue" data-image="assets/img/sidebar-5.jpg">
+			<div class="sidebar" data-color="blue" data-image="<?php echo $GLOBALS['domainname'] ?>app/img/sidebar-5.jpg">
 				<div class="sidebar-wrapper">
 					<div class="logo">
 						<div class="simple-text">
