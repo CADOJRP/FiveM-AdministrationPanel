@@ -54,18 +54,6 @@ CREATE TABLE `kicks` (
   `time` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `kicks`
---
-
-INSERT INTO `kicks` (`ID`, `license`, `reason`, `staff_name`, `staff_steamid`, `time`) VALUES
-(1, 'testing', 'temsptakjdhgbmjbndamsdbvkas', '', '76561198113581050', '1523471918'),
-(2, 'license:b60077947efe4473eac942fe658011a125a24458', 'testing system', 'Arthur Mitchell', '76561198113581050', '1523472120'),
-(3, 'license:b60077947efe4473eac942fe658011a125a24458', 'TEST NUMBER 1', 'Arthur Mitchell', '76561198113581050', '1523472437'),
-(4, 'license:b60077947efe4473eac942fe658011a125a24458', 'tes', 'Arthur Mitchell', '76561198113581050', '1523472783'),
-(5, 'license:2cf94bed992acb782d2931b9c6d98d530f6d0769', 'test', 'Arthur Mitchell', '76561198113581050', '1523475043'),
-(6, 'license:78ea6501bcbe4ed3a582359a878ef8ddd168fd5a', 'Testing blah blah', 'Arthur Mitchell', '76561198113581050', '1523481262'),
-(7, 'license:52437686dd7274d6120402a98046b135a9724f4d', ' ', 'Arthur Mitchell', '76561198113581050', '1523484226');
 
 -- --------------------------------------------------------
 
