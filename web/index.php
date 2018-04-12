@@ -129,6 +129,7 @@ $klein->respond('*',function($request,$response,$service){
 		
 		$info = dbquery('SELECT * FROM players WHERE license="'.$license.'"');
 		
+		if(empty($info)) { return 75; exit(); }
 		$ts = $ts + floor($info[0]['playtime'] / 60);
 		
 		if($ts > 100) {
@@ -230,6 +231,15 @@ $klein->respond('GET', '/',function($request,$response,$service){
 		}
 	}
 	$service->render('app/pages/dashboard.php',array('community'=>$GLOBALS['community_name'],'title'=>'Dashboard','players'=>$players,'stats'=>getStats()));
+});
+
+$klein->respond('GET', '/installer',function($request,$response,$service){
+	if(file_exists('installer.lock')) {
+		throw Klein\Exceptions\HttpException::createFromCode(404);
+		exit();
+	} else {
+		$service->render('app/pages/installer.php');
+	}
 });
 
 $klein->respond('GET', '/server/[:connection]',function($request,$response,$service){ 
@@ -355,7 +365,7 @@ $klein->respond('POST', '/api/button/[restart:action]',function($request,$respon
 	}
 });
 
-$klein->respond('POST', '/api/[warn|kick|ban:action]',function($request,$response,$service){ 
+$klein->respond('POST', '/api/[warn|kick|ban|install:action]',function($request,$response,$service){ 
 	header('Content-Type: application/json');
 	if(isset($_SESSION['steamid'])) {
 		if(getRank($_SESSION['steamid']) != "user") {
@@ -393,6 +403,25 @@ $klein->respond('POST', '/api/[warn|kick|ban:action]',function($request,$respons
 						dbquery('INSERT INTO bans (name, identifier, reason, ban_issued, banned_until, staff_name, staff_steamid) VALUES ("'.escapestring($request->param('name')).'", "'.escapestring($request->param('license')).'", "'.escapestring($request->param('reason')).'", "'.time().'", "'.$banned_until.'", "'.$_SESSION['steam_personaname'].'", "'.$_SESSION['steamid'].'")', false);
 						removeFromSession($request->param('license'), "Banned by " . $_SESSION['steam_personaname'] . " for " . $request->param('reason') . " (Relog for more information)");
 						echo json_encode(array('success'=>true,'reload'=>true));
+					}
+				break;
+				case "install":
+					if(file_exists('installer.lock')) {
+						throw Klein\Exceptions\HttpException::createFromCode(404);
+						exit();
+					} else {
+						fopen("installer.lock", "w");
+						$file_contents = file_get_contents('config.template');
+						$file_contents = str_replace("{mysql_host}", $request->param('mysql_host'),$file_contents);
+						$file_contents = str_replace("{mysql_user}", $request->param('mysql_user'),$file_contents);
+						$file_contents = str_replace("{mysql_pass}", $request->param('mysql_pass'),$file_contents);
+						$file_contents = str_replace("{mysql_db}", $request->param('mysql_db'),$file_contents);
+						$file_contents = str_replace("{domain}", $request->param('domain'),$file_contents);
+						$file_contents = str_replace("{subfolder}", $request->param('subfolder'),$file_contents);
+						$file_contents = str_replace("{apikey}", $request->param('steam_apikey'),$file_contents);
+						$file_contents = str_replace("{community_name}", $request->param('community_name'),$file_contents);
+						file_put_contents('config.php', $file_contents);
+						echo json_encode(array('success'=>true,'goURL'=>$request->param('domain')));
 					}
 				break;
 			}
