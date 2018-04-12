@@ -8,8 +8,6 @@
 	
 	// SITE ACCESS SETTINGS
 	$GLOBALS['domainname'] = "";										// URL (and folder if used) with protocol and trailing slash. Example: https://arthurmitchell.xyz/beta/
-	$GLOBALS['logoutpage'] = "";										// (If running from sub folder name this like the following: /foldername/ with the prefix slash and trailing slash) Example: /staff/
-	$GLOBALS['loginpage'] = "";											// Same as above. Example: /staff/
 	$GLOBALS['subfolder'] = ""; 										// If accessing via a sub folder type the sub folder name out like the following: /foldername Example: /staff
 	$GLOBALS['apikey'] = ""; 											// SteamCommunity API Key https://steamcommunity.com/dev/apikey
 	
