@@ -27,24 +27,14 @@ function steamLogin() {
 					include('userInfo.php');
 					$ProfileName = $steamprofile['personaname'];
 					$ProfileID = $steamprofile['steamid'];
-					$ProfileImage = $steamprofile['avatarfull'];
-					$mysqli = new mysqli($GLOBALS['mysql_host'], $GLOBALS['mysql_user'], $GLOBALS['mysql_pass'], $GLOBALS['mysql_db']);
-					$query = $mysqli->prepare("INSERT INTO users (name, steamid) VALUES (?, ?) ON DUPLICATE KEY UPDATE name = ?");
-					$query->bind_param('sss', $ProfileName, $ProfileID, $ProfileName);
-					$query->execute();
-					$query->close();
+					dbquery('INSERT INTO users (name, steamid) VALUES ("'.$ProfileName.'", "'.$ProfileID.'") ON DUPLICATE KEY UPDATE name = "'.$ProfileName.'"', false);
 					header('Location: '.$GLOBALS['loginpage']);
 					exit;
 				} else {
 					include('userInfo.php');
 					$ProfileName = $steamprofile['personaname'];
 					$ProfileID = $steamprofile['steamid'];
-					$ProfileImage = $steamprofile['avatarfull'];
-					$mysqli = new mysqli($GLOBALS['mysql_host'], $GLOBALS['mysql_user'], $GLOBALS['mysql_pass'], $GLOBALS['mysql_db']);
-					$query = $mysqli->prepare("INSERT INTO users (name, steamid) VALUES (?, ?) ON DUPLICATE KEY UPDATE name = ?");
-					$query->bind_param('sss', $ProfileName, $ProfileID, $ProfileName);
-					$query->execute();
-					$query->close();
+					dbquery('INSERT INTO users (name, steamid) VALUES ("'.$ProfileName.'", "'.$ProfileID.'") ON DUPLICATE KEY UPDATE name = "'.$ProfileName.'"', false);
 					exit;
 				}
 			} else {
