@@ -42,7 +42,7 @@
 											</span>
 												<hr>
 											<span class="description" style="font-weight: normal;">
-												Playtime: <?php echo secsToStr($this->userinfo['playtime'] * 60); ?>
+												Playtime: <?php if($this->userinfo['playtime'] != null) { echo secsToStr($this->userinfo['playtime'] * 60); } else { echo "1 Minute"; } ?>
 											</span>
 												<hr>
 											<span class="description" style="font-weight: normal;">
@@ -148,7 +148,7 @@
 										if(empty($warns)) {
 											echo '
 												<tr>
-													<td colspan="4">
+													<td colspan="3">
 														<center>
 															No Warnings on Record
 														</center>
@@ -194,9 +194,6 @@
 										<th>
 											Date
 										</th>
-										<th>
-											
-										</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -205,7 +202,7 @@
 										if(empty($kicks)) {
 											echo '
 												<tr>
-													<td colspan="4">
+													<td colspan="3">
 														<center>
 															No Kicks on Record
 														</center>
@@ -253,9 +250,6 @@
 										</th>
 										<th>
 											Expires
-										</th>
-										<th>
-											
 										</th>
 									</tr>
 								</thead>
