@@ -220,6 +220,9 @@ $klein->respond('*',function($request,$response,$service){
 			}
 		}
 	}
+	if($GLOBALS['debug']) {
+		error_log(print_r(debug_backtrace(), true));
+	}
 });
 
 $klein->respond('GET', '/',function($request,$response,$service){
