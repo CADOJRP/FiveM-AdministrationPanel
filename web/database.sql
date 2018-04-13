@@ -97,12 +97,6 @@ CREATE TABLE `users` (
   `rank` varchar(255) NOT NULL DEFAULT 'user'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `users`
---
-
-INSERT INTO `users` (`ID`, `name`, `steamid`, `rank`) VALUES
-(1, 'Arthur Mitchell (Example)', '76561198113581050', 'director');
 
 -- --------------------------------------------------------
 
