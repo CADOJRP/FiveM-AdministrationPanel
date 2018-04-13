@@ -50,15 +50,11 @@ An Administration Panel for FiveM Servers
 
 
 ### Installation
-* Coming Soon
+* View our install guide on our wiki [here](https://github.com/CADOJRP/FiveM-AdministrationPanel/wiki/Installation)
 
 
 ### Media
 * Coming Soon
-
-
-### Known Issues
-* ~~Sub Directory Access~~ (Resolved: Added Klein work around)
 
 
 ### Support
