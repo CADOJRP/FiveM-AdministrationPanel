@@ -2,23 +2,83 @@
 	<div class="col-md-12">
 		<div class="card">
 			<div class="header">
-				<h4 class="title">Staff Panel Update</h4>
-				<p class="category">Date: 3/11/2018</p>
+				<h4 class="title">Update 0.1</h4>
+				<p class="category">Date: 4/13/2018</p>
 			</div>
 			<div class="content">
-				<h4>Trust Score</h4>
+				<h4>Permissions</h4>
 				<p style="font-size: 14px;">
 				</p><ul>
 					<li>
-						Score scores are a new way to view how active and how trusted a player within our community is. Trust score ranges from 0 - 100 percent. When a new player joins our community their trust score starts at 75% and will gain 1% every hour of playtime on any of our servers. If a player is warned their trust score goes down by 1%, if kicked 3% and if banned 6%. 
+						The permissions system has been released. The current permissions used by the system are warn, kick, ban, editstaff and editservers. More will be coming in the future such as unban, permban, tempban, etc.
 					</li>
 				</ul>
 				<p></p>
-				<h4>Kick For Staff Button</h4>
+				<h4>Discord Webhooks</h4>
 				<p style="font-size: 14px;">
 				</p><ul>
 					<li>
-						The orange "Kick For Staff" button on a servers page will kick the most recent connected player to allow for a staff member to join the server. This kick does not count against their record.
+						We've finished the Discord webhook system. This will allow you to have a Discord chat that will message every time someone gets warned, kicked, or banned.
+					</li>
+				</ul>
+				<p></p>
+				<h4>Join Message</h4>
+				<p style="font-size: 14px;">
+				</p><ul>
+					<li>
+						Join messages are now supported. The default join message is "Username is joining the server with 75% trust score." This message by default won't look the best because the default chat resource already provides join messages and puts <b>server:</b> infront of our messages. This is an easy fix. Join our Discord for help.
+					</li>
+				</ul>
+				<p></p>
+				<h4>Edit Staff</h4>
+				<p style="font-size: 14px;">
+				</p><ul>
+					<li>
+						You're now able to add and remove staff from a menu! If you have the "editstaff" permission you can click the Edit Staff button on the left side of the screen and explore the menu.
+					</li>
+				</ul>
+				<p></p>
+				<h4>Edit Servers</h4>
+				<p style="font-size: 14px;">
+				</p><ul>
+					<li>
+						You're now able to add and remove servers from a menu! If you have the "editservers" permission you can click the Edit Servers button on the left side of the screen and explore the menu.
+					</li>
+				</ul>
+				<p></p>
+				<h4>Installer Changes</h4>
+				<p style="font-size: 14px;">
+				</p><ul>
+					<li>
+						Sadly we've had to remove the installer as it was too unreliable and had too many expoits.
+					</li>
+				</ul>
+				<p></p>
+				<h4>Bug Fixes</h4>
+				<p style="font-size: 14px;">
+				</p><ul>
+					<li>
+						We've squashed a lot of bugs. Many bugs centered around errors and timeouts. We can't thank the beta testers enough for helping us find these.
+					</li>
+				</ul>
+				<p></p>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12">
+		<div class="card">
+			<div class="header">
+				<h4 class="title">Beta Release</h4>
+				<p class="category">Date: 4/11/2018</p>
+			</div>
+			<div class="content">
+				<h4>Initial Release</h4>
+				<p style="font-size: 14px;">
+				</p><ul>
+					<li>
+						The initial release has too many features to talk about in an update. Feel free to read the GitHub readme file for more information on what was initially released.
 					</li>
 				</ul>
 				<p></p>
