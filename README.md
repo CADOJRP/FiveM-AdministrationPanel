@@ -31,15 +31,15 @@ An Administration Panel for FiveM Servers
 * Multiple Servers
 * First Joined
 * Last Played
+* Add/Remove Staff Menu
+* Add/Remove Server Menu
 * Warnings/Kicks/Bans Logging
+* Permissions System
 
 ### Upcoming Features
 * Staff Tracking
-* Permissions Based
 * In-Game Commands
 * Unban Button
-* Add/Remove Staff **Menu**
-* Add/Remove Server **Menu**
 * Installer
 
 ### Requirements
