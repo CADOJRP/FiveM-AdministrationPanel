@@ -52,6 +52,29 @@
 								';
 							}
 						?>
+						<?php
+							if(hasPermission($_SESSION['steamid'], 'editstaff')) {
+								echo '
+									<li>
+										<a href="' . $GLOBALS['domainname'] . 'admin/staff">
+											<i class="pe-7s-id"></i>
+											<p>Edit Staff</p>
+										</a>
+									</li>
+								';
+							}
+							
+							if(hasPermission($_SESSION['steamid'], 'editservers')) {
+								echo '
+									<li>
+										<a href="' . $GLOBALS['domainname'] . 'admin/servers">
+											<i class="pe-7s-server"></i>
+											<p>Edit Servers</p>
+										</a>
+									</li>
+								';
+							}
+						?>
 						<!--
 						<li>
 							<a href="user.php">

@@ -22,28 +22,17 @@ function steamLogin() {
 				preg_match($ptn, $id, $matches);
 				
 				$_SESSION['steamid'] = $matches[1];
-				if (!headers_sent()) {
-					include('userInfo.php');
-					$ProfileName = $steamprofile['personaname'];
-					$ProfileID = $steamprofile['steamid'];
-					if(file_exists('../installer.lock')) {
-						dbquery('INSERT INTO users (name, steamid) VALUES ("'.$ProfileName.'", "'.$ProfileID.'") ON DUPLICATE KEY UPDATE name = "'.$ProfileName.'"', false);
-					} else {
-						dbquery('INSERT INTO users (name, steamid, rank) VALUES ("'.$ProfileName.'", "'.$ProfileID.'", "owner") ON DUPLICATE KEY UPDATE name = "'.$ProfileName.'"', false);
-					}
-					header('Location: '.$GLOBALS['domainname']);
-					exit;
+				include('userInfo.php');
+				$ProfileName = $steamprofile['personaname'];
+				$ProfileID = $steamprofile['steamid'];
+				
+				if(empty(dbquery('SELECT * FROM users'))) {
+					dbquery('INSERT INTO users (name, steamid, rank) VALUES ("'.$ProfileName.'", "'.$ProfileID.'", "owner")', false);
 				} else {
-					include('userInfo.php');
-					$ProfileName = $steamprofile['personaname'];
-					$ProfileID = $steamprofile['steamid'];
-					if(file_exists('../installer.lock')) {
-						dbquery('INSERT INTO users (name, steamid) VALUES ("'.$ProfileName.'", "'.$ProfileID.'") ON DUPLICATE KEY UPDATE name = "'.$ProfileName.'"', false);
-					} else {
-						dbquery('INSERT INTO users (name, steamid, rank) VALUES ("'.$ProfileName.'", "'.$ProfileID.'", "owner") ON DUPLICATE KEY UPDATE name = "'.$ProfileName.'"', false);
-					}
-					exit;
+					dbquery('INSERT INTO users (name, steamid) VALUES ("'.$ProfileName.'", "'.$ProfileID.'") ON DUPLICATE KEY UPDATE name = "'.$ProfileName.'"', false);
 				}
+				header('Location: '.$GLOBALS['domainname']);
+				exit;
 			} else {
 				echo "User is not logged in.\n";
 			}
@@ -67,7 +56,5 @@ if (isset($_GET['update'])){
 	header('Location: '.$_SERVER['PHP_SELF']);
 	exit;
 }
-
-// Version 4.0
 
 ?>

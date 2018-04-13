@@ -6,6 +6,7 @@ require('vendor/autoload.php');
 $klein = new \Klein\Klein;
 
 $klein->respond('*',function($request,$response,$service){
+	ini_set("error_log", realpath('logs') . "/" . date('mdy') . ".log");
 	session_start();
 	require(getcwd() . '/steamauth/steamauth.php');
 	require(getcwd() . '/q3query.class.php');
@@ -40,7 +41,7 @@ $klein->respond('*',function($request,$response,$service){
 	
 	function checkOnline($site) {
 		$curlInit = curl_init(strtok($site, ':'));
-		curl_setopt($curlInit,CURLOPT_CONNECTTIMEOUT,5);
+		curl_setopt($curlInit,CURLOPT_CONNECTTIMEOUT,$GLOBALS['checktimeout']);
 		curl_setopt($curlInit,CURLOPT_PORT,str_replace(':', '', substr($site, strpos($site, ':'))));
 		curl_setopt($curlInit,CURLOPT_HEADER,true);
 		curl_setopt($curlInit,CURLOPT_NOBODY,true);
@@ -48,9 +49,11 @@ $klein->respond('*',function($request,$response,$service){
 
 		$response = curl_exec($curlInit);
 
+		if(curl_error($curlInit)) { return false; }
+
+		if ($response) { return true; } else { return false; }
+		
 		curl_close($curlInit);
-		if ($response) return true;
-		return false;
 	}
 	
 	function getStats() {
@@ -92,6 +95,15 @@ $klein->respond('*',function($request,$response,$service){
 	
 	function getRank($input) {
 		return dbquery('SELECT * FROM users WHERE steamid="'.escapestring($input).'"')[0]['rank'];
+	}
+	
+	function hasPermission(int $steam, string $perm) {
+		$rank = getRank($steam);
+		if(!$GLOBALS['permissions'][$rank] == null) {
+			return in_array($perm, $GLOBALS['permissions'][$rank]);
+		} else {
+			return false;
+		}
 	}
 	
 	function isCron(){
@@ -174,6 +186,36 @@ $klein->respond('*',function($request,$response,$service){
 			return join(', ', $parts) . " and " . $last;
 	}
 	
+	function discordMessage($title, $message) {
+		if(empty($GLOBALS['discord_webhook'])) {
+			exit();
+		}
+
+		$discordMessage = '
+			{
+				"username": "'.$GLOBALS['community_name'].' Bot",
+				"avatar_url": "https://pbs.twimg.com/profile_images/847824193899167744/J1Teh4Di_400x400.jpg",
+				"content": "",
+				"embeds": [{
+					"title": "'.$title.'",
+					"description": "'.$message.'",
+					"type": "link",
+					"timestamp": "'.date('c').'"
+				}]
+			}
+		';
+		$curl = curl_init();
+		curl_setopt($curl, CURLOPT_URL, $GLOBALS['discord_webhook']);
+		curl_setopt($curl, CURLOPT_POST, 1);
+		curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode(json_decode($discordMessage)));
+		curl_exec($curl);
+		curl_close($curl);
+	}
+
 	function dec2hex($number)
 	{
 		$hexvalues = array('0','1','2','3','4','5','6','7',
@@ -236,15 +278,6 @@ $klein->respond('GET', '/',function($request,$response,$service){
 	$service->render('app/pages/dashboard.php',array('community'=>$GLOBALS['community_name'],'title'=>'Dashboard','players'=>$players,'stats'=>getStats()));
 });
 
-$klein->respond('GET', '/installer',function($request,$response,$service){
-	if(file_exists('installer.lock')) {
-		throw Klein\Exceptions\HttpException::createFromCode(404);
-		exit();
-	} else {
-		$service->render('app/pages/installer.php');
-	}
-});
-
 $klein->respond('GET', '/server/[:connection]',function($request,$response,$service){ 
 	$connection = escapestring($request->connection);
 	if(checkOnline($connection)) {
@@ -268,7 +301,26 @@ $klein->respond('GET', '/api',function($request,$response,$service){
 	echo json_encode(array("response"=>"400","message"=>"Invalid API Endpoint"));
 });
 
-$klein->respond('GET', '/api/[staff|players|servers|bans|warns|kicks|cron|checkban|adduser:action]',function($request,$response,$service){ 
+$klein->respond('GET', '/admin/[staff|servers:action]',function($request,$response,$service){ 
+	switch($request->action){
+		case "staff":
+			if(hasPermission($_SESSION['steamid'], "editstaff")) {
+				$service->render('app/pages/admin/staff.php',array('community'=>$GLOBALS['community_name'],'title'=>'Staff'));
+			} else {
+				throw Klein\Exceptions\HttpException::createFromCode(404);
+			}
+		break;
+		case "servers":
+		if(hasPermission($_SESSION['steamid'], "editservers")) {
+			$service->render('app/pages/admin/servers.php',array('community'=>$GLOBALS['community_name'],'title'=>'Servers'));
+		} else {
+			throw Klein\Exceptions\HttpException::createFromCode(404);
+		}
+		break;
+	}
+});
+
+$klein->respond('GET', '/api/[staff|players|servers|bans|warns|kicks|cron|checkban|adduser|message:action]',function($request,$response,$service){ 
 	header('Content-Type: application/json');
 	switch($request->action){
 		case "staff":
@@ -333,8 +385,15 @@ $klein->respond('GET', '/api/[staff|players|servers|bans|warns|kicks|cron|checkb
 			if($request->param('license') == null || $request->param('name') == null) {
 				echo json_encode(array("response"=>"400","message"=>"Missing Parameters"));
 			} else {
-				dbquery('INSERT INTO players (name, license, playtime, firstjoined, lastplayed) VALUES ("'.escapestring($request->param('name')).'", "'.escapestring($request->param('license')).'", "0", "'.time().'", "'.time().'")', false);
+				dbquery('INSERT INTO players (name, license, playtime, firstjoined, lastplayed) VALUES ("'.escapestring($request->param('name')).'", "'.escapestring($request->param('license')).'", "0", "'.time().'", "'.time().'") ON DUPLICATE KEY UPDATE name="'.escapestring($request->param('name')).'"', false);
+				echo json_encode(array("response"=>"200","message"=>"Successfully added user into database.")); 
+				if($GLOBALS['joinmessages'] == true) {
+					sendMessage('^3' . $request->param('name') . '^0 is joining the server with ^2' . trustScore($request->param('license')) . '%^0 trust score.');
+				}
 			}
+		break;
+		case "message":
+			// For future use
 		break;
 	}
 });
@@ -368,31 +427,49 @@ $klein->respond('POST', '/api/button/[restart:action]',function($request,$respon
 	}
 });
 
-$klein->respond('POST', '/api/[warn|kick|ban|install:action]',function($request,$response,$service){ 
+$klein->respond('POST', '/api/[warn|kick|ban|addserver|delserver|addstaff|delstaff:action]',function($request,$response,$service){ 
 	header('Content-Type: application/json');
 	if(isset($_SESSION['steamid'])) {
 		if(getRank($_SESSION['steamid']) != "user") {
 			switch($request->action){
 				case "warn":
+					if(!hasPermission($_SESSION['steamid'], 'warn')){
+						echo json_encode(array('message'=>'You do not have permission to warn!'));
+						exit();
+					}
 					if($request->param('name') == null || $request->param('license') == null || $request->param('reason') == null) {					
 						echo json_encode(array('message'=>'Please fill in all of the fields!'));
 					} else {
 						dbquery('INSERT INTO warnings (license, reason, staff_name, staff_steamid, time) VALUES ("'.escapestring($request->param('license')).'", "'.escapestring($request->param('reason')).'", "'.$_SESSION['steam_personaname'].'", "'.$_SESSION['steamid'].'", "'.time().'")', false);
 						sendMessage('^3' . $request->param('name') . '^0 has been warned by ^2' . $_SESSION['steam_personaname'] . '^0 for ^3' . $request->param('reason'));
+						if(!empty($GLOBALS['discord_webhook'])){
+							discordMessage('Player Warned', '**Player: **'.$request->param('name').'\r\n**Reason: **'.$request->param('reason').'\r\n**Warned By: **' . $_SESSION['steam_personaname']);
+						}	
 						echo json_encode(array('success'=>true,'reload'=>true));
 					}
 				break;
 				case "kick":
+					if(!hasPermission($_SESSION['steamid'], 'kick')){
+						echo json_encode(array('message'=>'You do not have permission to kick!'));
+						exit();
+					}
 					if($request->param('name') == null || $request->param('license') == null || $request->param('reason') == null) {					
 						echo json_encode(array('message'=>'Please fill in all of the fields!'));	
 					} else {
 						dbquery('INSERT INTO kicks (license, reason, staff_name, staff_steamid, time) VALUES ("'.escapestring($request->param('license')).'", "'.escapestring($request->param('reason')).'", "'.$_SESSION['steam_personaname'].'", "'.$_SESSION['steamid'].'", "'.time().'")', false);
 						removeFromSession($request->param('license'), "You were kicked by " . $_SESSION['steam_personaname'] . " for " . $request->param('reason'));
 						sendMessage('^3' . $request->param('name') . '^0 has been kicked by ^2' . $_SESSION['steam_personaname'] . '^0 for ^3' . $request->param('reason'));
+						if(!empty($GLOBALS['discord_webhook'])){
+							discordMessage('Player Kicked', '**Player: **'.$request->param('name').'\r\n**Reason: **'.$request->param('reason').'\r\n**Kicked By: **' . $_SESSION['steam_personaname']);
+						}	
 						echo json_encode(array('success'=>true,'reload'=>true));
 					}
 				break;
 				case "ban":
+					if(!hasPermission($_SESSION['steamid'], 'ban')){
+						echo json_encode(array('message'=>'You do not have permission to ban!'));
+						exit();
+					}
 					if($request->param('name') == null || $request->param('license') == null || $request->param('reason') == null || $request->param('banlength') == null) {				
 						echo json_encode(array('message'=>'Please fill in all of the fields!'));		
 					} else {
@@ -405,26 +482,63 @@ $klein->respond('POST', '/api/[warn|kick|ban|install:action]',function($request,
 						}	
 						dbquery('INSERT INTO bans (name, identifier, reason, ban_issued, banned_until, staff_name, staff_steamid) VALUES ("'.escapestring($request->param('name')).'", "'.escapestring($request->param('license')).'", "'.escapestring($request->param('reason')).'", "'.time().'", "'.$banned_until.'", "'.$_SESSION['steam_personaname'].'", "'.$_SESSION['steamid'].'")', false);
 						removeFromSession($request->param('license'), "Banned by " . $_SESSION['steam_personaname'] . " for " . $request->param('reason') . " (Relog for more information)");
+						if(!empty($GLOBALS['discord_webhook'])){
+							if($request->param('banlength') == 0) {
+								$banlength = "Permanent";
+							} else {
+								$banlength = secsToStr($request->param('banlength'));
+							}	
+							discordMessage('Player Banned', '**Player: **'.$request->param('name').'\r\n**Reason: **'.$request->param('reason').'\r\n**Ban Length: **'.$banlength.'\r\n**Banned By: **' . $_SESSION['steam_personaname']);
+						}	
 						echo json_encode(array('success'=>true,'reload'=>true));
 					}
 				break;
-				case "install":
-					if(file_exists('installer.lock')) {
-						throw Klein\Exceptions\HttpException::createFromCode(404);
+				case "addserver":
+					if(!hasPermission($_SESSION['steamid'], 'editservers')){
+						echo json_encode(array('message'=>'You do not have permission to edit servers!'));
 						exit();
+					}
+					if($request->param('servername') == null || $request->param('serverip') == null || $request->param('serverport') == null || $request->param('serverrcon') == null) {
+						echo json_encode(array('message'=>'Please fill in all of the fields!'));
 					} else {
-						fopen("installer.lock", "w");
-						$file_contents = file_get_contents('config.template');
-						$file_contents = str_replace("{mysql_host}", $request->param('mysql_host'),$file_contents);
-						$file_contents = str_replace("{mysql_user}", $request->param('mysql_user'),$file_contents);
-						$file_contents = str_replace("{mysql_pass}", $request->param('mysql_pass'),$file_contents);
-						$file_contents = str_replace("{mysql_db}", $request->param('mysql_db'),$file_contents);
-						$file_contents = str_replace("{domain}", $request->param('domain'),$file_contents);
-						$file_contents = str_replace("{subfolder}", $request->param('subfolder'),$file_contents);
-						$file_contents = str_replace("{apikey}", $request->param('steam_apikey'),$file_contents);
-						$file_contents = str_replace("{community_name}", $request->param('community_name'),$file_contents);
-						file_put_contents('config.php', $file_contents);
-						echo json_encode(array('success'=>true,'goURL'=>$request->param('domain')));
+						if($request->param('serverip') == "localhost") {
+							echo json_encode(array('message'=>'Server IP \'localhost\' is disabled for compatibility reasons. We recommend that you use an external IP address.'));
+							exit();
+						}
+						dbquery('INSERT INTO servers (name, connection, rcon) VALUES ("'.$request->param('servername').'", "'.$request->param('serverip').':'.$request->param('serverport').'", "'.$request->param('serverrcon').'")', false);
+						echo json_encode(array('success'=>true,'reload'=>true));
+					}
+				break;
+				case "delserver":
+					if(!hasPermission($_SESSION['steamid'], 'editservers')){
+						echo json_encode(array('message'=>'You do not have permission to edit servers!'));
+						exit();
+					}
+					if($request->param('serverid') != null) {
+						dbquery('DELETE FROM servers WHERE ID="'.escapestring($request->param('serverid')).'"', false);
+						echo json_encode(array('success'=>true,'reload'=>true));
+					}
+				break;
+				case "addstaff":
+					if(!hasPermission($_SESSION['steamid'], 'editstaff')){
+						echo json_encode(array('message'=>'You do not have permission to edit staff!'));
+						exit();
+					}
+					if($request->param('steamid') == null || $request->param('rank') == null) {
+						echo json_encode(array('message'=>'Please fill in all of the fields!'));
+					} else {
+						dbquery('UPDATE users SET rank="'.escapestring($request->param('rank')).'" WHERE steamid="'.escapestring($request->param('steamid')).'"', false);
+						echo json_encode(array('success'=>true,'reload'=>true));
+					}
+				break;
+				case "delstaff":
+					if(!hasPermission($_SESSION['steamid'], 'editstaff')){
+						echo json_encode(array('message'=>'You do not have permission to edit staff!'));
+						exit();
+					}
+					if($request->param('steamid') != null) {
+						dbquery('UPDATE users SET rank="user" WHERE steamid="'.escapestring($request->param('steamid')).'"', false);
+						echo json_encode(array('success'=>true,'reload'=>true));
 					}
 				break;
 			}

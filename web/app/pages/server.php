@@ -22,15 +22,16 @@
                 </div>
             </div>
         </nav>
-
-
         <div class="content">
             <div class="container-fluid">
+                <?php
+                    if($GLOBALS['serveractions'][$this->server['connection']] != null) {
+                ?>
                 <div class="row">
                     <div class="col-md-12">
                         <div class="card">
                             <div class="header">	
-                                <h4 class="title">Server Settings</h4>
+                                <h4 class="title">Server Actions</h4>
 							</div>
 							<div class="content">
 								<?php
@@ -50,6 +51,9 @@
 						</div>
 					</div>
 				</div>
+                <?php
+                    }
+                ?>
                 <div class="row">
                     <div class="col-md-12">
                         <div class="card">

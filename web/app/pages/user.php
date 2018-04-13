@@ -42,7 +42,7 @@
 											<h4 class="title" id="profile-username"><?php echo $this->userinfo['name']; ?></h4>
 												<hr>
 											<span class="description" style="font-weight: normal;">
-												Trust Score: <?php echo trustScore($this->userinfo['steam']); ?>%
+												Trust Score: <?php echo trustScore($this->userinfo['license']); ?>%
 											</span>
 												<hr>
 											<span class="description" style="font-weight: normal;">
