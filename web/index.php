@@ -6,6 +6,7 @@ require('vendor/autoload.php');
 $klein = new \Klein\Klein;
 
 $klein->respond('*',function($request,$response,$service){
+	if ($request->uri != "/api/cron") {
 	session_start();
 	require(getcwd() . '/steamauth/steamauth.php');
 	require(getcwd() . '/q3query.class.php');
@@ -16,7 +17,7 @@ $klein->respond('*',function($request,$response,$service){
 		}
 		return strip_tags(mysqli_real_escape_string($conn,$value));
 	}
-	
+}
 	function dbquery($sql,$returnresult = true){
 		$conn = new mysqli($GLOBALS['mysql_host'], $GLOBALS['mysql_user'], $GLOBALS['mysql_pass'], $GLOBALS['mysql_db']);
 		if ($conn->connect_errno) {
