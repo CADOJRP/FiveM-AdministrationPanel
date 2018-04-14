@@ -8139,3 +8139,39 @@ button.close {
 .message-success {
 	background-color:#2ecc71!important;
 }
+
+.ui-menu-item {
+	padding: 0px !important;
+	width: 100% !important;
+	font-size: 14px !important;
+	padding-left: 4px !important;  
+	-webkit-box-sizing: border-box !important;
+	-moz-box-sizing: border-box !important;
+	box-sizing: border-box !important;
+	padding-top: 4px !important;
+	padding-bottom: 4px !important;
+	overflow-x: hidden !important;
+	overflow: hidden !important;
+}
+
+.ui-menu-item:hover {
+	background: inherit !important;
+	outline: none !important;
+	width: 100% !important;
+}
+
+.ui-state-focus:hover {
+	background: inherit !important;
+	outline: none !important;
+	width: 100% !important;
+}
+
+.ui-state-focus {
+	width: 100% !important;
+	background: inherit !important;
+	outline: none !important;
+	padding-top: 4px !important;
+	padding-bottom: 4px !important;
+	padding-left: 4px !important;
+	margin: 0 !important;
+}
