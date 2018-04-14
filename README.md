@@ -53,6 +53,10 @@ An Administration Panel for FiveM Servers
 * View our install guide on our wiki [here](https://github.com/CADOJRP/FiveM-AdministrationPanel/wiki/Installation)
 
 
+### Recommended Hosting
+* https://ELHostingServices.com offers cheap web hosting that meets all of our requirements. (This is the hosting that we use while developing)
+
+
 ### Media
 * Coming Soon
 
