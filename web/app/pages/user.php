@@ -46,6 +46,10 @@
 											</span>
 												<hr>
 											<span class="description" style="font-weight: normal;">
+												Steam Hex: <?php echo $this->userinfo['steam'] ?>
+											</span>
+												<hr>
+											<span class="description" style="font-weight: normal;">
 												Playtime: <?php if($this->userinfo['playtime'] != null) { echo secsToStr($this->userinfo['playtime'] * 60); } else { echo "1 Minute"; } ?>
 											</span>
 												<hr>
