@@ -92,7 +92,7 @@
 				</div>
 				<?php
 					$version = json_decode(file_get_contents('https://raw.githubusercontent.com/CADOJRP/FiveM-AdministrationPanel/master/version.json'));
-					if($version->webpanel > 0.1) {
+					if($version->webpanel > $GLOBALS['version']) {
 						echo '
 							<div class="row">
 								<div class="col-md-12">
