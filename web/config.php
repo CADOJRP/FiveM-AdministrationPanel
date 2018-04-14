@@ -15,6 +15,8 @@
 	$GLOBALS['tswarn'] = 1;												// Trust Score Warning Impact
 	$GLOBALS['tskick'] = 3;												// Trust Score Kick Impact
 	$GLOBALS['tsban'] = 6;												// Trust Score Ban Impact
+	$GLOBALS['tstime'] = 1;												// How often (in hours) a user goes up in trust score.
+	$GLOBALS['analytics'] = true;										// Collects info such as community name, version, php version, etc. Used for debugging and improving script. If debug is true it will override this value.
 	date_default_timezone_set('America/New_York');						// Timezone (http://php.net/manual/en/timezones.php)
 
 
@@ -25,7 +27,7 @@
 
 	// SERVER SETTINGS
 	$GLOBALS['joinmessages'] = false;									// The chat resource has the default join messages so without remove that this will cause two join messages.
-
+	$GLOBALS['chatcommands'] = true;									// Add default chat commands in game.
 
 	$GLOBALS['permissions'] = [
 		"owner"=> [
