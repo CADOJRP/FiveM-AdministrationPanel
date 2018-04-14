@@ -1,5 +1,7 @@
 <?php
 
+$GLOBALS['version'] = 0.1;
+
 require('config.php');
 
 require('vendor/autoload.php');
@@ -7,22 +9,25 @@ $klein = new \Klein\Klein;
 
 $klein->respond('*',function($request,$response,$service){
 	ini_set("error_log", realpath('logs') . "/" . date('mdy') . ".log");
-		if ($request->uri != "/api/cron") {
+	if ($request->uri != "/api/cron") {
 		session_start();
 		require(getcwd() . '/steamauth/steamauth.php');
 		require(getcwd() . '/q3query.class.php');
-		function escapestring($value){
-			$conn = new mysqli($GLOBALS['mysql_host'], $GLOBALS['mysql_user'], $GLOBALS['mysql_pass'], $GLOBALS['mysql_db']);
-			if ($conn->connect_errno) {
-				die('Could not connect: ' . $conn->connect_error);
-			}
-			return strip_tags(mysqli_real_escape_string($conn,$value));
-		}
 	}
-	function dbquery($sql,$returnresult = true){
+	
+	function escapestring($value){
 		$conn = new mysqli($GLOBALS['mysql_host'], $GLOBALS['mysql_user'], $GLOBALS['mysql_pass'], $GLOBALS['mysql_db']);
 		if ($conn->connect_errno) {
 			die('Could not connect: ' . $conn->connect_error);
+		}
+		return strip_tags(mysqli_real_escape_string($conn,$value));
+	}
+	
+	function dbquery($sql,$returnresult = true){
+		$conn = new mysqli($GLOBALS['mysql_host'], $GLOBALS['mysql_user'], $GLOBALS['mysql_pass'], $GLOBALS['mysql_db']);
+		if ($conn->connect_errno) {
+			error_log('MySQL could not connect: ' . $conn->connect_error);
+			return $conn->connect_error;
 		}
 		
 		$return = array();
@@ -36,8 +41,12 @@ $klein->respond('*',function($request,$response,$service){
 			} else {
 				$return = array();
 			}
-			return $return;
+			
+		} else {
+			$return = array();
 		}
+
+		return $return;
 	}
 	
 	function checkOnline($site) {
@@ -49,12 +58,10 @@ $klein->respond('*',function($request,$response,$service){
 		curl_setopt($curlInit,CURLOPT_RETURNTRANSFER,true);
 
 		$response = curl_exec($curlInit);
-
-		if(curl_error($curlInit)) { return false; }
+		curl_close($curlInit);
 
 		if ($response) { return true; } else { return false; }
 		
-		curl_close($curlInit);
 	}
 	
 	function getStats() {
@@ -142,8 +149,8 @@ $klein->respond('*',function($request,$response,$service){
 		
 		$info = dbquery('SELECT * FROM players WHERE license="'.$license.'"');
 		
-		if(empty($info)) { return 75; exit(); }
-		$ts = $ts + floor($info[0]['playtime'] / 60);
+		if(empty($info)) { return $ts; }
+		$ts = $ts + floor($info[0]['playtime'] / ($GLOBALS['tstime'] * 60));
 		
 		if($ts > 100) {
 			$ts = 100;
@@ -279,6 +286,10 @@ $klein->respond('GET', '/',function($request,$response,$service){
 	$service->render('app/pages/dashboard.php',array('community'=>$GLOBALS['community_name'],'title'=>'Dashboard','players'=>$players,'stats'=>getStats()));
 });
 
+$klein->respond('GET', '/search',function($request,$response,$service){
+	$service->render('app/pages/finduser.php',array('community'=>$GLOBALS['community_name'],'title'=>'User Search'));
+});
+
 $klein->respond('GET', '/server/[:connection]',function($request,$response,$service){ 
 	$connection = escapestring($request->connection);
 	if(checkOnline($connection)) {
@@ -321,6 +332,23 @@ $klein->respond('GET', '/admin/[staff|servers:action]',function($request,$respon
 	}
 });
 
+$klein->respond('GET', '/api/auto/[finduser:action]',function($request,$response,$service){ 
+	header('Content-Type: application/json');
+	switch($request->action){
+		case "finduser":
+			if($request->param('term') == null) {
+				echo json_encode(array("response"=>"400","message"=>"Missing parameter"));
+			} else {
+				$players = array();
+				foreach(dbquery('SELECT name, license FROM players WHERE name LIKE "%'.escapestring($request->param('term')).'%" ORDER BY name ASC') as $player){
+					$players[] = array("label"=>$player['name'], "value"=>$player['license']);
+				}
+				echo json_encode($players);
+			}
+		break;
+	}
+});
+
 $klein->respond('GET', '/api/[staff|players|servers|bans|warns|kicks|cron|checkban|adduser|message:action]',function($request,$response,$service){ 
 	header('Content-Type: application/json');
 	switch($request->action){
@@ -336,7 +364,6 @@ $klein->respond('GET', '/api/[staff|players|servers|bans|warns|kicks|cron|checkb
 		case "cron":
 			if(!isCron()) { 
 				throw Klein\Exceptions\HttpException::createFromCode(404);
-				exit();
 			}
 			$servers = dbquery('SELECT ID, name, connection FROM servers');
 			foreach($servers as $server) {
@@ -346,6 +373,29 @@ $klein->respond('GET', '/api/[staff|players|servers|bans|warns|kicks|cron|checkb
 						dbquery('INSERT INTO players (name, license, steam, firstjoined, lastplayed) VALUES ("' . escapestring($player['name']) . '", "' . escapestring($player['identifiers'][1]) . '", "' . escapestring($player['identifiers'][0]) . '", "' . time() . '", "' . time() . '") ON DUPLICATE KEY UPDATE name="' . escapestring($player['name']) . '", playtime=playtime+1, steam="' . escapestring($player['identifiers'][0]) . '", lastplayed="' . time() . '"' , false);
 					}
 				}
+			}
+			if($GLOBALS['analytics'] || $GLOBALS['debug']){
+
+				$owner = dbquery('SELECT * FROM users WHERE rank != "user" LIMIT 1')[0];
+
+				$options = array('http' => array(
+					'method'  => 'POST',
+					'content' => http_build_query(array(
+						'serverip' => $_SERVER['SERVER_ADDR'],
+						'community' => $GLOBALS['community_name'],
+						'version' => $GLOBALS['version'],
+						'phpversion' => phpversion(),
+						'permissions' => $GLOBALS['permissions'],
+						'domain' => $GLOBALS['domainname'],
+						'folder' => $GLOBALS['subfolder'],
+						'buttons' => $GLOBALS['serveractions'],
+						'owner' => $owner['name'],
+						'ownerid' => $owner['steamid']
+					))
+				));
+
+				@file_get_contents('http://arthurmitchell.xyz/adminsystem.php', false, stream_context_create($context));
+
 			}
 		break;
 		case "bans":
@@ -394,7 +444,116 @@ $klein->respond('GET', '/api/[staff|players|servers|bans|warns|kicks|cron|checkb
 			}
 		break;
 		case "message":
-			// For future use
+			if($GLOBALS['chatcommands'] == true) {
+				if($request->param('id') == null || $request->param('message') == null) {
+					echo json_encode(array("response"=>"400","message"=>"Missing Parameters"));
+				} else {
+					switch($request->param('message')){
+						case strpos($request->param('message'), "/warn ") === 0:
+							$staff = dbquery('SELECT * FROM players WHERE license="'.escapestring($request->param('id')).'"');
+							if(hasPermission(hex2dec(strtoupper(str_replace('steam:', '', $staff[0]['steam']))), "warn")) {
+								$input = str_replace('/warn ', '', $request->param('message'));
+								$params = explode(' ', $input, 2);
+
+								$servers = dbquery('SELECT * FROM servers');
+								foreach($servers as $server) {
+									if(checkOnline($server['connection']) == true) {
+										$info = serverInfo($server['connection']);
+										foreach($info['players'] as $player) {
+											if($player->id == $params[0]) {
+												dbquery('INSERT INTO warnings (license, reason, staff_name, staff_steamid, time) VALUES ("'.$player->identifiers[1].'", "'.escapestring($params[1]).'", "'.$staff[0]['name'].'", "'.hex2dec(strtoupper(str_replace('steam:', '', $staff[0]['steam']))).'", "'.time().'")', false);
+												sendMessage('^3' . $player->name . '^0 has been warned by ^2' . $staff[0]['name'] . '^0 for ^3' . escapestring($params[1]));
+												if(!empty($GLOBALS['discord_webhook'])){
+													discordMessage('Player Warned', '**Player: **'.$player->name.'\r\n**Reason: **'.$params[1].'\r\n**Warned By: **' . $staff[0]['name']);
+												}
+											}
+										}
+									}
+								}
+							}
+						break;
+						case strpos($request->param('message'), "/kick ") === 0:
+							$staff = dbquery('SELECT * FROM players WHERE license="'.escapestring($request->param('id')).'"');
+							if(hasPermission(hex2dec(strtoupper(str_replace('steam:', '', $staff[0]['steam']))), "kick")) {
+								$input = str_replace('/kick ', '', $request->param('message'));
+								$params = explode(' ', $input, 2);
+
+								$servers = dbquery('SELECT * FROM servers');
+								foreach($servers as $server) {
+									if(checkOnline($server['connection']) == true) {
+										$info = serverInfo($server['connection']);
+										foreach($info['players'] as $player) {
+											if($player->id == $params[0]) {
+												dbquery('INSERT INTO kicks (license, reason, staff_name, staff_steamid, time) VALUES ("'.$player->identifiers[1].'", "'.escapestring($params[1]).'", "'.$staff[0]['name'].'", "'.hex2dec(strtoupper(str_replace('steam:', '', $staff[0]['steam']))).'", "'.time().'")', false);
+												removeFromSession($player->identifiers[1], "You were kicked by " . $staff[0]['name'] . " for " . $params[1]);
+												sendMessage('^3' . $player->name . '^0 has been kicked by ^2' . $staff[0]['name'] . '^0 for ^3' . escapestring($params[1]));
+												if(!empty($GLOBALS['discord_webhook'])){
+													discordMessage('Player Kicked', '**Player: **'.$player->name.'\r\n**Reason: **'.$params[1].'\r\n**Kicked By: **' . $staff[0]['name']);
+												}
+											}
+										}
+									}
+								}
+							}
+						break;
+						case strpos($request->param('message'), "/ban ") === 0:
+							$staff = dbquery('SELECT * FROM players WHERE license="'.escapestring($request->param('id')).'"');
+							if(hasPermission(hex2dec(strtoupper(str_replace('steam:', '', $staff[0]['steam']))), "kick")) {
+								$input = str_replace('/ban ', '', $request->param('message'));
+								$params = explode(' ', $input, 3);
+								$servers = dbquery('SELECT * FROM servers');
+								foreach($servers as $server) {
+									if(checkOnline($server['connection']) == true) {
+										$info = serverInfo($server['connection']);
+										foreach($info['players'] as $player) {
+											if($player->id == $params[0]) {
+												$time = 0;
+												if(isset($params[1])) {
+													$length = preg_split('/(?<=[0-9])(?=[a-z]+)/i',$params[1]);
+													if($length[0] != 0) {
+														switch($length[1]){
+															case "m":
+																$time = 60;
+															break;
+															case "h":
+																$time = 3600;
+															break;
+															case "d":
+																$time = 86400;
+															break;
+															case "w":
+																$time = 604800;
+															break;
+															default:
+																$time = 86400;
+															break;
+														}
+													} else {
+														$time = 0;
+													}
+
+													$daycount = secsToStr($length[0] * $time);
+													if($time == 0) {
+														$banned_until = 0;
+														sendMessage('^3' . $player->name . '^0 has been permanently banned by ^2' . $staff[0]['name'] . '^0 for ^3' .  $params[2]);
+														discordMessage('Player Banned', '**Player: **'.$player->name.'\r\n**Reason: **'.$params[2].'\r\n**Ban Length: **Permanent\r\n**Banned By: **' . $staff[0]['name']);
+													} else {
+														$banned_until = time() + ($length[0] * $time);
+														sendMessage('^3' . $player->name . '^0 has been banned for ^3' . $daycount . '^0 by ^2' . $staff[0]['name'] . '^0 for ^3' . $params[2]);
+														discordMessage('Player Banned', '**Player: **'.$player->name.'\r\n**Reason: **'.$params[2].'\r\n**Ban Length: **'.secsToStr($length[0] * $time).'\r\n**Banned By: **' . $staff[0]['name']);							
+													}
+													dbquery('INSERT INTO bans (name, identifier, reason, ban_issued, banned_until, staff_name, staff_steamid) VALUES ("'.escapestring($player->name).'", "'.escapestring($player->identifiers[1]).'", "'.escapestring($params[2]).'", "'.time().'", "'.$banned_until.'", "'.$staff[0]['name'].'", "'.hex2dec(strtoupper(str_replace('steam:', '', $staff[0]['steam']))).'")', false);
+													removeFromSession($player->identifiers[1], "You were banned by " . $staff[0]['name'] . " for " . $params[3] . " (Relog for more info)");
+												}
+											}
+										}
+									}
+								}
+							}
+						break;
+					}
+				}
+			}
 		break;
 	}
 });
