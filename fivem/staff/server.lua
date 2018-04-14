@@ -36,7 +36,6 @@ AddEventHandler( "playerConnecting", function(name, setReason, deferrals)
 				end
 			end
 		end)
-		PerformHttpRequest(website .. '/api/adduser?name=' .. GetPlayerName(source) .. '&license=' .. GetPlayerIdentifiers(source)[2], function(statusCode, response, headers) end)
 	else 
 		setReason("Error! Steam is required to play on this FiveM server.")
 		CancelEvent()
