@@ -25,7 +25,8 @@
         <div class="content">
             <div class="container-fluid">
                 <?php
-                    if($GLOBALS['serveractions'][$this->server['connection']] != null) {
+                    if(isset($GLOBALS['serveractions'][$this->server['connection']])) {
+		
                 ?>
                 <div class="row">
                     <div class="col-md-12">
