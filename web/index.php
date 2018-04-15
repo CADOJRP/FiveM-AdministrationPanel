@@ -105,7 +105,7 @@ $klein->respond('*',function($request,$response,$service){
 		return dbquery('SELECT * FROM users WHERE steamid="'.escapestring($input).'"')[0]['rank'];
 	}
 	
-	function hasPermission(int $steam, string $perm) {
+	function hasPermission($steam, string $perm) {
 		$rank = getRank($steam);
 		if(!$GLOBALS['permissions'][$rank] == null) {
 			return in_array($perm, $GLOBALS['permissions'][$rank]);
