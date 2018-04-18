@@ -37,10 +37,13 @@ An Administration Panel for FiveM Servers
 * Permissions System
 * In-Game Commands
 * Unban Button
+* Revmoing Records
+* User Search
+* Plugin System ([Official Plugins](https://github.com/CADOJRP/FiveM-AdministrationPanel-Plugins))
+* Staff Statistics
 
 ### Upcoming Features
-* Staff Tracking
-* Installer
+* Have an idea? Suggest it in our [Discord](https://discord.gg/EgWrfBy) or Issues page.
 
 ### Requirements
 * Web Server w/ PHP
