@@ -35,11 +35,11 @@ An Administration Panel for FiveM Servers
 * Add/Remove Server Menu
 * Warnings/Kicks/Bans Logging
 * Permissions System
+* In-Game Commands
+* Unban Button
 
 ### Upcoming Features
 * Staff Tracking
-* In-Game Commands
-* Unban Button
 * Installer
 
 ### Requirements
