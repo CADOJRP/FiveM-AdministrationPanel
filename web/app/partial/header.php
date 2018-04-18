@@ -22,6 +22,9 @@
 		<link href="<?php echo $GLOBALS['domainname']; ?>app/css/animate.min.css" rel="stylesheet"/>
 		<link href="<?php echo $GLOBALS['domainname']; ?>app/css/light-bootstrap-dashboard.css" rel="stylesheet"/>
 		<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+        <?php
+            plugins::call('header');
+        ?>
 	</head>
 	<body>
 		<div class="wrapper">
@@ -81,6 +84,9 @@
 								<p>User Search</p>
 							</a>
 						</li>
+						<?php
+							plugins::call('navbarButtons');
+						?>
 					</ul>
 				</div>
 			</div>

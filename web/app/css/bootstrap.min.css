@@ -8175,3 +8175,8 @@ button.close {
 	padding-left: 4px !important;
 	margin: 0 !important;
 }
+
+.table-remove-button {
+    text-align: right;
+    width: 30px;
+}

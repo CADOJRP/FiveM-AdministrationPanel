@@ -91,6 +91,7 @@
 					</div>
 				</div>
 				<?php
+					plugins::call('addDashboardContent');
 					$version = json_decode(file_get_contents('https://raw.githubusercontent.com/CADOJRP/FiveM-AdministrationPanel/master/version.json'));
 					if($version->webpanel > $GLOBALS['version']) {
 						echo '

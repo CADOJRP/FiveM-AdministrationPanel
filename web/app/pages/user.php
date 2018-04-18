@@ -46,10 +46,6 @@
 											</span>
 												<hr>
 											<span class="description" style="font-weight: normal;">
-												Steam Hex: <?php echo $this->userinfo['steam'] ?>
-											</span>
-												<hr>
-											<span class="description" style="font-weight: normal;">
 												Playtime: <?php if($this->userinfo['playtime'] != null) { echo secsToStr($this->userinfo['playtime'] * 60); } else { echo "1 Minute"; } ?>
 											</span>
 												<hr>
@@ -60,6 +56,9 @@
 											<span class="description" style="font-weight: normal;">
 												Last Played: <?php echo date("m/d/Y h:i A", $this->userinfo['lastplayed']); ?>
 											</span>
+											<?php
+												plugins::call('userInfoTable', array($this->userinfo));
+											?>
 										</div>
 									</div>
 									<hr>
@@ -82,6 +81,9 @@
 									</li>
 									<li>
 										<a href="#panel-warn" data-toggle="tab">Warn</a>
+									</li>
+									<li>
+										<a href="#panel-other" data-toggle="tab">Other Actions</a>
 									</li>
 								</ul>
 								<div class="tab-content">
@@ -127,6 +129,11 @@
 											<button type="submit" class="btn btn-success btn-fill" style="width: 100%;"><i class="fa fa-paper-plane"></i> &nbsp; Warn Player</button>
 										</form>
 									</div>
+									<div class="tab-pane" id="panel-other">
+										<?php
+											plugins::call('playerPageOther', array($this->userinfo));
+										?>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -156,7 +163,7 @@
 										if(empty($warns)) {
 											echo '
 												<tr>
-													<td colspan="3">
+													<td colspan="4">
 														<center>
 															No Warnings on Record
 														</center>
@@ -176,6 +183,19 @@
 														<td>
 															' . date("m/d/Y h:i A", $warn['time']) . '
 														</td>
+												';
+													if(hasPermission($_SESSION['steamid'], 'delrecord')) {
+														echo '
+														<form action="'.$GLOBALS['domainname'].'api/delwarn" method="post" onsubmit="return submitForm($(this));">
+															<input type="hidden" name="warnid" value="'.$warn['ID'].'" />
+															<input type="submit" id="remove-warn-'.$warn['ID'].'" style="display: none;" />
+															<td class="table-remove-button"><span class="label label-danger" onclick=\'$("#remove-warn-'.$warn['ID'].'").click();\' style="cursor: pointer;">Remove</span></td>
+														</form>
+														';
+													} else {
+														echo '<td></td>';
+													}
+												echo '
 													</tr>
 												';
 											}
@@ -210,7 +230,7 @@
 										if(empty($kicks)) {
 											echo '
 												<tr>
-													<td colspan="3">
+													<td colspan="4">
 														<center>
 															No Kicks on Record
 														</center>
@@ -230,6 +250,19 @@
 														<td>
 															' . date("m/d/Y h:i A", $kick['time']) . '
 														</td>
+												';
+													if(hasPermission($_SESSION['steamid'], 'delrecord')) {
+														echo '
+														<form action="'.$GLOBALS['domainname'].'api/delkick" method="post" onsubmit="return submitForm($(this));">
+															<input type="hidden" name="kickid" value="'.$kick['ID'].'" />
+															<input type="submit" id="remove-kick-'.$kick['ID'].'" style="display: none;" />
+															<td class="table-remove-button"><span class="label label-danger" onclick=\'$("#remove-kick-'.$kick['ID'].'").click();\' style="cursor: pointer;">Remove</span></td>
+														</form>
+														';
+													} else {
+														echo '<td></td>';
+													}
+												echo '
 													</tr>
 												';
 											}
@@ -259,6 +292,9 @@
 										<th>
 											Expires
 										</th>
+										<th>
+											
+										</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -267,7 +303,7 @@
 										if(empty($bans)) {
 											echo '
 												<tr>
-													<td colspan="4">
+													<td colspan="5">
 														<center>
 															No Bans on Record
 														</center>
@@ -279,7 +315,7 @@
 												if($ban['banned_until'] == 0) {
 													$banned_until = "Permanent";
 												} else {
-													$banned_until = date("m/d/Y h:i A", $ban['ban_issued']);
+													$banned_until = date("m/d/Y h:i A", $ban['banned_until']);
 												}
 												echo '
 													<tr>
@@ -295,6 +331,19 @@
 														<td>
 															' . $banned_until . '
 														</td>
+												';
+													if(hasPermission($_SESSION['steamid'], 'delrecord')) {
+														echo '
+														<form action="'.$GLOBALS['domainname'].'api/delban" method="post" onsubmit="return submitForm($(this));">
+															<input type="hidden" name="banid" value="'.$ban['ID'].'" />
+															<input type="submit" id="remove-ban-'.$ban['ID'].'" style="display: none;" />
+															<td class="table-remove-button"><span class="label label-danger" onclick=\'$("#remove-ban-'.$ban['ID'].'").click();\' style="cursor: pointer;">Remove</span></td>
+														</form>
+														';
+													} else {
+														echo '<td></td>';
+													}
+												echo '
 													</tr>
 												';
 											}
@@ -304,6 +353,9 @@
 							</table>
 						</div>
 					</div>
+					<?php
+            			plugins::call('addPlayerPageContentEnd', array($this->userinfo));
+ 				   	?>
 				</div>
             </div>
         </div>

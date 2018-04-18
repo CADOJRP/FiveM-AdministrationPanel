@@ -25,7 +25,8 @@
         <div class="content">
             <div class="container-fluid">
                 <?php
-                    if($GLOBALS['serveractions'][$this->server['connection']] != null) {
+                    plugins::call('addServerPageContentBeginning', array($server));
+                    if(isset($GLOBALS['serveractions'][$this->server['connection']])) {
                 ?>
                 <div class="row">
                     <div class="col-md-12">
@@ -45,7 +46,8 @@
 												</form>
 											';
 										}
-									}
+                                    }
+                                    plugins::call('createServerButton')
 								?>
 							</div>
 						</div>
@@ -103,7 +105,9 @@
                 </div>
             </div>
         </div>
-
+        <?php
+            plugins::call('addServerPageContentEnd', array($server));
+        ?>
         <footer class="footer">
             <div class="container-fluid">
                 <p class="copyright pull-right">

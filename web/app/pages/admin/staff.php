@@ -25,7 +25,7 @@
     <div class="content">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-md-8 col-md-offset-2">
+                <div class="col-md-10 col-md-offset-1">
                     <div class="card">
                         <div class="header">		
                             <h4 class="title">Staff List</h4>
@@ -35,19 +35,39 @@
                             <table class="table table-hover table-striped">
                                 <thead>
                                     <th>Name</th>
+                                    <th>Playtime</th>
+                                    <th>Warns</th>
+                                    <th>Kicks</th>
+                                    <th>Bans</th>
                                     <th>Rank</th>
                                     <th></th>
                                 </thead>
                                 <tbody>
                                     <?php
                                         foreach (dbquery('SELECT * FROM users WHERE rank!="user"') as $staff) {
+                                            $staffinfo = dbquery('SELECT * FROM players WHERE steam="steam:'. strtolower(dec2hex($staff['steamid'])) .'"');
+                                            $warns = dbquery('SELECT COUNT(*) FROM warnings WHERE staff_steamid="' . $staff['steamid'] . '"');
+                                            $kicks = dbquery('SELECT COUNT(*) FROM kicks WHERE staff_steamid="' . $staff['steamid'] . '"');
+                                            $bans = dbquery('SELECT COUNT(*) FROM bans WHERE staff_steamid="' . $staff['steamid'] . '"');
                                             echo '
                                                 <tr>
                                                     <td>
                                                         '.$staff['name'].'
                                                     </td>
                                                     <td>
-                                                        '.$staff['rank'].'
+                                                        '.secsToStr($staffinfo[0]['playtime'] * 60).'
+                                                    </td>
+                                                    <td>
+                                                        '.$warns[0]['COUNT(*)'].'
+                                                    </td>
+                                                    <td>
+                                                        '.$kicks[0]['COUNT(*)'].'
+                                                    </td>
+                                                    <td>
+                                                        '.$bans[0]['COUNT(*)'].'
+                                                    </td>
+                                                    <td>
+                                                        '.ucfirst($staff['rank']).'
                                                     </td>
                                                     <form action="'.$GLOBALS['domainname'].'api/delstaff" method="post" onsubmit="return submitForm($(this));">
                                                         <input type="hidden" name="steamid" value="'.$staff['steamid'].'" />
@@ -69,7 +89,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-8 col-md-offset-2">
+                <div class="col-md-10 col-md-offset-1">
                     <div class="card">
                         <div class="header">
                             <h4 class="title">Add Staff</h4>
