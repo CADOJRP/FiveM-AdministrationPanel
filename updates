@@ -2,6 +2,66 @@
 	<div class="col-md-12">
 		<div class="card">
 			<div class="header">
+				<h4 class="title">Update 0.2</h4>
+				<p class="category">Date: 4/17/2018</p>
+			</div>
+			<div class="content">
+				<h4>Plugin System</h4>
+				<p style="font-size: 14px;">
+				</p><ul>
+					<li>
+						We're glad to announce that we've release a plugin system. To find plugins developed by the team visit <a href="https://github.com/CADOJRP/FiveM-AdministrationPanel-Plugins">https://github.com/CADOJRP/FiveM-AdministrationPanel-Plugins</a>
+					</li>
+				</ul>
+				<p></p>
+				<h4>Chat Commands</h4>
+				<p style="font-size: 14px;">
+				</p><ul>
+					<li>
+						You're now able to warn, kick, and ban using in-game commands. Running the command will check the users permissions before taking action.
+					</li>
+				</ul>
+				<p></p>
+				<h4>Removing Records</h4>
+				<p style="font-size: 14px;">
+				</p><ul>
+					<li>
+						We have finally added the ability for staff to remove warns, kicks and bans from a players profile.
+					</li>
+				</ul>
+				<p></p>
+				<h4>Back End Stuff</h4>
+				<p style="font-size: 14px;">
+				</p><ul>
+					<li>
+						We're continuing to work hard to improve our panel. With the new Plugins System we will start focusing on other unique features such as vRP and ESX support. 
+					</li>
+				</ul>
+				<p></p>
+				<h4>Analytics</h4>
+				<p style="font-size: 14px;">
+				</p><ul>
+					<li>
+						In the recent updates we've been working to add tracking to our software. The reason for this is it allows us to access your GET API Endpoints and we're able to use that information to make plugins such as a Global Ban, global time tracking, records on other servers, etc. To disable panel tracking change "analytics" to false in your config file.
+					</li>
+				</ul>
+				<p></p>
+				<h4>Bug Fixes</h4>
+				<p style="font-size: 14px;">
+				</p><ul>
+					<li>
+						We've squashed a lot of bugs. Many bugs centered around errors and timeouts. We can't thank the beta testers enough for helping us find these.
+					</li>
+				</ul>
+				<p></p>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12">
+		<div class="card">
+			<div class="header">
 				<h4 class="title">Update 0.1</h4>
 				<p class="category">Date: 4/13/2018</p>
 			</div>
