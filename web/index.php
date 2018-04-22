@@ -14,7 +14,7 @@ $klein->respond('*', function ($request, $response, $service) {
 
     // Logging System
     ini_set("error_log", realpath('logs') . "/" . date('mdy') . ".log");
-
+    
     // CRON and Steam Auth Check
     if ($request->uri != "/api/cron") {
         session_start();
@@ -597,7 +597,7 @@ $klein->respond('GET', '/api/[staff|players|servers|bans|warns|kicks|cron|checkb
     }
 });
 
-$klein->respond('POST', '/api/button/[restart:action]', function ($request, $response, $service) {
+$klein->respond('POST', '/api/button/[restart|say|command:action]', function ($request, $response, $service) {
     header('Content-Type: application/json');
     if (isset($_SESSION['steamid'])) {
         if (getRank($_SESSION['steamid']) != "user") {
@@ -612,6 +612,36 @@ $klein->respond('POST', '/api/button/[restart:action]', function ($request, $res
                                 $con = new q3query(strtok($server[0]['connection'], ':'), str_replace(':', '', substr($server[0]['connection'], strpos($server[0]['connection'], ':'))), $success);
                                 $con->setRconpassword($server[0]['rcon']);
                                 $con->rcon("restart " . $request->param('input'));
+                                echo json_encode(array('success' => true, 'reload' => true));
+                            }
+                        }
+                    }
+                    break;
+                case "say":
+                    if ($request->param('input') == null || $request->param('server') == null) {
+                        echo json_encode(array("response" => "400", "message" => "Invalid API Endpoint"));
+                    } else {
+                        $server = dbquery('SELECT * FROM servers WHERE connection="' . escapestring($request->param('server')) . '"');
+                        if (!empty($server)) {
+                            if (checkOnline($server[0]['connection']) == true) {
+                                $con = new q3query(strtok($server[0]['connection'], ':'), str_replace(':', '', substr($server[0]['connection'], strpos($server[0]['connection'], ':'))), $success);
+                                $con->setRconpassword($server[0]['rcon']);
+                                $con->rcon("say " . $request->param('input'));
+                                echo json_encode(array('success' => true, 'reload' => true));
+                            }
+                        }
+                    }
+                    break;
+                case "command":
+                    if ($request->param('input') == null || $request->param('server') == null) {
+                        echo json_encode(array("response" => "400", "message" => "Invalid API Endpoint"));
+                    } else {
+                        $server = dbquery('SELECT * FROM servers WHERE connection="' . escapestring($request->param('server')) . '"');
+                        if (!empty($server)) {
+                            if (checkOnline($server[0]['connection']) == true) {
+                                $con = new q3query(strtok($server[0]['connection'], ':'), str_replace(':', '', substr($server[0]['connection'], strpos($server[0]['connection'], ':'))), $success);
+                                $con->setRconpassword($server[0]['rcon']);
+                                $con->rcon($request->param('input'));
                                 echo json_encode(array('success' => true, 'reload' => true));
                             }
                         }
@@ -777,7 +807,9 @@ $klein->respond('POST', '/api/[warn|kick|ban|addserver|delserver|addstaff|delsta
     }
 });
 
-plugins::call('createRoute');
+$klein->respond('GET', '/reports', function ($request, $response, $service) {
+    $service->render('app/pages/reports.php', array('community' => $GLOBALS['community_name'], 'title' => 'Player Reports'));
+});
 
 $klein->onHttpError(function ($code, $router) {
     $service = $router->service();
