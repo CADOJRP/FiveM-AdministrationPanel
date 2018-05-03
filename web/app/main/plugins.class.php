@@ -83,7 +83,7 @@ class plugins
     public static function call($hook, $params = false)
     {
         // look if hooks existing
-        if (count(self::$plugins[$hook]) != 0) {
+        if (@count(self::$plugins[$hook]) != 0) {
             // go throug all plugins
             foreach (self::$plugins[$hook] as $name) {
                 // check if params are given
