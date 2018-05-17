@@ -34,7 +34,7 @@
 			"warn",
 			"kick",
 			"ban",
-			"unban",
+			"delrecord",
 			"editstaff",
 			"editservers"
 		],
@@ -42,7 +42,7 @@
 			"warn",
 			"kick",
 			"ban",
-			"unban"
+			"delrecord"
 		],
 		"admin"=> [
 			"warn",
