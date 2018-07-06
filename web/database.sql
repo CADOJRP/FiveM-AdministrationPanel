@@ -37,7 +37,7 @@ CREATE TABLE `bans` (
   `banned_until` varchar(1024) NOT NULL,
   `staff_name` varchar(1024) NOT NULL,
   `staff_steamid` varchar(1024) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -52,7 +52,7 @@ CREATE TABLE `kicks` (
   `staff_name` varchar(255) NOT NULL,
   `staff_steamid` varchar(255) NOT NULL,
   `time` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 
 -- --------------------------------------------------------
@@ -69,7 +69,7 @@ CREATE TABLE `players` (
   `playtime` int(255) NOT NULL DEFAULT '1',
   `firstjoined` varchar(255) NOT NULL,
   `lastplayed` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -82,7 +82,7 @@ CREATE TABLE `servers` (
   `name` varchar(255) NOT NULL,
   `connection` varchar(255) NOT NULL,
   `rcon` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -95,7 +95,7 @@ CREATE TABLE `users` (
   `name` varchar(255) NOT NULL,
   `steamid` varchar(255) NOT NULL,
   `rank` varchar(255) NOT NULL DEFAULT 'user'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -110,7 +110,7 @@ CREATE TABLE `warnings` (
   `staff_name` varchar(255) NOT NULL,
   `staff_steamid` varchar(255) NOT NULL,
   `time` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
 -- Indexes for dumped tables
