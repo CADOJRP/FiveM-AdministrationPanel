@@ -1,6 +1,6 @@
 <?php
 
-$GLOBALS['version'] = 0.2;
+$GLOBALS['version'] = 0.3;
 
 require 'config.php';
 
@@ -14,7 +14,7 @@ $klein->respond('*', function ($request, $response, $service) {
 
     // Logging System
     ini_set("error_log", realpath('logs') . "/" . date('mdy') . ".log");
-    
+
     // CRON and Steam Auth Check
     if ($request->uri != "/api/cron") {
         session_start();
@@ -100,7 +100,7 @@ $klein->respond('*', function ($request, $response, $service) {
     // Get FiveM Server Information
     function serverInfo($conn)
     {
-        $json = file_get_contents('http://' . $conn . '/players.json');
+        $json = @file_get_contents('http://' . $conn . '/players.json');
         $data = json_decode($json);
 
         $players = 0;
@@ -147,7 +147,7 @@ $klein->respond('*', function ($request, $response, $service) {
         foreach (dbquery('SELECT * FROM servers') as $server) {
             if (checkOnline($server['connection']) == true) {
                 $con = new q3query(strtok($server['connection'], ':'), str_replace(':', '', substr($server['connection'], strpos($server['connection'], ':'))), $success);
-                foreach (json_decode(file_get_contents('http://' . $server['connection'] . '/players.json')) as $player) {
+                foreach (json_decode(@file_get_contents('http://' . $server['connection'] . '/players.json')) as $player) {
                     if ($player->identifiers[1] == $license) {
                         $userid = $player->id;
                         $con->setRconpassword($server['rcon']);
@@ -200,6 +200,43 @@ $klein->respond('*', function ($request, $response, $service) {
             'Hour' => 3600,
             'Minute' => 60,
             'Second' => 1,
+        );
+
+        $parts = array();
+
+        foreach ($periods as $name => $dur) {
+            $div = floor($duration / $dur);
+
+            if ($div == 0) {
+                continue;
+            } else
+            if ($div == 1) {
+                $parts[] = $div . " " . $name;
+            } else {
+                $parts[] = $div . " " . $name . "s";
+            }
+
+            $duration %= $dur;
+        }
+
+        $last = array_pop($parts);
+
+        if (empty($parts)) {
+            return $last;
+        } else {
+            return join(', ', $parts) . " and " . $last;
+        }
+
+    }
+
+    // Seconds to Human Readable
+    function secsToStrRound($duration)
+    {
+        $duration = $duration + 2;
+        $periods = array(
+            'Day' => 86400,
+            'Hour' => 3600,
+            'Minute' => 60
         );
 
         $parts = array();
@@ -344,6 +381,11 @@ $klein->respond('GET', '/server/[:connection]', function ($request, $response, $
     }
 });
 
+$klein->respond('GET', '/recent', function ($request, $response, $service) {
+    $service->render('app/pages/recentplayers.php', array('community' => $GLOBALS['community_name'], 'title' => 'Recent Players'));
+});
+
+
 $klein->respond('GET', '/user/[:license]', function ($request, $response, $service) {
     $service->render('app/pages/user.php', array('community' => $GLOBALS['community_name'], 'title' => 'Server', 'userinfo' => dbquery('SELECT * FROM players WHERE license="' . escapestring($request->license) . '"')[0]));
 });
@@ -372,6 +414,14 @@ $klein->respond('GET', '/admin/[staff|servers:action]', function ($request, $res
     }
 });
 
+$klein->respond('GET', '/admin/profile/[:steamid]', function ($request, $response, $service) {
+    if(escapestring($request->steamid) == $_SESSION['steamid'] || hasPermission($_SESSION['steamid'], 'editstaff')) {
+        $service->render('app/pages/admin/staffinfo.php', array('community' => $GLOBALS['community_name'], 'title' => 'Staff Information', 'userinfo' => dbquery('SELECT * FROM users WHERE steamid="' . escapestring($request->steamid) . '"')[0]));
+    } else {
+        throw Klein\Exceptions\HttpException::createFromCode(404);
+    }
+});
+
 $klein->respond('GET', '/api/auto/[finduser:action]', function ($request, $response, $service) {
     header('Content-Type: application/json');
     switch ($request->action) {
@@ -389,7 +439,7 @@ $klein->respond('GET', '/api/auto/[finduser:action]', function ($request, $respo
     }
 });
 
-$klein->respond('GET', '/api/[staff|players|servers|bans|warns|kicks|cron|checkban|adduser|message:action]', function ($request, $response, $service) {
+$klein->respond('GET', '/api/[staff|players|servers|bans|warns|kicks|cron|checkban|adduser|message|recentchart:action]', function ($request, $response, $service) {
     header('Content-Type: application/json');
     switch ($request->action) {
         case "staff":
@@ -406,15 +456,23 @@ $klein->respond('GET', '/api/[staff|players|servers|bans|warns|kicks|cron|checkb
                 throw Klein\Exceptions\HttpException::createFromCode(404);
             }
             plugins::call('cronCalled');
-            $servers = dbquery('SELECT ID, name, connection FROM servers');
+            $servers = dbquery('SELECT * FROM servers');
             foreach ($servers as $server) {
                 if (checkOnline($server['connection'])) {
-                    $players = json_decode(file_get_contents('http://' . $server['connection'] . '/players.json'), true);
+                    $players = json_decode(@file_get_contents('http://' . $server['connection'] . '/players.json'), true);
                     foreach ($players as $player) {
                         dbquery('INSERT INTO players (name, license, steam, firstjoined, lastplayed) VALUES ("' . escapestring($player['name']) . '", "' . escapestring($player['identifiers'][1]) . '", "' . escapestring($player['identifiers'][0]) . '", "' . time() . '", "' . time() . '") ON DUPLICATE KEY UPDATE name="' . escapestring($player['name']) . '", playtime=playtime+1, steam="' . escapestring($player['identifiers'][0]) . '", lastplayed="' . time() . '"', false);
                     }
+
+                    $con = new q3query(strtok($server['connection'], ':'), str_replace(':', '', substr($server['connection'], strpos($server['connection'], ':'))), $success);
+                    $con->setRconpassword($server['rcon']);
+                    foreach(dbquery('SELECT * FROM users WHERE rank != "user"') as $staff) {
+                        $con->rcon("add_ace identifier.steam:" . dec2hex($staff['steamid']) . " npb.god allow");
+                    }
                 }
             }
+            
+
             if ($GLOBALS['analytics'] || $GLOBALS['debug']) {
                 $owner = dbquery('SELECT * FROM users WHERE rank != "user" LIMIT 1')[0];
                 $options = array('http' => array(
@@ -590,14 +648,36 @@ $klein->respond('GET', '/api/[staff|players|servers|bans|warns|kicks|cron|checkb
                                 }
                             }
                             break;
+                        case strpos($request->param('message'), "/trustscore ") === 0:
+                            $input = str_replace('/trustscore ', '', $request->param('message'));
+                            $servers = dbquery('SELECT * FROM servers');
+                            foreach ($servers as $server) {
+                                if (checkOnline($server['connection']) == true) {
+                                    $info = serverInfo($server['connection']);
+                                    foreach ($info['players'] as $player) {
+                                        if ($player->id == $input) {
+                                            $playerinfo = dbquery('SELECT * FROM players WHERE license="' . $player->identifiers[1] . '"');
+                                            sendMessage('^3' . $player->name . '^0 has a playtime of ^2' . secsToStr($playerinfo[0]['playtime'] * 60) . '^0 and a trustscore of ^2' . trustScore($player->identifiers[1]) . '%');
+                                        }
+                                    }
+                                }
+                            }
+                            break;
                     }
                 }
             }
             break;
+        case "recentchart":
+            $weekprior = time() - 604800;
+            $recentwarns = dbquery('SELECT * FROM warnings WHERE time>="' . $weekprior . '"');
+            $recentkicks = dbquery('SELECT * FROM kicks WHERE time>="' . $weekprior . '"');
+            $recentbans = dbquery('SELECT * FROM bans WHERE ban_issued>="' . $weekprior . '"');
+            echo json_encode($recentbans);
+            break;
     }
 });
 
-$klein->respond('POST', '/api/button/[restart|say|command:action]', function ($request, $response, $service) {
+$klein->respond('POST', '/api/button/[restart|kickforstaff|command:action]', function ($request, $response, $service) {
     header('Content-Type: application/json');
     if (isset($_SESSION['steamid'])) {
         if (getRank($_SESSION['steamid']) != "user") {
@@ -617,21 +697,6 @@ $klein->respond('POST', '/api/button/[restart|say|command:action]', function ($r
                         }
                     }
                     break;
-                case "say":
-                    if ($request->param('input') == null || $request->param('server') == null) {
-                        echo json_encode(array("response" => "400", "message" => "Invalid API Endpoint"));
-                    } else {
-                        $server = dbquery('SELECT * FROM servers WHERE connection="' . escapestring($request->param('server')) . '"');
-                        if (!empty($server)) {
-                            if (checkOnline($server[0]['connection']) == true) {
-                                $con = new q3query(strtok($server[0]['connection'], ':'), str_replace(':', '', substr($server[0]['connection'], strpos($server[0]['connection'], ':'))), $success);
-                                $con->setRconpassword($server[0]['rcon']);
-                                $con->rcon("say " . $request->param('input'));
-                                echo json_encode(array('success' => true, 'reload' => true));
-                            }
-                        }
-                    }
-                    break;
                 case "command":
                     if ($request->param('input') == null || $request->param('server') == null) {
                         echo json_encode(array("response" => "400", "message" => "Invalid API Endpoint"));
@@ -642,6 +707,29 @@ $klein->respond('POST', '/api/button/[restart|say|command:action]', function ($r
                                 $con = new q3query(strtok($server[0]['connection'], ':'), str_replace(':', '', substr($server[0]['connection'], strpos($server[0]['connection'], ':'))), $success);
                                 $con->setRconpassword($server[0]['rcon']);
                                 $con->rcon($request->param('input'));
+                                echo json_encode(array('success' => true, 'reload' => true));
+                            }
+                        }
+                    }
+                    break;
+                case "kickforstaff":
+                    if ($request->param('server') == null) {
+                        echo json_encode(array("response" => "400", "message" => "Invalid API Endpoint"));
+                    } else {
+                        $server = dbquery('SELECT * FROM servers WHERE connection="' . escapestring($request->param('server')) . '"');
+                        if (!empty($server)) {
+                            if (checkOnline($server[0]['connection']) == true) {
+                                $serverinfo = json_decode(@file_get_contents('http://' . $server[0]['connection'] . '/players.json'));
+                                $con = new q3query(strtok($server[0]['connection'], ':'), str_replace(':', '', substr($server[0]['connection'], strpos($server[0]['connection'], ':'))), $success);
+                                sort($serverinfo);
+                                $kickplayer = null;
+                                foreach($serverinfo as $player) {
+                                    $kickplayer = $player;
+                                }
+                                $con->setRconpassword($server[0]['rcon']);
+                                $con->rcon('say ^3' . $kickplayer->name . '^0 has been kicked by ^2' . $_SESSION['steam_personaname'] . '^0 to make room for staff.');
+                                discordMessage('Kick For Staff', '**Staff Member: **' . $_SESSION['steam_personaname']);
+                                $con->rcon('clientkick ' . $kickplayer->id . ' Kicked for Reserved Staff Slot');
                                 echo json_encode(array('success' => true, 'reload' => true));
                             }
                         }
@@ -807,9 +895,7 @@ $klein->respond('POST', '/api/[warn|kick|ban|addserver|delserver|addstaff|delsta
     }
 });
 
-$klein->respond('GET', '/reports', function ($request, $response, $service) {
-    $service->render('app/pages/reports.php', array('community' => $GLOBALS['community_name'], 'title' => 'Player Reports'));
-});
+plugins::call('createRoute');
 
 $klein->onHttpError(function ($code, $router) {
     $service = $router->service();

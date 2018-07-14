@@ -1,4 +1,4 @@
-<?php
-namespace GuzzleHttp\Exception;
-
-interface GuzzleException {}
+<?php
+namespace GuzzleHttp\Exception;
+
+interface GuzzleException {}
