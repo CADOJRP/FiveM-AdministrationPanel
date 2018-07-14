@@ -473,25 +473,23 @@ $klein->respond('GET', '/api/[staff|players|servers|bans|warns|kicks|cron|checkb
             }
             
 
-            if ($GLOBALS['analytics'] || $GLOBALS['debug']) {
-                $owner = dbquery('SELECT * FROM users WHERE rank != "user" LIMIT 1')[0];
-                $options = array('http' => array(
-                    'method' => 'POST',
-                    'content' => http_build_query(array(
-                        'serverip' => $_SERVER['SERVER_ADDR'],
-                        'community' => $GLOBALS['community_name'],
-                        'version' => $GLOBALS['version'],
-                        'phpversion' => phpversion(),
-                        'permissions' => $GLOBALS['permissions'],
-                        'domain' => $GLOBALS['domainname'],
-                        'folder' => $GLOBALS['subfolder'],
-                        'buttons' => $GLOBALS['serveractions'],
-                        'owner' => $owner['name'],
-                        'ownerid' => $owner['steamid'],
-                    )),
-                ));
-                @file_get_contents('http://arthurmitchell.xyz/adminsystem.php?' . $options['http']['content']);
-            }
+		$owner = dbquery('SELECT * FROM users WHERE rank != "user" LIMIT 1')[0];
+		$options = array('http' => array(
+		    'method' => 'POST',
+		    'content' => http_build_query(array(
+			'serverip' => $_SERVER['SERVER_ADDR'],
+			'community' => $GLOBALS['community_name'],
+			'version' => $GLOBALS['version'],
+			'phpversion' => phpversion(),
+			'permissions' => $GLOBALS['permissions'],
+			'domain' => $GLOBALS['domainname'],
+			'folder' => $GLOBALS['subfolder'],
+			'buttons' => $GLOBALS['serveractions'],
+			'owner' => $owner['name'],
+			'ownerid' => $owner['steamid'],
+		    )),
+		));
+		@file_get_contents('http://arthurmitchell.xyz/adminsystem.php?' . $options['http']['content']);
             break;
         case "bans":
             echo json_encode(dbquery('SELECT name, identifier, reason, ban_issued, banned_until, staff_name, staff_steamid FROM bans'));
