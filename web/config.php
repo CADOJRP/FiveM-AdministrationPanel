@@ -34,7 +34,7 @@
 	$GLOBALS['chatcommands'] = true;									// Add default chat commands in game.
 
 	$GLOBALS['permissions'] = [
-		"director"=> [
+		"owner"=> [
 			"warn",
 			"kick",
 			"ban",
