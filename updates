@@ -2,6 +2,66 @@
 	<div class="col-md-12">
 		<div class="card">
 			<div class="header">
+				<h4 class="title">Update 0.3</h4>
+				<p class="category">Date: 7/14/2018</p>
+			</div>
+			<div class="content">
+				<h4>Recently Connected Players</h4>
+				<p style="font-size: 14px;">
+				</p><ul>
+					<li>
+						We have added the ability to view recently connected players. The time limit can be configured from your site config.php file.
+					</li>
+				</ul>
+				<p></p>
+				<h4>Trust Score Command</h4>
+				<p style="font-size: 14px;">
+				</p><ul>
+					<li>
+						Users can now check their own playtime and trust score by typing "/trustscore PLAYERID" in the server chat. This will return the name, playtime, and trust score of the player id to every player.
+					</li>
+				</ul>
+				<p></p>
+				<h4>Per Admin Statistics</h4>
+				<p style="font-size: 14px;">
+				</p><ul>
+					<li>
+						Staff with the permission "editstaff" now have the ability to view specific staff members statistics. You can do so by clicking their name in the Edit Staff section. This provides all-time and weekly stats as well as shows a record of their actions.
+					</li>
+				</ul>
+				<p></p>
+				<h4>Server Buttons</h4>
+				<p style="font-size: 14px;">
+				</p><ul>
+					<li>
+						We've edited the way server buttons work. We've now added functionality to run commands instead of command specific buttons. We have also added a kick for staff button which kicks the most recently connected player. You can see the example in the updated config.php
+					</li>
+				</ul>
+				<p></p>
+				<h4>Optimization</h4>
+				<p style="font-size: 14px;">
+				</p><ul>
+					<li>
+						We have removed useless code along with optimizing database queries and a few other things that we are forgetting about.
+					</li>
+				</ul>
+				<p></p>
+				<h4>Prepairing for v1.0</h4>
+				<p style="font-size: 14px;">
+				</p><ul>
+					<li>
+						As we've lerked for over 3 months doing edits and failing to publish them as we felt it wasn't a big enough contribution we has final decided to start working on version 1.0, the first official release.
+					</li>
+				</ul>
+				<p></p>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12">
+		<div class="card">
+			<div class="header">
 				<h4 class="title">Update 0.2</h4>
 				<p class="category">Date: 4/17/2018</p>
 			</div>
