@@ -1,4 +1,8 @@
-<?php
+<?php 
+
+	// THE NEWEST VERSION RELEASED ON 7/14/2018 AT 1 AM EST HAS SLIGHTLY CHANGED THE WAY BUTTONS WORK. PLEASE TAKE A LOOK AT THE NEW EXAMPLES BELOW
+	// THE NEWEST VERSION RELEASED ON 7/14/2018 AT 1 AM EST HAS SLIGHTLY CHANGED THE WAY BUTTONS WORK. PLEASE TAKE A LOOK AT THE NEW EXAMPLES BELOW
+	// THE NEWEST VERSION RELEASED ON 7/14/2018 AT 1 AM EST HAS SLIGHTLY CHANGED THE WAY BUTTONS WORK. PLEASE TAKE A LOOK AT THE NEW EXAMPLES BELOW
 	
 	// DATABASE SETTINGS
 	$GLOBALS['mysql_host'] = "";										// MySQL Host
@@ -12,11 +16,11 @@
 	$GLOBALS['apikey'] = ""; 											// SteamCommunity API Key https://steamcommunity.com/dev/apikey
 	$GLOBALS['checktimeout'] = 5;										// How long in seconds until the CRON times out and says the server is offline. Default: 5. If your server takes a long time to respond raise this. (If you have a ton of offline servers lower this)
 	$GLOBALS['trustscore'] = 75;										// Trust Score Starting Value
-	$GLOBALS['tswarn'] = 1;												// Trust Score Warning Impact
-	$GLOBALS['tskick'] = 3;												// Trust Score Kick Impact
-	$GLOBALS['tsban'] = 6;												// Trust Score Ban Impact
+	$GLOBALS['tswarn'] = 3;												// Trust Score Warning Impact
+	$GLOBALS['tskick'] = 6;												// Trust Score Kick Impact
+	$GLOBALS['tsban'] = 10;												// Trust Score Ban Impact
 	$GLOBALS['tstime'] = 1;												// How often (in hours) a user goes up in trust score.
-	$GLOBALS['analytics'] = true;										// Collects info such as community name, version, php version, etc. Used for debugging and improving script. If debug is true it will override this value.
+	$GLOBALS['recent_time'] = 10;										// How long players count as recently connected in minutes.
 	date_default_timezone_set('America/New_York');						// Timezone (http://php.net/manual/en/timezones.php)
 
 
@@ -34,15 +38,24 @@
 			"warn",
 			"kick",
 			"ban",
-			"delrecord",
+			"unban",
 			"editstaff",
-			"editservers"
+			"editservers",
+			"delrecord"
+		],
+		"communitymanager"=> [
+			"warn",
+			"kick",
+			"ban",
+			"unban",
+			"editstaff",
+			"delrecord"
 		],
 		"senioradmin"=> [
 			"warn",
 			"kick",
 			"ban",
-			"delrecord"
+			"unban"
 		],
 		"admin"=> [
 			"warn",
@@ -51,22 +64,42 @@
 		],
 		"moderator"=> [
 			"warn",
-			"kick"
+			"kick",
+			"ban"
 		],
-		"trusted"=> [
-			"warn"
+		"trialmod"=> [
+			"warn",
+			"kick"
 		]
 	];
 	
 	
 	// SERVER ACTIONS BUTTONS
 	$GLOBALS['serveractions'] = [
-		"206.221.190.163:30120"=> [
-			"els-fivem"=> [
-				"action"=> "restart",
-				"resource"=> "els-fivem",
-				"buttonname"=> "Restart ELS",
+		"108.61.69.48:30120"=> [
+			"kickforstaff"=> [
+				"action"=> "kickforstaff",
+				"input"=> "",
+				"buttonname"=> "Kick For Staff",
 				"buttonstyle"=> "btn-warning"
+			],
+			"aop-blaine"=> [
+				"action"=> "command",
+				"input"=> "aop Blaine County",
+				"buttonname"=> "AOP Blaine",
+				"buttonstyle"=> "btn-success"
+			],
+			"aop-city"=> [
+				"action"=> "command",
+				"input"=> "aop Los Santos",
+				"buttonname"=> "AOP City",
+				"buttonstyle"=> "btn-success"
+			],
+			"aop-paleto"=> [
+				"action"=> "command",
+				"input"=> "aop Paleto Bay",
+				"buttonname"=> "AOP Paleto",
+				"buttonstyle"=> "btn-success"
 			]
 		]
 	];

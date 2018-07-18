@@ -50,7 +50,7 @@
                                             $kicks = dbquery('SELECT COUNT(*) FROM kicks WHERE staff_steamid="' . $staff['steamid'] . '"');
                                             $bans = dbquery('SELECT COUNT(*) FROM bans WHERE staff_steamid="' . $staff['steamid'] . '"');
                                             echo '
-                                                <tr>
+                                                <tr style="cursor: pointer;" onclick=\'window.location.href="' .$GLOBALS['domainname'] . 'admin/profile/' . $staff['steamid'].'"\'>
                                                     <td>
                                                         '.$staff['name'].'
                                                     </td>
@@ -76,14 +76,12 @@
                                                             '.(($_SESSION['steamid'] != $staff['steamid'])?'<span class="label label-danger" onclick=\'$("#remove-staff-'.$staff['steamid'].'").click();\' style="cursor: pointer;">Remove</span>':"").'
                                                         </td>
                                                     </form>
-
                                                 </tr>
                                             ';
                                         }
                                     ?>
                                 </tbody>
                             </table>
-
                         </div>
                     </div>
                 </div>

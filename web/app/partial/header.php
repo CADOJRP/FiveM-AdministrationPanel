@@ -21,8 +21,9 @@
 		<link href="<?php echo $GLOBALS['domainname']; ?>app/css/bootstrap.min.css" rel="stylesheet" />
 		<link href="<?php echo $GLOBALS['domainname']; ?>app/css/animate.min.css" rel="stylesheet"/>
 		<link href="<?php echo $GLOBALS['domainname']; ?>app/css/light-bootstrap-dashboard.css" rel="stylesheet"/>
-		<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-        <?php
+		<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css"/>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js"></script>
+		<?php
             plugins::call('header');
         ?>
 	</head>
@@ -55,6 +56,12 @@
 								';
 							}
 						?>
+						<li>
+							<a href="<?php echo $GLOBALS['domainname']; ?>recent">
+								<i class="pe-7s-plug"></i>
+								<p>Recent Players</p>
+							</a>
+						</li>
 						<?php
 							if(hasPermission($_SESSION['steamid'], 'editstaff')) {
 								echo '

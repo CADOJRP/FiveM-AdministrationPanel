@@ -25,7 +25,7 @@
         <div class="content">
             <div class="container-fluid">
                 <?php
-                    plugins::call('addServerPageContentBeginning', array($this->server));
+                    plugins::call('addServerPageContentBeginning', array($server));
                     if(isset($GLOBALS['serveractions'][$this->server['connection']])) {
                 ?>
                 <div class="row">
@@ -39,9 +39,9 @@
 									if($GLOBALS['serveractions'][$this->server['connection']] != null) {
 										foreach($GLOBALS['serveractions'][$this->server['connection']] as $button) {
 											echo '
-												<form action="'.$GLOBALS['domainname'].'api/button/'.$button['action'].'" method="post" onsubmit="return submitForm($(this));">
+												<form action="'.$GLOBALS['domainname'].'api/button/'.$button['action'].'" method="post" onsubmit="return submitForm($(this));" style="display: inline-block;">
 													<input type="hidden" name="server" value="'.$this->server['connection'].'"/>
-													<input type="hidden" name="input" value="'.$button['resource'].'"/>
+													<input type="hidden" name="input" value="'.$button['input'].'"/>
 													<button type="submit" class="btn btn-success btn-fill '.$button['buttonstyle'].'">'.$button['buttonname'].'</button>
 												</form>
 											';
@@ -98,7 +98,6 @@
 										?>
                                     </tbody>
                                 </table>
-
                             </div>
                         </div>
                     </div>
@@ -106,7 +105,7 @@
             </div>
         </div>
         <?php
-            plugins::call('addServerPageContentEnd', array($this->server));
+            plugins::call('addServerPageContentEnd', array($server));
         ?>
         <footer class="footer">
             <div class="container-fluid">
