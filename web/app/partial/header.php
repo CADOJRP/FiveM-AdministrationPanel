@@ -9,7 +9,6 @@
 		<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 		<script src="//code.jquery.com/jquery-1.10.2.js"></script>
-		<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 		<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.11.0/build/alertify.min.js"></script>
 		<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.11.0/build/css/alertify.min.css"/>
 		<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.11.0/build/css/themes/bootstrap.min.css"/>
@@ -22,7 +21,10 @@
 		<link href="<?php echo $GLOBALS['domainname']; ?>app/css/animate.min.css" rel="stylesheet"/>
 		<link href="<?php echo $GLOBALS['domainname']; ?>app/css/light-bootstrap-dashboard.css" rel="stylesheet"/>
 		<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css"/>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js"></script>
+		<link href="//cdn.datatables.net/1.10.18/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+		<script src="//cdn.datatables.net/1.10.18/js/jquery.dataTables.min.js"></script>
+		<script src="//cdn.datatables.net/1.10.18/js/dataTables.bootstrap4.min.js"></script>
 		<?php
             plugins::call('header');
         ?>
@@ -86,9 +88,9 @@
 							}
 						?>
 						<li>
-							<a href="<?php echo $GLOBALS['domainname']; ?>search">
+							<a href="<?php echo $GLOBALS['domainname']; ?>data/players">
 								<i class="pe-7s-users"></i>
-								<p>User Search</p>
+								<p>Player List</p>
 							</a>
 						</li>
 						<?php
