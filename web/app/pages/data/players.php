@@ -30,8 +30,8 @@
             <div class="header">
               <h4 class="title">Player List</h4>
             </div>
-            <div class="content">
-                <table id="players" class="table table-striped table-bordered" style="width:100%">
+            <div class="content table-responsive">
+                <table id="players" class="table table-hover table-striped table-bordered" style="width:100%;cursor:pointer;">
                     <thead>
                         <tr>
                             <th>Name</th>
