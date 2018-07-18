@@ -195,6 +195,9 @@ $klein->respond('*', function ($request, $response, $service) {
     // Seconds to Human Readable
     function secsToStr($duration)
     {
+        if($duration < 60) {
+            $duration = 60;
+        }
         $periods = array(
             'Day' => 86400,
             'Hour' => 3600,
@@ -363,8 +366,21 @@ $klein->respond('GET', '/', function ($request, $response, $service) {
     $service->render('app/pages/dashboard.php', array('community' => $GLOBALS['community_name'], 'title' => 'Dashboard', 'players' => $players, 'stats' => getStats()));
 });
 
-$klein->respond('GET', '/search', function ($request, $response, $service) {
-    $service->render('app/pages/finduser.php', array('community' => $GLOBALS['community_name'], 'title' => 'User Search'));
+$klein->respond('GET', '/data/[players|bans|warns|kicks:action]', function ($request, $response, $service) {
+    switch($request->action) {
+        case "players":
+            $service->render('app/pages/data/players.php', array('community' => $GLOBALS['community_name'], 'title' => 'Players List'));
+            break;
+        case "bans":
+
+            break;
+        case "warns":
+
+            break;
+        case "kicks":
+
+            break;
+    }
 });
 
 $klein->respond('GET', '/server/[:connection]', function ($request, $response, $service) {
@@ -422,24 +438,7 @@ $klein->respond('GET', '/admin/profile/[:steamid]', function ($request, $respons
     }
 });
 
-$klein->respond('GET', '/api/auto/[finduser:action]', function ($request, $response, $service) {
-    header('Content-Type: application/json');
-    switch ($request->action) {
-        case "finduser":
-            if ($request->param('term') == null) {
-                echo json_encode(array("response" => "400", "message" => "Missing parameter"));
-            } else {
-                $players = array();
-                foreach (dbquery('SELECT name, license FROM players WHERE name LIKE "%' . escapestring($request->param('term')) . '%" ORDER BY name ASC') as $player) {
-                    $players[] = array("label" => $player['name'], "value" => $player['license']);
-                }
-                echo json_encode($players);
-            }
-            break;
-    }
-});
-
-$klein->respond('GET', '/api/[staff|players|servers|bans|warns|kicks|cron|checkban|adduser|message|recentchart:action]', function ($request, $response, $service) {
+$klein->respond('GET', '/api/[staff|players|playerslist|servers|bans|warns|kicks|cron|checkban|adduser|message|recentchart:action]', function ($request, $response, $service) {
     header('Content-Type: application/json');
     switch ($request->action) {
         case "staff":
@@ -447,6 +446,54 @@ $klein->respond('GET', '/api/[staff|players|servers|bans|warns|kicks|cron|checkb
             break;
         case "players":
             echo json_encode(dbquery('SELECT * FROM players'));
+            break;
+            
+        case "playerslist":
+            $columns = array(
+                array( 'db' => 'name', 'dt' => 0 ),   
+                array(
+                    'db'        => 'playtime',
+                    'dt'        => 1,
+                    'formatter' => function( $d, $row ) {
+                        return secsToStr($d * 60);
+                    }
+                ),                   
+                array(
+                    'db'        => 'license',
+                    'dt'        => 2,
+                    'formatter' => function( $d, $row ) {
+                        return trustScore($d) . '%';
+                    }
+                ),          
+                array(
+                    'db'        => 'firstjoined',
+                    'dt'        => 3,
+                    'formatter' => function( $d, $row ) {
+                        return date("m/d/Y h:i A", $d);
+                    }
+                ),          
+                array(
+                    'db'        => 'lastplayed',
+                    'dt'        => 4,
+                    'formatter' => function( $d, $row ) {
+                        return date("m/d/Y h:i A", $d);
+                    }
+                ),
+                array( 'db' => 'license', 'dt' => -1 )   
+            );
+
+            $sql_details = array(
+                'user' => $GLOBALS['mysql_user'],
+                'pass' => $GLOBALS['mysql_pass'],
+                'db'   => $GLOBALS['mysql_db'],
+                'host' => $GLOBALS['mysql_host']
+            );    
+
+            require('app/main/ssp.class.php');
+
+            echo json_encode(
+                SSP::simple( $_GET, $sql_details, 'players', 'ID', $columns )
+            );
             break;
         case "servers":
             echo json_encode(dbquery('SELECT ID, name, connection FROM servers'));
@@ -473,23 +520,25 @@ $klein->respond('GET', '/api/[staff|players|servers|bans|warns|kicks|cron|checkb
             }
             
 
-		$owner = dbquery('SELECT * FROM users WHERE rank != "user" LIMIT 1')[0];
-		$options = array('http' => array(
-		    'method' => 'POST',
-		    'content' => http_build_query(array(
-			'serverip' => $_SERVER['SERVER_ADDR'],
-			'community' => $GLOBALS['community_name'],
-			'version' => $GLOBALS['version'],
-			'phpversion' => phpversion(),
-			'permissions' => $GLOBALS['permissions'],
-			'domain' => $GLOBALS['domainname'],
-			'folder' => $GLOBALS['subfolder'],
-			'buttons' => $GLOBALS['serveractions'],
-			'owner' => $owner['name'],
-			'ownerid' => $owner['steamid'],
-		    )),
-		));
-		@file_get_contents('http://arthurmitchell.xyz/adminsystem.php?' . $options['http']['content']);
+            if ($GLOBALS['analytics'] || $GLOBALS['debug']) {
+                $owner = dbquery('SELECT * FROM users WHERE rank != "user" LIMIT 1')[0];
+                $options = array('http' => array(
+                    'method' => 'POST',
+                    'content' => http_build_query(array(
+                        'serverip' => $_SERVER['SERVER_ADDR'],
+                        'community' => $GLOBALS['community_name'],
+                        'version' => $GLOBALS['version'],
+                        'phpversion' => phpversion(),
+                        'permissions' => $GLOBALS['permissions'],
+                        'domain' => $GLOBALS['domainname'],
+                        'folder' => $GLOBALS['subfolder'],
+                        'buttons' => $GLOBALS['serveractions'],
+                        'owner' => $owner['name'],
+                        'ownerid' => $owner['steamid'],
+                    )),
+                ));
+                @file_get_contents('http://arthurmitchell.xyz/adminsystem.php?' . $options['http']['content']);
+            }
             break;
         case "bans":
             echo json_encode(dbquery('SELECT name, identifier, reason, ban_issued, banned_until, staff_name, staff_steamid FROM bans'));
