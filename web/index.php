@@ -169,7 +169,14 @@ $klein->respond('*', function ($request, $response, $service) {
             }
         }
     }
-
+    function sendRconCommand($command, $message)
+    {
+        if (checkOnline($server['connection']) == true) {
+            $con = new q3query(strtok($server['connection'], ':'), str_replace(':', '', substr($server['connection'], strpos($server['connection'], ':'))), $success);
+            $con->setRconpassword($server['rcon']);
+            $con->rcon($command . " " . $message);
+        }
+    }
     // Get Players Trustscore
     function trustScore($license)
     {
