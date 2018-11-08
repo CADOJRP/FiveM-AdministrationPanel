@@ -1,0 +1,29 @@
+Options -MultiViews
+
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^ index.php [L]
+
+# BEGIN cPanel-generated php ini directives, do not edit
+# Manual editing of this file may result in unexpected behavior.
+# To make changes to this file, use the cPanel MultiPHP INI Editor (Home >> Software >> MultiPHP INI Editor)
+# For more information, read our documentation (https://go.cpanel.net/EA4ModifyINI)
+<IfModule php7_module>
+   php_flag display_errors Off
+   php_value max_execution_time 45
+   php_value max_input_time 60
+   php_value max_input_vars 1000
+   php_value memory_limit 128M
+   php_value post_max_size 8M
+   php_value session.gc_maxlifetime 144000
+   php_value upload_max_filesize 2M
+   php_flag zlib.output_compression On
+</IfModule>
+# END cPanel-generated php ini directives, do not edit
+
+# php -- BEGIN cPanel-generated handler, do not edit
+# Set the “ea-php70” package as the default “PHP” programming language.
+<IfModule mime_module>
+  AddType application/x-httpd-ea-php70 .php .php7 .phtml
+</IfModule>
+# php -- END cPanel-generated handler, do not edit
