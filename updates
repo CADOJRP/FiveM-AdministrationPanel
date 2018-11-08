@@ -2,6 +2,90 @@
 	<div class="col-md-12">
 		<div class="card">
 			<div class="header">
+				<h4 class="title">Update 0.4</h4>
+				<p class="category">Date: 11/8/2018</p>
+			</div>
+			<div class="content">
+				<h4>Updated Sidebar</h4>
+				<p style="font-size: 14px;">
+				</p><ul>
+					<li>
+						We've finally updated the left sidebar as it was getting too cluttered.
+					</li>
+				</ul>
+				<p></p>
+				<h4>Edit Panel</h4>
+				<p style="font-size: 14px;">
+				</p><ul>
+					<li>
+						We've moved the config primarily to the MySQL database to allow for easy editing. An issue currently known is that permissions and buttons don't save correctly. They are stored in serialed PHP array in the database if someone wishes to manually change them. The permission to edit the staff panel config is 'editpanel'.
+					</li>
+				</ul>
+				<p></p>
+				<h4>Tables! Tables! Tables!</h4>
+				<p style="font-size: 14px;">
+				</p><ul>
+					<li>
+						We've changed most of the HTML tables to a sortable, pagination-able, searchable table system. This allows you to change the sorting on certain pages to show highest ping, alphabetical, or other options.
+					</li>
+				</ul>
+				<p></p>
+				<h4>Players List</h4>
+				<p style="font-size: 14px;">
+				</p><ul>
+					<li>
+						You now have the ability to view all players including disconnected players. This retired the old player search method.
+					</li>
+				</ul>
+				<p></p>
+				<h4>Warning List</h4>
+				<p style="font-size: 14px;">
+				</p><ul>
+					<li>
+						You are now able to view a list of all warnings.
+					</li>
+				</ul>
+				<p></p>
+				<h4>Kicks List</h4>
+				<p style="font-size: 14px;">
+				</p><ul>
+					<li>
+						You are now able to view a list of all kicks.
+					</li>
+				</ul>
+				<p></p>
+				<h4>Bans List</h4>
+				<p style="font-size: 14px;">
+				</p><ul>
+					<li>
+						You are now able to view a list of all bans.
+					</li>
+				</ul>
+				<p></p>
+				<h4>Playtime Statistics</h4>
+				<p style="font-size: 14px;">
+				</p><ul>
+					<li>
+						Your dashboard now shows playtime statistics of all users in minutes, hours, days, and years.
+					</li>
+				</ul>
+				<p></p>
+				<h4>Prepairing for v1.0</h4>
+				<p style="font-size: 14px;">
+				</p><ul>
+					<li>
+						Sorry for the delay in updates, I've been busy with life recently and haven't had much time to do any development. We are still on track for v1.0 in Q1 of 2018 (Maybe at the turn of the year).
+					</li>
+				</ul>
+				<p></p>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12">
+		<div class="card">
+			<div class="header">
 				<h4 class="title">Update 0.3</h4>
 				<p class="category">Date: 7/14/2018</p>
 			</div>

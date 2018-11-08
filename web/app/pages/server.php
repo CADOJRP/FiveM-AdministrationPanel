@@ -60,17 +60,19 @@
                     <div class="col-md-12">
                         <div class="card">
                             <div class="header">		
-                                <h4 class="title">Player List<span style="float: right;"><?php echo $this->info['playercount']; ?>/32</span></h4>
+                                <h4 class="title">Player List<span style="float: right;"><?php echo $this->info['playercount'] . '/' . serverDetails($this->server['connection'])->vars->sv_maxClients; ?></span></h4>
                                 <p class="category"><?php echo $this->server['connection']; ?></p>
                             </div>
-                            <div class="content table-responsive table-full-width">
-                                <table class="table table-hover table-striped">
+                            <div class="content table-responsive">
+                                <table id="players" class="table table-hover table-striped table-bordered" style="width:100%;cursor:pointer;">
                                     <thead>
-                                        <th>ID</th>
-                                    	<th>Name</th>
-                                    	<th>Ping</th>
-                                    	<th>Playtime</th>
-                                    	<th>Trust Score</th>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                            <th>Ping</th>
+                                            <th>Playtime</th>
+                                            <th>Trust Score</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
 										<?php
@@ -97,6 +99,15 @@
 											}
 										?>
                                     </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                            <th>Ping</th>
+                                            <th>Playtime</th>
+                                            <th>Trust Score</th>
+                                        </tr>
+                                    </tfoot>
                                 </table>
                             </div>
                         </div>
@@ -115,4 +126,13 @@
             </div>
         </footer>
     </div>
+  <script type="text/javascript">
+        $(document).ready(function() {
+            $('#players').DataTable({
+                "paging": false,
+                "order": [[ 0, "asc" ]],
+                "bInfo" : false
+            });
+        } );
+  </script>
 <?php $this->partial('app/partial/footer.php');?>
