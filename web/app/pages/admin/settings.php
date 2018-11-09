@@ -114,13 +114,21 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <label>Permissions (JSON)</label>
-                                            <textarea rows="20" cols="80" class="form-control" name="permissions" id="permissions"><?php print_r(trim(preg_replace('/\\\\\"/',"\"", json_encode(json_decode(json_encode(unserialize(siteConfig('permissions'))), true))),'"')); ?></textarea>
+                                            <?php 
+                                                $permissions = trim(preg_replace('/\\\\\"/',"\"", json_encode(json_decode(json_encode(unserialize(siteConfig('permissions'))), true))),'"'); 
+                                            ?>
+                                            <textarea rows="20" cols="80" class="form-control" id="permissions"><?php print_r($permissions); ?></textarea>
+                                            <input type="hidden" name="permissions" id="permissionshidden" value='<?php print_r($permissions); ?>'/>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-12">
                                             <label>Server Buttons (JSON)</label>
-                                            <textarea rows="20" cols="80" class="form-control" name="serveractions" id="serveractions"><?php print_r(trim(preg_replace('/\\\\\"/',"\"", json_encode(json_decode(json_encode(unserialize(siteConfig('serveractions'))), true))),'"')); ?></textarea>
+                                            <?php
+                                                $buttons = trim(preg_replace('/\\\\\"/',"\"", json_encode(json_decode(json_encode(unserialize(siteConfig('serveractions'))), true))),'"');
+                                            ?>
+                                            <textarea rows="20" cols="80" class="form-control" id="serveractions"><?php print_r($buttons); ?></textarea>
+                                            <input type="hidden" name="serveractions" id="serveractionshidden" value='<?php print_r($buttons) ?>'/>
                                         </div>
                                     </div>
                                     <div id="message"></div>
@@ -160,6 +168,14 @@
         var totalLines = editor2.lineCount();
         var totalChars = editor2.getTextArea().value.length;
         editor2.autoFormatRange({line:0, ch:0}, {line:totalLines, ch:totalChars});
+
+        editor.on('change',function(content){
+            $("#permissionshidden").val(content.getValue());
+        });
+
+        editor2.on('change',function(content){
+            $("#serveractionshidden").val(content.getValue());
+        });
 
     </script>
 <?php $this->partial('app/partial/footer.php');?>

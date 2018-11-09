@@ -60,6 +60,13 @@ $klein->respond('*', function ($request, $response, $service) {
         return $return;
     }
 
+    // Check HTTPS and Force Value
+    if((strpos($GLOBALS['domainname'], 'https://') !== false)) {
+        if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == "off") {
+            header("Location: " . $GLOBALS['domainname']);
+        }
+    }
+
     $GLOBALS['serveractions'] = json_decode(json_encode(unserialize(dbquery('SELECT * FROM config', true)[0]['serveractions'])), true);
     $GLOBALS['permissions'] = json_decode(json_encode(unserialize(dbquery('SELECT * FROM config', true)[0]['permissions'])), true);
 
@@ -1175,6 +1182,27 @@ $klein->respond('POST', '/api/[warn|kick|ban|commend|addserver|updatepanel|delse
                         echo json_encode(array('message' => 'You do not have permission to edit the panel!'));
                         exit();
                     } else {
+
+                        if(escapestring(serialize(json_decode($_POST['permissions']))) == "N;") {
+                            echo json_encode(array('success' => false, 'message' => 'Your permissions field failed to validate (Check Syntax)'));
+                            exit();
+                        }
+
+                        if(escapestring(serialize(json_decode($_POST['serveractions']))) == "N;") {
+                            echo json_encode(array('success' => false, 'message' => 'Your server buttons field failed to validate (Check Syntax)'));
+                            exit();
+                        }
+
+                        if($_POST['joinmessages'] != "true" && $_POST['joinmessages'] != "false") {
+                            echo json_encode(array('success' => false, 'message' => 'Join Messages field incorrect input. (true/false)'));
+                            exit();
+                        }
+
+                        if($_POST['chatcommands'] != "true" && $_POST['chatcommands'] != "false") {
+                            echo json_encode(array('success' => false, 'message' => 'Chat Commands field incorrect input. (true/false)'));
+                            exit();
+                        }
+
                         dbquery('UPDATE config SET
                         community_name = "' . escapestring($_POST['communityname']) . '",
                         discord_webhook = "' . escapestring($_POST['discordwebhook']) . '",
@@ -1188,8 +1216,8 @@ $klein->respond('POST', '/api/[warn|kick|ban|commend|addserver|updatepanel|delse
                         tstime = "' . escapestring($_POST['timepoints']) . '",
                         recent_time = "' . escapestring($_POST['recentplayers']) . '",
                         checktimeout = "' . escapestring($_POST['checktimeout']) . '",
-                        permissions = "' . escapestring(serialize(json_decode($_POST['permissions']))) . '",
-                        serveractions = "' . escapestring(serialize(json_decode($_POST['serveractions']))) . '"
+                        permissions = \'' . escapestring(serialize(json_decode($_POST['permissions']))) . '\',
+                        serveractions = \'' . escapestring(serialize(json_decode($_POST['serveractions']))) . '\'
                          WHERE ID=1', false);                    
                          
                         echo json_encode(array('success' => true, 'reload' => true));
