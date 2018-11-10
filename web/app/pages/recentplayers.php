@@ -51,7 +51,7 @@
                                             foreach($players as $player) {
                                                 $anyplayers = true;
                                                 echo '
-                                                    <tr onclick="window.location.href=\'../user/'.$player['license'].'\';" class="clickable">
+                                                    <tr onclick="window.location.href=\'./user/'.$player['license'].'\';" class="clickable">
                                                         <td>' . $player['name'] . '</td>
                                                         <td>' . secsToStr($player['playtime'] * 60) . '</td>
                                                         <td>' . trustScore($player['license']) . '%</td>
