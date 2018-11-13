@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 /* q3query.class.php - Quake 3 query class
  *

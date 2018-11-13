@@ -32,7 +32,7 @@
 									<div class="card-body">
 										<div class="author">
 											<?php
-												$data = json_decode(file_get_contents('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=' . $GLOBALS['apikey'] . '&steamids=' . hex2dec(strtoupper(str_replace('steam:', '', $this->userinfo['steam'])))));
+												$data = json_decode(@file_get_contents('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=' . $GLOBALS['apikey'] . '&steamids=' . hex2dec(strtoupper(str_replace('steam:', '', $this->userinfo['steam'])))));
 												if($this->userinfo['lastplayed'] == null || $this->userinfo['firstjoined'] == null) {
 													$this->userinfo['firstjoined'] = time(); 
 													$this->userinfo['lastplayed'] = time();
@@ -73,21 +73,36 @@
 						<div class="col-md-9">
 							<div class="tabbable" id="tabs-125045">
 								<ul class="nav nav-tabs">
-									<li class="active">
+								    <li class="active">
+										<a href="#panel-warn" data-toggle="tab">Warn</a>
+									</li>
+									<li>
 										<a href="#panel-kick" data-toggle="tab">Kick</a>
 									</li>
 									<li>
 										<a href="#panel-ban" data-toggle="tab">Ban</a>
 									</li>
 									<li>
-										<a href="#panel-warn" data-toggle="tab">Warn</a>
+										<a href="#panel-commend" data-toggle="tab">Commend</a>
 									</li>
 									<li>
 										<a href="#panel-other" data-toggle="tab">Other Actions</a>
 									</li>
 								</ul>
 								<div class="tab-content">
-									<div class="tab-pane active" id="panel-kick">
+								    <div class="tab-pane active" id="panel-warn">
+										<form action="<?php echo $GLOBALS['domainname']; ?>api/warn" method="post" onsubmit="return submitForm($(this));">
+											<div class="form-group">
+												<label>Warn Reason</label>
+												<input type="text" class="form-control" name="reason" />
+												<input type="hidden" class="form-control" name="name" value="<?php echo $this->userinfo['name']; ?>" />
+												<input type="hidden" class="form-control" name="license" value="<?php echo $this->userinfo['license']; ?>" />
+											</div>
+											<div id="message"></div>
+											<button type="submit" class="btn btn-success btn-fill" style="width: 100%;"><i class="fa fa-paper-plane"></i> &nbsp; Warn Player</button>
+										</form>
+									</div>
+									<div class="tab-pane" id="panel-kick">
 										<form action="<?php echo $GLOBALS['domainname']; ?>api/kick" method="post" onsubmit="return submitForm($(this));">
 											<div class="form-group">
 												<label>Kick Reason</label>
@@ -117,16 +132,16 @@
 											<button type="submit" class="btn btn-success btn-fill" style="width: 100%;"><i class="fa fa-paper-plane"></i> &nbsp; Ban Player</button>
 										</form>
 									</div>
-									<div class="tab-pane" id="panel-warn">
-										<form action="<?php echo $GLOBALS['domainname']; ?>api/warn" method="post" onsubmit="return submitForm($(this));">
+								    <div class="tab-pane" id="panel-commend">
+										<form action="<?php echo $GLOBALS['domainname']; ?>api/commend" method="post" onsubmit="return submitForm($(this));">
 											<div class="form-group">
-												<label>Warn Reason</label>
+												<label>Commendation Reason</label>
 												<input type="text" class="form-control" name="reason" />
 												<input type="hidden" class="form-control" name="name" value="<?php echo $this->userinfo['name']; ?>" />
 												<input type="hidden" class="form-control" name="license" value="<?php echo $this->userinfo['license']; ?>" />
 											</div>
 											<div id="message"></div>
-											<button type="submit" class="btn btn-success btn-fill" style="width: 100%;"><i class="fa fa-paper-plane"></i> &nbsp; Warn Player</button>
+											<button type="submit" class="btn btn-success btn-fill" style="width: 100%;"><i class="fa fa-paper-plane"></i> &nbsp; Commend Player</button>
 										</form>
 									</div>
 									<div class="tab-pane" id="panel-other">
@@ -338,6 +353,73 @@
 															<input type="hidden" name="banid" value="'.$ban['ID'].'" />
 															<input type="submit" id="remove-ban-'.$ban['ID'].'" style="display: none;" />
 															<td class="table-remove-button"><span class="label label-danger" onclick=\'$("#remove-ban-'.$ban['ID'].'").click();\' style="cursor: pointer;">Remove</span></td>
+														</form>
+														';
+													} else {
+														echo '<td></td>';
+													}
+												echo '
+													</tr>
+												';
+											}
+										}
+									?>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<h3>
+								Commendations
+							</h3>
+							<table class="table table-striped">
+								<thead>
+									<tr>
+										<th>
+											Staff
+										</th>
+										<th>
+											Reason
+										</th>
+										<th>
+											Date
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									<?php 
+										$commendations = dbquery('SELECT * FROM commend WHERE license="' . $this->userinfo['license'] . '"');
+										if(empty($commendations)) {
+											echo '
+												<tr>
+													<td colspan="4">
+														<center>
+															No Commendations on Record
+														</center>
+													</td>
+												</tr>
+											';
+										} else {
+											foreach($commendations as $commend) {
+												echo '
+													<tr>
+														<td>
+															' . $commend['staff_name'] . '
+														</td>
+														<td>
+															' . $commend['reason'] . '
+														</td>
+														<td>
+															' . date("m/d/Y h:i A", $commend['time']) . '
+														</td>
+												';
+													if(hasPermission($_SESSION['steamid'], 'delrecord')) {
+														echo '
+														<form action="'.$GLOBALS['domainname'].'api/delcommend" method="post" onsubmit="return submitForm($(this));">
+															<input type="hidden" name="commendid" value="'.$commend['ID'].'" />
+															<input type="submit" id="remove-commend-'.$commend['ID'].'" style="display: none;" />
+															<td class="table-remove-button"><span class="label label-danger" onclick=\'$("#remove-commend-'.$commend['ID'].'").click();\' style="cursor: pointer;">Remove</span></td>
 														</form>
 														';
 													} else {

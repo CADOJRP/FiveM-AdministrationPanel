@@ -25,7 +25,7 @@
         <div class="content">
             <div class="container-fluid">
                 <?php
-                    plugins::call('addServerPageContentBeginning', array($this->server));
+                    plugins::call('addServerPageContentBeginning', array($server));
                     if(isset($GLOBALS['serveractions'][$this->server['connection']])) {
                 ?>
                 <div class="row">
@@ -39,9 +39,9 @@
 									if($GLOBALS['serveractions'][$this->server['connection']] != null) {
 										foreach($GLOBALS['serveractions'][$this->server['connection']] as $button) {
 											echo '
-												<form action="'.$GLOBALS['domainname'].'api/button/'.$button['action'].'" method="post" onsubmit="return submitForm($(this));">
+												<form action="'.$GLOBALS['domainname'].'api/button/'.$button['action'].'" method="post" onsubmit="return submitForm($(this));" style="display: inline-block;">
 													<input type="hidden" name="server" value="'.$this->server['connection'].'"/>
-													<input type="hidden" name="input" value="'.$button['resource'].'"/>
+													<input type="hidden" name="input" value="'.$button['input'].'"/>
 													<button type="submit" class="btn btn-success btn-fill '.$button['buttonstyle'].'">'.$button['buttonname'].'</button>
 												</form>
 											';
@@ -60,17 +60,19 @@
                     <div class="col-md-12">
                         <div class="card">
                             <div class="header">		
-                                <h4 class="title">Player List<span style="float: right;"><?php echo $this->info['playercount']; ?>/32</span></h4>
+                                <h4 class="title">Player List<span style="float: right;"><?php echo $this->info['playercount'] . '/' . serverDetails($this->server['connection'])->vars->sv_maxClients; ?></span></h4>
                                 <p class="category"><?php echo $this->server['connection']; ?></p>
                             </div>
-                            <div class="content table-responsive table-full-width">
-                                <table class="table table-hover table-striped">
+                            <div class="content table-responsive">
+                                <table id="players" class="table table-hover table-striped table-bordered" style="width:100%;cursor:pointer;">
                                     <thead>
-                                        <th>ID</th>
-                                    	<th>Name</th>
-                                    	<th>Ping</th>
-                                    	<th>Playtime</th>
-                                    	<th>Trust Score</th>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                            <th>Ping</th>
+                                            <th>Playtime</th>
+                                            <th>Trust Score</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
 										<?php
@@ -97,8 +99,16 @@
 											}
 										?>
                                     </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                            <th>Ping</th>
+                                            <th>Playtime</th>
+                                            <th>Trust Score</th>
+                                        </tr>
+                                    </tfoot>
                                 </table>
-
                             </div>
                         </div>
                     </div>
@@ -106,7 +116,7 @@
             </div>
         </div>
         <?php
-            plugins::call('addServerPageContentEnd', array($this->server));
+            plugins::call('addServerPageContentEnd', array($server));
         ?>
         <footer class="footer">
             <div class="container-fluid">
@@ -116,4 +126,13 @@
             </div>
         </footer>
     </div>
+  <script type="text/javascript">
+        $(document).ready(function() {
+            $('#players').DataTable({
+                "paging": false,
+                "order": [[ 0, "asc" ]],
+                "bInfo" : false
+            });
+        } );
+  </script>
 <?php $this->partial('app/partial/footer.php');?>
