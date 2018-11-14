@@ -20,6 +20,7 @@ An Administration Panel for FiveM Servers
 ### Features
 * Warning
 * Kicking
+* Commending
 * Temporary Banning
 * Permanent Banning
 * Playtime Tracking
@@ -33,11 +34,15 @@ An Administration Panel for FiveM Servers
 * Last Played
 * Add/Remove Staff Menu
 * Add/Remove Server Menu
+* Edit Panel Menu
 * Warnings/Kicks/Bans Logging
-* Permissions System
+* Advanced Permissions System
+* Player IP Tracking/Viewing (Permission Based)
 * In-Game Commands
-* Unban Button
-* Revmoing Records
+* One-Click Unbanning
+* Removing Records
+* Recent Players
+* Per Staff Statistics
 * User Search
 * Plugin System ([Official Plugins](https://github.com/CADOJRP/FiveM-AdministrationPanel-Plugins))
 * Staff Statistics
