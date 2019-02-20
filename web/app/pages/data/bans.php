@@ -64,7 +64,7 @@
             $('#players').DataTable( {
                 "processing": true,
                 "serverSide": true,
-                "ajax": "<?php echo $GLOBALS['domainname']; ?>api/banslist",
+                "ajax": "<?php echo $GLOBALS['domainname']; ?>api/banslist?community=<?php echo userCommunity($_SESSION['steamid']); ?>",
                 "order": [[ 3, "desc" ]]
             } );
             

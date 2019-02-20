@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.7.7
+-- version 4.8.3
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Nov 08, 2018 at 08:26 PM
--- Server version: 5.7.23-cll-lve
--- PHP Version: 5.6.30
+-- Generation Time: Feb 20, 2019 at 08:12 AM
+-- Server version: 5.7.25-cll-lve
+-- PHP Version: 7.2.7
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -19,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `cadojrpc_game`
+-- Database: `fivemad1_panel`
 --
 
 -- --------------------------------------------------------
@@ -36,7 +36,8 @@ CREATE TABLE `bans` (
   `ban_issued` varchar(1024) NOT NULL,
   `banned_until` varchar(1024) NOT NULL,
   `staff_name` varchar(1024) NOT NULL,
-  `staff_steamid` varchar(1024) NOT NULL
+  `staff_steamid` varchar(1024) NOT NULL,
+  `community` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -51,7 +52,22 @@ CREATE TABLE `commend` (
   `reason` varchar(1024) NOT NULL,
   `staff_name` varchar(255) NOT NULL,
   `staff_steamid` varchar(255) NOT NULL,
-  `time` varchar(255) NOT NULL
+  `time` varchar(255) NOT NULL,
+  `community` varchar(255) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `communities`
+--
+
+CREATE TABLE `communities` (
+  `ID` int(255) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `owner` varchar(255) NOT NULL,
+  `time` int(11) NOT NULL,
+  `uniqueid` varchar(255) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -76,15 +92,11 @@ CREATE TABLE `config` (
   `recent_time` int(255) NOT NULL DEFAULT '10',
   `permissions` varchar(20480) NOT NULL,
   `serveractions` varchar(20480) NOT NULL,
-  `debug` enum('false','true') NOT NULL DEFAULT 'false'
+  `debug` enum('false','true') NOT NULL DEFAULT 'false',
+  `community` varchar(255) NOT NULL,
+  `plugin_extendeduserinfo` tinyint(1) NOT NULL DEFAULT '0',
+  `plugin_globaluserinfo` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `config`
---
-
-INSERT INTO `config` (`ID`, `community_name`, `discord_webhook`, `joinmessages`, `chatcommands`, `checktimeout`, `trustscore`, `tswarn`, `tskick`, `tsban`, `tscommend`, `tstime`, `recent_time`, `permissions`, `serveractions`, `debug`) VALUES
-(1, 'Change Name', '', 'false', 'true', 5, 75, 3, 6, 10, 2, 1, 10, 'a:6:{s:5:\"owner\";a:9:{i:0;s:7:\"commend\";i:1;s:4:\"warn\";i:2;s:4:\"kick\";i:3;s:3:\"ban\";i:4;s:5:\"unban\";i:5;s:9:\"editstaff\";i:6;s:11:\"editservers\";i:7;s:9:\"editpanel\";i:8;s:9:\"delrecord\";}s:16:\"communitymanager\";a:7:{i:0;s:7:\"commend\";i:1;s:4:\"warn\";i:2;s:4:\"kick\";i:3;s:3:\"ban\";i:4;s:5:\"unban\";i:5;s:9:\"editstaff\";i:6;s:9:\"delrecord\";}s:11:\"senioradmin\";a:5:{i:0;s:7:\"commend\";i:1;s:4:\"warn\";i:2;s:4:\"kick\";i:3;s:3:\"ban\";i:4;s:5:\"unban\";}s:5:\"admin\";a:4:{i:0;s:7:\"commend\";i:1;s:4:\"warn\";i:2;s:4:\"kick\";i:3;s:3:\"ban\";}s:9:\"moderator\";a:4:{i:0;s:7:\"commend\";i:1;s:4:\"warn\";i:2;s:4:\"kick\";i:3;s:3:\"ban\";}s:8:\"trialmod\";a:3:{i:0;s:7:\"commend\";i:1;s:4:\"warn\";i:2;s:4:\"kick\";}}', 'O:8:\"stdClass\":1:{s:18:\"108.61.69.48:30120\";O:8:\"stdClass\":4:{s:12:\"kickforstaff\";O:8:\"stdClass\":4:{s:6:\"action\";s:12:\"kickforstaff\";s:5:\"input\";s:0:\"\";s:10:\"buttonname\";s:14:\"Kick For Staff\";s:11:\"buttonstyle\";s:11:\"btn-warning\";}s:10:\"aop-blaine\";O:8:\"stdClass\":4:{s:6:\"action\";s:7:\"command\";s:5:\"input\";s:17:\"aop Blaine County\";s:10:\"buttonname\";s:10:\"AOP Blaine\";s:11:\"buttonstyle\";s:11:\"btn-success\";}s:8:\"aop-city\";O:8:\"stdClass\":4:{s:6:\"action\";s:7:\"command\";s:5:\"input\";s:14:\"aop Los Santos\";s:10:\"buttonname\";s:8:\"AOP City\";s:11:\"buttonstyle\";s:11:\"btn-success\";}s:10:\"aop-paleto\";O:8:\"stdClass\":4:{s:6:\"action\";s:7:\"command\";s:5:\"input\";s:14:\"aop Paleto Bay\";s:10:\"buttonname\";s:10:\"AOP Paleto\";s:11:\"buttonstyle\";s:11:\"btn-success\";}}}', 'false');
 
 -- --------------------------------------------------------
 
@@ -98,8 +110,25 @@ CREATE TABLE `kicks` (
   `reason` varchar(1024) NOT NULL,
   `staff_name` varchar(255) NOT NULL,
   `staff_steamid` varchar(255) NOT NULL,
-  `time` varchar(255) NOT NULL
+  `time` varchar(255) NOT NULL,
+  `community` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `notes`
+--
+
+CREATE TABLE `notes` (
+  `ID` int(255) NOT NULL,
+  `license` varchar(255) NOT NULL,
+  `reason` varchar(255) NOT NULL,
+  `staff_name` varchar(255) NOT NULL,
+  `staff_steamid` varchar(255) NOT NULL,
+  `time` varchar(255) NOT NULL,
+  `community` varchar(255) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -112,9 +141,11 @@ CREATE TABLE `players` (
   `name` varchar(255) NOT NULL,
   `license` varchar(255) NOT NULL,
   `steam` varchar(255) NOT NULL,
+  `discord` varchar(255) DEFAULT NULL,
   `playtime` int(255) NOT NULL DEFAULT '1',
   `firstjoined` varchar(255) NOT NULL,
-  `lastplayed` varchar(255) NOT NULL
+  `lastplayed` varchar(255) NOT NULL,
+  `community` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -127,8 +158,40 @@ CREATE TABLE `servers` (
   `ID` int(255) NOT NULL,
   `name` varchar(255) NOT NULL,
   `connection` varchar(255) NOT NULL,
-  `rcon` varchar(255) NOT NULL
+  `rcon` varchar(255) NOT NULL,
+  `community` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `support_comments`
+--
+
+CREATE TABLE `support_comments` (
+  `ID` int(255) NOT NULL,
+  `message` varchar(2048) NOT NULL,
+  `ticketid` varchar(255) NOT NULL,
+  `commentid` varchar(255) NOT NULL,
+  `steamid` varchar(255) NOT NULL,
+  `time` varchar(255) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `support_tickets`
+--
+
+CREATE TABLE `support_tickets` (
+  `ID` int(255) NOT NULL,
+  `title` varchar(1024) NOT NULL,
+  `message` varchar(2048) NOT NULL,
+  `ticketid` varchar(255) NOT NULL,
+  `steamid` varchar(255) NOT NULL,
+  `status` enum('open','in-progress','pending','closed') NOT NULL DEFAULT 'open',
+  `time` varchar(255) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -140,7 +203,10 @@ CREATE TABLE `users` (
   `ID` int(255) NOT NULL,
   `name` varchar(255) NOT NULL,
   `steamid` varchar(255) NOT NULL,
-  `rank` varchar(255) NOT NULL DEFAULT 'user'
+  `rank` varchar(255) NOT NULL DEFAULT 'user',
+  `community` varchar(255) NOT NULL DEFAULT '',
+  `staff` tinyint(1) NOT NULL DEFAULT '0',
+  `beta` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -155,7 +221,8 @@ CREATE TABLE `warnings` (
   `reason` varchar(1024) NOT NULL,
   `staff_name` varchar(255) NOT NULL,
   `staff_steamid` varchar(255) NOT NULL,
-  `time` varchar(255) NOT NULL
+  `time` varchar(255) NOT NULL,
+  `community` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -175,6 +242,12 @@ ALTER TABLE `commend`
   ADD PRIMARY KEY (`ID`);
 
 --
+-- Indexes for table `communities`
+--
+ALTER TABLE `communities`
+  ADD PRIMARY KEY (`ID`);
+
+--
 -- Indexes for table `config`
 --
 ALTER TABLE `config`
@@ -187,16 +260,34 @@ ALTER TABLE `kicks`
   ADD PRIMARY KEY (`ID`);
 
 --
+-- Indexes for table `notes`
+--
+ALTER TABLE `notes`
+  ADD PRIMARY KEY (`ID`);
+
+--
 -- Indexes for table `players`
 --
 ALTER TABLE `players`
   ADD PRIMARY KEY (`ID`),
-  ADD UNIQUE KEY `license` (`license`);
+  ADD UNIQUE KEY `license` (`license`,`community`);
 
 --
 -- Indexes for table `servers`
 --
 ALTER TABLE `servers`
+  ADD PRIMARY KEY (`ID`);
+
+--
+-- Indexes for table `support_comments`
+--
+ALTER TABLE `support_comments`
+  ADD PRIMARY KEY (`ID`);
+
+--
+-- Indexes for table `support_tickets`
+--
+ALTER TABLE `support_tickets`
   ADD PRIMARY KEY (`ID`);
 
 --
@@ -230,15 +321,27 @@ ALTER TABLE `commend`
   MODIFY `ID` int(255) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `communities`
+--
+ALTER TABLE `communities`
+  MODIFY `ID` int(255) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `config`
 --
 ALTER TABLE `config`
-  MODIFY `ID` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `ID` int(255) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `kicks`
 --
 ALTER TABLE `kicks`
+  MODIFY `ID` int(255) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `notes`
+--
+ALTER TABLE `notes`
   MODIFY `ID` int(255) NOT NULL AUTO_INCREMENT;
 
 --
@@ -251,6 +354,18 @@ ALTER TABLE `players`
 -- AUTO_INCREMENT for table `servers`
 --
 ALTER TABLE `servers`
+  MODIFY `ID` int(255) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `support_comments`
+--
+ALTER TABLE `support_comments`
+  MODIFY `ID` int(255) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `support_tickets`
+--
+ALTER TABLE `support_tickets`
   MODIFY `ID` int(255) NOT NULL AUTO_INCREMENT;
 
 --

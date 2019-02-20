@@ -34,7 +34,16 @@ $(document).ready(function(){
     }).on("blur", function(){
         $(this).parent(".input-group").removeClass("input-group-focus");
     });
+
+    // Fixes sub-nav not working as expected on IOS
+    $('body').on('touchstart.dropdown', '.dropdown-menu', function(e) {
+        e.stopPropagation();
+    });
       
+    
+    $('.sidebar .collapse').collapse('hide').on('hidden.bs.collapse', function() {
+        $(this).css('height', 'auto');
+    });
 });
 
 // activate collapse right menu when the windows is resized 

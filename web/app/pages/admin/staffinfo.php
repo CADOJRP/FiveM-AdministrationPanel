@@ -36,7 +36,7 @@
                             </div>
                         </div>
                         <div class="tiles-body">
-                            <div class="text-center"><?php echo dbquery('SELECT COUNT(*) FROM warnings WHERE staff_steamid="' . $this->userinfo['steamid'] . '"')[0]['COUNT(*)']; ?></div>
+                            <div class="text-center"><?php echo dbquery('SELECT COUNT(*) FROM warnings WHERE staff_steamid="' . $this->userinfo['steamid'] . '" AND community="' . userCommunity($_SESSION['steamid']) . '"')[0]['COUNT(*)']; ?></div>
                         </div>
                         <div class="tiles-footer"></div>
                     </a>
@@ -52,7 +52,7 @@
                             </div>
                         </div>
                         <div class="tiles-body">
-                            <div class="text-center"><?php echo dbquery('SELECT COUNT(*) FROM kicks WHERE staff_steamid="' . $this->userinfo['steamid'] . '"')[0]['COUNT(*)']; ?></div>
+                            <div class="text-center"><?php echo dbquery('SELECT COUNT(*) FROM kicks WHERE staff_steamid="' . $this->userinfo['steamid'] . '" AND community="' . userCommunity($_SESSION['steamid']) . '"')[0]['COUNT(*)']; ?></div>
                         </div>
                         <div class="tiles-footer"></div>
                     </a>
@@ -68,7 +68,7 @@
                             </div>
                         </div>
                         <div class="tiles-body">
-                            <div class="text-center"><?php echo dbquery('SELECT COUNT(*) FROM bans WHERE staff_steamid="' . $this->userinfo['steamid'] . '" AND banned_until!=0')[0]['COUNT(*)']; ?></div>
+                            <div class="text-center"><?php echo dbquery('SELECT COUNT(*) FROM bans WHERE staff_steamid="' . $this->userinfo['steamid'] . '" AND banned_until!=0 AND community="' . userCommunity($_SESSION['steamid']) . '"')[0]['COUNT(*)']; ?></div>
                         </div>
                         <div class="tiles-footer"></div>
                     </a>
@@ -84,7 +84,7 @@
                             </div>
                         </div>
                         <div class="tiles-body">
-                            <div class="text-center"><?php echo dbquery('SELECT COUNT(*) FROM bans WHERE staff_steamid="' . $this->userinfo['steamid'] . '" AND banned_until=0')[0]['COUNT(*)']; ?></div>
+                            <div class="text-center"><?php echo dbquery('SELECT COUNT(*) FROM bans WHERE staff_steamid="' . $this->userinfo['steamid'] . '" AND banned_until=0 AND community="' . userCommunity($_SESSION['steamid']) . '"')[0]['COUNT(*)']; ?></div>
                         </div>
                         <div class="tiles-footer"></div>
                     </a>
@@ -102,7 +102,7 @@
                             </div>
                         </div>
                         <div class="tiles-body">
-                            <div class="text-center"><?php echo dbquery('SELECT COUNT(*) FROM warnings WHERE staff_steamid="' . $this->userinfo['steamid'] . '" AND time >= ' . (time() - 604800))[0]['COUNT(*)']; ?></div>
+                            <div class="text-center"><?php echo dbquery('SELECT COUNT(*) FROM warnings WHERE staff_steamid="' . $this->userinfo['steamid'] . '" AND time >= ' . (time() - 604800) . ' AND community="' . userCommunity($_SESSION['steamid']) . '"')[0]['COUNT(*)']; ?></div>
                         </div>
                         <div class="tiles-footer"></div>
                     </a>
@@ -118,7 +118,7 @@
                             </div>
                         </div>
                         <div class="tiles-body">
-                            <div class="text-center"><?php echo dbquery('SELECT COUNT(*) FROM kicks WHERE staff_steamid="' . $this->userinfo['steamid'] . '" AND time >= ' . (time() - 604800))[0]['COUNT(*)']; ?></div>
+                            <div class="text-center"><?php echo dbquery('SELECT COUNT(*) FROM kicks WHERE staff_steamid="' . $this->userinfo['steamid'] . '" AND time >= ' . (time() - 604800) . ' AND community="' . userCommunity($_SESSION['steamid']) . '"')[0]['COUNT(*)']; ?></div>
                         </div>
                         <div class="tiles-footer"></div>
                     </a>
@@ -134,7 +134,7 @@
                             </div>
                         </div>
                         <div class="tiles-body">
-                            <div class="text-center"><?php echo dbquery('SELECT COUNT(*) FROM bans WHERE staff_steamid="' . $this->userinfo['steamid'] . '" AND banned_until!=0 AND ban_issued >= ' . (time() - 604800))[0]['COUNT(*)']; ?></div>
+                            <div class="text-center"><?php echo dbquery('SELECT COUNT(*) FROM bans WHERE staff_steamid="' . $this->userinfo['steamid'] . '" AND banned_until!=0 AND ban_issued >= ' . (time() - 604800) . ' AND community="' . userCommunity($_SESSION['steamid']) . '"')[0]['COUNT(*)']; ?></div>
                         </div>
                         <div class="tiles-footer"></div>
                     </a>
@@ -150,7 +150,7 @@
                             </div>
                         </div>
                         <div class="tiles-body">
-                            <div class="text-center"><?php echo dbquery('SELECT COUNT(*) FROM bans WHERE staff_steamid="' . $this->userinfo['steamid'] . '" AND banned_until=0 AND ban_issued >= ' . (time() - 604800))[0]['COUNT(*)']; ?></div>
+                            <div class="text-center"><?php echo dbquery('SELECT COUNT(*) FROM bans WHERE staff_steamid="' . $this->userinfo['steamid'] . '" AND banned_until=0 AND ban_issued >= ' . (time() - 604800) . ' AND community="' . userCommunity($_SESSION['steamid']) . '"')[0]['COUNT(*)']; ?></div>
                         </div>
                         <div class="tiles-footer"></div>
                     </a>
@@ -166,6 +166,7 @@
                             <div class="row">
                             <table class="table table-hover table-striped">
                                 <thead>
+                                    <th>Name</th>
                                     <th>Action</th>
                                     <th>Date Issued</th>
                                     <th>Reason</th>
@@ -173,37 +174,50 @@
                                 <tbody>
                                     <?php
                                         $actionlog = array();
-                                        foreach(dbquery('SELECT * FROM bans WHERE staff_steamid="' . $this->userinfo['steamid'] . '"') as $ban) {
+                                        foreach(dbquery('SELECT * FROM bans WHERE staff_steamid="' . $this->userinfo['steamid'] . '" AND community="' . userCommunity($_SESSION['steamid']) . '"') as $ban) {
                                             if($ban['banned_until'] == 0) {
                                                 $actionlog[] = array(
                                                     "action"=>"Permanent Ban",
                                                     "date"=>date("m/d/Y h:i A T", $ban['ban_issued']),
                                                     "timestamp"=>$ban['ban_issued'],
-                                                    "reason"=>$ban['reason']
+                                                    "reason"=>$ban['reason'],
+                                                    "license"=>$ban['identifier'],
                                                 );
                                             } else {
                                                 $actionlog[] = array(
                                                     "action"=>"Temporary Ban (" . secsToStrRound($ban['banned_until'] - $ban['ban_issued']) . ")",
                                                     "date"=>date("m/d/Y h:i A T", $ban['ban_issued']),
                                                     "timestamp"=>$ban['ban_issued'],
-                                                    "reason"=>$ban['reason']
+                                                    "reason"=>$ban['reason'],
+                                                    "license"=>$ban['identifier']
                                                 );
                                             }
                                         }
-                                        foreach(dbquery('SELECT * FROM kicks WHERE staff_steamid="' . $this->userinfo['steamid'] . '"') as $kick) {
+                                        foreach(dbquery('SELECT * FROM kicks WHERE staff_steamid="' . $this->userinfo['steamid'] . '" AND community="' . userCommunity($_SESSION['steamid']) . '"') as $kick) {
                                             $actionlog[] = array(
                                                 "action"=>"Kick",
                                                 "date"=>date("m/d/Y h:i A T", $kick['time']),
                                                 "timestamp"=>$kick['time'],
-                                                "reason"=>$kick['reason']
+                                                "reason"=>$kick['reason'],
+                                                "license"=>$kick['license']
                                             );
                                         }
-                                        foreach(dbquery('SELECT * FROM warnings WHERE staff_steamid="' . $this->userinfo['steamid'] . '"') as $warn) {
+                                        foreach(dbquery('SELECT * FROM warnings WHERE staff_steamid="' . $this->userinfo['steamid'] . '" AND community="' . userCommunity($_SESSION['steamid']) . '"') as $warn) {
                                             $actionlog[] = array(
                                                 "action"=>"Warning",
                                                 "date"=>date("m/d/Y h:i A T", $warn['time']),
                                                 "timestamp"=>$warn['time'],
-                                                "reason"=>$warn['reason']
+                                                "reason"=>$warn['reason'],
+                                                "license"=>$warn['license']
+                                            );
+                                        }
+                                        foreach(dbquery('SELECT * FROM commend WHERE staff_steamid="' . $this->userinfo['steamid'] . '" AND community="' . userCommunity($_SESSION['steamid']) . '"') as $commend) {
+                                            $actionlog[] = array(
+                                                "action"=>"Commend",
+                                                "date"=>date("m/d/Y h:i A T", $commend['time']),
+                                                "timestamp"=>$commend['time'],
+                                                "reason"=>$commend['reason'],
+                                                "license"=>$commend['license']
                                             );
                                         }
                                         function cmp($a, $b) {
@@ -215,7 +229,8 @@
                                         usort($actionlog, "cmp");
                                         foreach(array_reverse($actionlog) as $action) {
                                             echo '
-                                                <tr>
+                                                <tr onclick=\'window.location.href="' .$GLOBALS['domainname'] . 'user/' . $action['license'].'"\'>
+                                                    <td>' . dbquery('SELECT * FROM players WHERE license="' . $action['license'] . '" AND community="' . userCommunity($_SESSION['steamid']) . '"')[0]['name'] . '</td>
                                                     <td>' . $action['action'] . '</td>
                                                     <td>' . $action['date'] . '</td>
                                                     <td>' . $action['reason'] . '</td>

@@ -4729,3 +4729,16 @@ a.shortcut-tiles {
   text-transform: uppercase;
   color: #fff;
 }
+
+.comment {
+  display: block;
+  padding: 9.5px;
+  margin: 0 0 10px;
+  font-size: 13px;
+  line-height: 1.42857143;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #212529;
+  white-space: pre-wrap
+}

@@ -87,85 +87,18 @@
                         </a>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-3">
-                        <a class="info-tiles tiles-inverse has-footer" href="#">
-                            <div class="tiles-heading">
-                                <div class="pull-left">Accumulative Playtime (Minutes)</div>
-                                <div class="pull-right">
-                                    <div id="tileorders" class="sparkline-block">
-                                        <canvas width="39" height="13" style="display: inline-block; width: 39px; height: 13px; vertical-align: top;"></canvas>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="tiles-body">
-                                <div class="text-center">
-                                    <?php echo $this->stats['playtime']; ?>
-                                </div>
-                            </div>
-                            <div class="tiles-footer"></div>
-                        </a>
-                    </div>
-                    <div class="col-md-3">
-                        <a class="info-tiles tiles-green has-footer" href="#">
-                            <div class="tiles-heading">
-                                <div class="pull-left">Accumulative Playtime (Hours)</div>
-                                <div class="pull-right">
-                                    <div id="tilerevenues" class="sparkline-block">
-                                        <canvas width="40" height="13" style="display: inline-block; width: 40px; height: 13px; vertical-align: top;"></canvas>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="tiles-body">
-                                <div class="text-center">
-                                    <?php echo round($this->stats['playtime'] / 60, 2); ?>
-                                </div>
-                            </div>
-                            <div class="tiles-footer"></div>
-                        </a>
-                    </div>
-                    <div class="col-md-3">
-                        <a class="info-tiles tiles-blue has-footer" href="#">
-                            <div class="tiles-heading">
-                                <div class="pull-left">Accumulative Playtime (Days)</div>
-                                <div class="pull-right">
-                                    <div id="tiletickets" class="sparkline-block">
-                                        <canvas width="13" height="13" style="display: inline-block; width: 13px; height: 13px; vertical-align: top;"></canvas>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="tiles-body">
-                                <div class="text-center">
-                                    <?php echo round($this->stats['playtime'] / 1440, 2); ?>
-                                </div>
-                            </div>
-                            <div class="tiles-footer"></div>
-                        </a>
-                    </div>
-                    <div class="col-md-3">
-                        <a class="info-tiles tiles-midnightblue has-footer" href="#">
-                            <div class="tiles-heading">
-                                <div class="pull-left">Accumulative Playtime (Years)</div>
-                                <div class="pull-right">
-                                    <div id="tilemembers" class="sparkline-block">
-                                        <canvas width="39" height="13" style="display: inline-block; width: 39px; height: 13px; vertical-align: top;"></canvas>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="tiles-body">
-                                <div class="text-center">
-                                    <?php echo round($this->stats['playtime'] / 525600, 2); ?>
-                                </div>
-                            </div>
-                            <div class="tiles-footer"></div>
-                        </a>
-                    </div>
-                </div>
                 <?php	
                 plugins::call('addDashboardContent');
-                $version = json_decode(file_get_contents('https://raw.githubusercontent.com/CADOJRP/FiveM-AdministrationPanel/master/version.json'));if ($version->webpanel > $GLOBALS['version']) {
+                $version = json_decode(file_get_contents('https://raw.githubusercontent.com/CADOJRP/FiveM-AdministrationPanel/master/version.json'));
+                
+                if ($version->webpanel > $GLOBALS['version']) {
                     echo '<div class="row"><div class="col-md-12"><div class="alert alert-danger info-tiles"><strong>Update Needed!</strong> We strongly advise updating as we are currently in our beta stages and will be resolving major flaws. <a href="https://github.com/CADOJRP/FiveM-AdministrationPanel/releases" target="_BLANK" style="color: #FFF;"><b><u>Download Update</u></b></a></div></div></div>						';
                 }
+
+                if (isset($GLOBALS['community_name'])) {
+                    echo '<div class="row"><div class="col-md-12"><div class="alert alert-danger info-tiles"><strong>Outdated Config!</strong> You are currently running an outdated config! This could cause problems with permissions and server buttons. Please cross check your configuration with the updated version <a href="https://github.com/CADOJRP/FiveM-AdministrationPanel/blob/v0.4-beta/web/config.php" target="_BLANK" style="color: #FFF;"><b><u>here</u></b></a>.</div></div></div>						';                    
+                }
+
                 echo file_get_contents('https://raw.githubusercontent.com/CADOJRP/FiveM-AdministrationPanel/master/updates');?> </div>
         </div>
         <footer class="footer">

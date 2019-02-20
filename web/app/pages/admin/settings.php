@@ -40,6 +40,14 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
+                                                <label>Community ID (Keep Secret)</label>
+                                                <input type="text" class="form-control" placeholder="Community ID" value="<?php echo siteConfig('community'); ?>" readonly="true" style="cursor: default; user-select: all;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
                                                 <label>Discord Webhook (Blank To Disable)</label>
                                                 <input type="text" class="form-control" placeholder="Discord Webhook Link" name="discordwebhook" value="<?php echo siteConfig('discord_webhook'); ?>">
                                             </div>
@@ -139,6 +147,29 @@
                         </div>
                     </div>
                 </div>
+                <?php
+                    if(dbquery('SELECT * FROM communities WHERE owner="' . $_SESSION['steamid'] . '" AND uniqueid="' . userCommunity($_SESSION['steamid']) . '"')[0]) {
+                ?>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="header">
+                                    <h4 class="title">Delete Community</h4> </div>
+                                <div class="content">
+                                    <form action="<?php echo $GLOBALS['domainname']; ?>api/delcommunity" method="post" onsubmit="return submitForm($(this));">
+                                        <label>Confirmation (Please Type: "I wish to delete my community")</label>
+                                        <input type="text" class="form-control" placeholder="Please Type 'I wish to delete my community'" name="securitycheck">
+                                        <div id="message"></div>
+                                        <button type="submit" class="btn btn-danger btn-fill" style="width: 100%;">Delete Community</button>
+                                        <div class="clearfix"></div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <?php
+                    }
+                ?>
             </div>
         </div>
     <script type="text/javascript">

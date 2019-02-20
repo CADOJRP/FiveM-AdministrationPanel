@@ -39,16 +39,18 @@
                                     <th>Warns</th>
                                     <th>Kicks</th>
                                     <th>Bans</th>
+                                    <th>Commends</th>
                                     <th>Rank</th>
                                     <th></th>
                                 </thead>
                                 <tbody>
                                     <?php
-                                        foreach (dbquery('SELECT * FROM users WHERE rank!="user"') as $staff) {
+                                        foreach (dbquery('SELECT * FROM users WHERE rank!="user" AND community="' . userCommunity($_SESSION['steamid']) . '"') as $staff) {
                                             $staffinfo = dbquery('SELECT * FROM players WHERE steam="steam:'. strtolower(dec2hex($staff['steamid'])) .'"');
                                             $warns = dbquery('SELECT COUNT(*) FROM warnings WHERE staff_steamid="' . $staff['steamid'] . '"');
                                             $kicks = dbquery('SELECT COUNT(*) FROM kicks WHERE staff_steamid="' . $staff['steamid'] . '"');
                                             $bans = dbquery('SELECT COUNT(*) FROM bans WHERE staff_steamid="' . $staff['steamid'] . '"');
+                                            $commends = dbquery('SELECT COUNT(*) FROM commend WHERE staff_steamid="' . $staff['steamid'] . '"');
                                             echo '
                                                 <tr style="cursor: pointer;" onclick=\'window.location.href="' .$GLOBALS['domainname'] . 'admin/profile/' . $staff['steamid'].'"\'>
                                                     <td>
@@ -67,13 +69,16 @@
                                                         '.$bans[0]['COUNT(*)'].'
                                                     </td>
                                                     <td>
+                                                        '.$commends[0]['COUNT(*)'].'
+                                                    </td>
+                                                    <td>
                                                         '.ucfirst($staff['rank']).'
                                                     </td>
                                                     <form action="'.$GLOBALS['domainname'].'api/delstaff" method="post" onsubmit="return submitForm($(this));">
                                                         <input type="hidden" name="steamid" value="'.$staff['steamid'].'" />
                                                         <input type="submit" id="remove-staff-'.$staff['steamid'].'" style="display: none;" />
                                                         <td>
-                                                            '.(($_SESSION['steamid'] != $staff['steamid'])?'<span class="label label-danger" onclick=\'$("#remove-staff-'.$staff['steamid'].'").click();\' style="cursor: pointer;">Remove</span>':"").'
+                                                            '.(($_SESSION['steamid'] != $staff['steamid'])?'<span class="label label-danger" onclick=\'return $("#remove-staff-'.$staff['steamid'].'").click();\' style="cursor: pointer;">Remove</span>':"").'
                                                         </td>
                                                     </form>
                                                 </tr>
@@ -98,13 +103,13 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label>User</label>
-                                            <select class="form-control" name="steamid">
+                                            <select class="form-control" id="selectuser" name="steamid">
                                                 <?php
                                                     $users = 0;
-                                                    foreach (dbquery('SELECT * FROM users WHERE rank="user"') as $user) {
+                                                    foreach (dbquery('SELECT * FROM users WHERE rank="user" AND community=""') as $user) {
                                                         $users++;
                                                         echo '
-                                                            <option value="'.$user['steamid'].'">'.$user['name'].'</option>
+                                                            <option value="'.$user['steamid'].'">'.$user['name'].' (' . $user['steamid'] . ')</option>
                                                         ';
                                                     }
                                                     if ($users == 0) {
@@ -119,7 +124,7 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label>Rank</label>
-                                            <select class="form-control" name="rank">
+                                            <select class="form-control" id="selectrank" name="rank">
                                                 <?php
                                                     foreach ($GLOBALS['permissions'] as $role=>$rank) {
                                                         echo '<option value="'.$role.'">'.$role.'</option>';
@@ -139,4 +144,10 @@
             </div>
         </div>
     </div>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#selectuser').select2();
+            $('#selectrank').select2();
+        });
+    </script>
 <?php $this->partial('app/partial/footer.php');?>

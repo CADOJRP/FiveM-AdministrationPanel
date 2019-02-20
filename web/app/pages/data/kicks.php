@@ -62,7 +62,7 @@
             $('#players').DataTable( {
                 "processing": true,
                 "serverSide": true,
-                "ajax": "<?php echo $GLOBALS['domainname']; ?>api/kickslist",
+                "ajax": "<?php echo $GLOBALS['domainname']; ?>api/kickslist?community=<?php echo userCommunity($_SESSION['steamid']); ?>",
                 "order": [[ 3, "desc" ]]
             } );
             

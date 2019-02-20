@@ -28,17 +28,16 @@
         <div class="col-md-12">
           <div class="card">
             <div class="header">
-              <h4 class="title">Player List</h4>
+              <h4 class="title">Commendations List</h4>
             </div>
             <div class="content table-responsive">
                 <table id="players" class="table table-hover table-striped table-bordered" style="width:100%;cursor:pointer;">
                     <thead>
                         <tr>
                             <th>Name</th>
-                            <th>Playtime</th>
-                            <th>Trust Score</th>
-                            <th>First Played</th>
-                            <th>Last Played</th>
+                            <th>Reason</th>
+                            <th>Staff Member</th>
+                            <th>Date</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -46,10 +45,9 @@
                     <tfoot>
                         <tr>
                             <th>Name</th>
-                            <th>Playtime</th>
-                            <th>Trust Score</th>
-                            <th>First Played</th>
-                            <th>Last Played</th>
+                            <th>Reason</th>
+                            <th>Staff Member</th>
+                            <th>Date</th>
                         </tr>
                     </tfoot>
                 </table>
@@ -64,7 +62,8 @@
             $('#players').DataTable( {
                 "processing": true,
                 "serverSide": true,
-                "ajax": "<?php echo $GLOBALS['domainname']; ?>api/playerslist?community=<?php echo userCommunity($_SESSION['steamid']); ?>",
+                "ajax": "<?php echo $GLOBALS['domainname']; ?>api/commendslist?community=<?php echo userCommunity($_SESSION['steamid']); ?>",
+                "order": [[ 3, "desc" ]]
             } );
             
             var table = $('#players').DataTable();

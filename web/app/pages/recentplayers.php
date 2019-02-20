@@ -47,7 +47,7 @@
                                             $anyplayers = false;
                                             $minlimit = time() - 60;
                                             $maxlimit = time() - siteConfig('recent_time') * 60;
-                                            $players = dbquery('SELECT * FROM players WHERE lastplayed < ' . $minlimit  . ' AND lastplayed > ' . $maxlimit);
+                                            $players = dbquery('SELECT * FROM players WHERE lastplayed < ' . $minlimit  . ' AND lastplayed > ' . $maxlimit . ' AND community="' . userCommunity($_SESSION['steamid']) . '"');
                                             foreach($players as $player) {
                                                 $anyplayers = true;
                                                 echo '

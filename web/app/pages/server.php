@@ -72,18 +72,26 @@
                                             <th>Ping</th>
                                             <th>Playtime</th>
                                             <th>Trust Score</th>
+                                            <th>Flags</th>
                                         </tr>
                                     </thead>
                                     <tbody>
 										<?php
 											foreach($this->info['players'] as $player) {
-												$playerinfo = dbquery('SELECT * FROM players WHERE license="'.$player->identifiers[1].'"');
+												$playerinfo = dbquery('SELECT * FROM players WHERE license="'.$player->identifiers[1].'" AND community="' . userCommunity($_SESSION['steamid']) . '"');
 												$playtime = $playerinfo[0]['playtime'];
 												if(!is_null($playerinfo[0]['playtime'])) {
 													$playtime = secsToStr($playerinfo[0]['playtime'] * 60);
 												} else {
 													$playtime = secsToStr(60);
-												}
+                                                }
+                                                
+                                                $flags = '';
+
+                                                if(dbquery('SELECT * FROM notes WHERE license="'.$player->identifiers[1].'" AND community="' . userCommunity($_SESSION['steamid']) . '"')) {
+                                                    $flags .= 'N ';
+                                                }
+
 												echo '
 													<tr onclick="window.location.href=\'../user/'.$player->identifiers[1].'\';" class="clickable">
 														<td>'.$player->id.'</td>
@@ -91,11 +99,12 @@
 														<td>'.$player->ping.'</td>
 														<td>'.$playtime.'</td>
 														<td>'.trustScore($player->identifiers[1]).'%</td>
+														<td>'. $flags . plugins::call('addUserFlags', array($playerinfo)) . '</td>
 													</tr> 
 												';
 											}
 											if($this->info['playercount'] == 0) {
-												echo '<tr><td colspan="5"><center>No Players Online</center></td></tr>';
+												echo '<tr><td colspan="6"><center>No Players Online</center></td></tr>';
 											}
 										?>
                                     </tbody>

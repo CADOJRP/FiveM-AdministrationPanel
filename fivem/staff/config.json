@@ -1,0 +1,12 @@
+[  
+    {  
+        "url": "https://fivemadminpanel.com",
+        "communityid": "CHANGEME (Pssst, you can find your community ID under panel settings)",
+        "prefix": "^8[Staff Panel]",
+        "ban_message": "🔴 You've Been Banned! 🔴\n⚫ Banned By: {ban_staff} \n⚫ Ban Reason: {ban_reason} \n⚫ Ban Issued: {ban_issued} \n⚫ Ban Expires: {ban_expires}",
+        "chat_proccessing": true,
+        "server_logs": true,
+        "ip_address": true,
+        "debug": true
+    }
+]
