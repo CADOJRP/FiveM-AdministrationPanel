@@ -44,7 +44,7 @@
                                 </thead>
                                 <tbody>
                                     <?php
-                                        foreach (dbquery('SELECT * FROM users WHERE rank!="user"') as $staff) {
+                                        foreach (dbquery('SELECT * FROM users WHERE `rank` !="user"') as $staff) {
                                             $staffinfo = dbquery('SELECT * FROM players WHERE steam="steam:'. strtolower(dec2hex($staff['steamid'])) .'"');
                                             $warns = dbquery('SELECT COUNT(*) FROM warnings WHERE staff_steamid="' . $staff['steamid'] . '"');
                                             $kicks = dbquery('SELECT COUNT(*) FROM kicks WHERE staff_steamid="' . $staff['steamid'] . '"');
@@ -101,7 +101,7 @@
                                             <select class="form-control" name="steamid">
                                                 <?php
                                                     $users = 0;
-                                                    foreach (dbquery('SELECT * FROM users WHERE rank="user"') as $user) {
+                                                    foreach (dbquery('SELECT * FROM users WHERE `rank` = "user"') as $user) {
                                                         $users++;
                                                         echo '
                                                             <option value="'.$user['steamid'].'">'.$user['name'].'</option>
