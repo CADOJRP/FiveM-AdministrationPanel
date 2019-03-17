@@ -1267,15 +1267,17 @@ $klein->respond('GET', '/api/[staff|players|playerslist|warnslist|kickslist|comm
                                                         $daycount = secsToStr($length[0] * $time);
                                                         if ($time == 0) {
                                                             $banned_until = 0;
+                                                            dbquery('INSERT INTO bans (name, identifier, reason, ban_issued, banned_until, staff_name, staff_steamid, community) VALUES ("' . escapestring($player->name) . '", "' . escapestring($player->identifiers[1]) . '", "' . escapestring($params[2]) . '", "' . time() . '", "' . $banned_until . '", "' . $staff[0]['name'] . '", "' . hex2dec(strtoupper(str_replace('steam:', '', $staff[0]['steam']))) . '", "' . $community . '")', false);
+                                                            removeFromSession($player->identifiers[1], "You were banned by " . $staff[0]['name'] . " for " . $params[3] . " (Relog for more info)", $server);
                                                             sendMessage('^3' . $player->name . '^0 has been permanently banned by ^2' . $staff[0]['name'] . '^0 for ^3' . $params[2], $server);
                                                             discordMessage('Player Banned', '**Player: **' . $player->name . '\r\n**Reason: **' . $params[2] . '\r\n**Ban Length: **Permanent\r\n**Banned By: **' . $staff[0]['name'], $community);
                                                         } else {
                                                             $banned_until = time() + ($length[0] * $time);
+                                                            dbquery('INSERT INTO bans (name, identifier, reason, ban_issued, banned_until, staff_name, staff_steamid, community) VALUES ("' . escapestring($player->name) . '", "' . escapestring($player->identifiers[1]) . '", "' . escapestring($params[2]) . '", "' . time() . '", "' . $banned_until . '", "' . $staff[0]['name'] . '", "' . hex2dec(strtoupper(str_replace('steam:', '', $staff[0]['steam']))) . '", "' . $community . '")', false);
+                                                            removeFromSession($player->identifiers[1], "You were banned by " . $staff[0]['name'] . " for " . $params[3] . " (Relog for more info)", $server);
                                                             sendMessage('^3' . $player->name . '^0 has been banned for ^3' . $daycount . '^0 by ^2' . $staff[0]['name'] . '^0 for ^3' . $params[2], $server);
                                                             discordMessage('Player Banned', '**Player: **' . $player->name . '\r\n**Reason: **' . $params[2] . '\r\n**Ban Length: **' . secsToStr($length[0] * $time) . '\r\n**Banned By: **' . $staff[0]['name'], $community);
                                                         }
-                                                        dbquery('INSERT INTO bans (name, identifier, reason, ban_issued, banned_until, staff_name, staff_steamid, community) VALUES ("' . escapestring($player->name) . '", "' . escapestring($player->identifiers[1]) . '", "' . escapestring($params[2]) . '", "' . time() . '", "' . $banned_until . '", "' . $staff[0]['name'] . '", "' . hex2dec(strtoupper(str_replace('steam:', '', $staff[0]['steam']))) . '", "' . $community . '")', false);
-                                                        removeFromSession($player->identifiers[1], "You were banned by " . $staff[0]['name'] . " for " . $params[3] . " (Relog for more info)", $server);
                                                     }
                                                 }
                                             }
