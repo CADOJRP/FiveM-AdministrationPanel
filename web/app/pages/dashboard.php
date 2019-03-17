@@ -15,7 +15,7 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-3">
-                        <a class="info-tiles tiles-inverse has-footer info-tiles-warns" href="#">
+                        <a class="info-tiles tiles-success has-footer info-tiles-warns" href="#">
                             <div class="tiles-heading">
                                 <div class="pull-left">Warnings</div>
                                 <div class="pull-right">
@@ -33,7 +33,7 @@
                         </a>
                     </div>
                     <div class="col-md-3">
-                        <a class="info-tiles tiles-green has-footer info-tiles-kicks" href="#">
+                        <a class="info-tiles tiles-warning has-footer info-tiles-kicks" href="#">
                             <div class="tiles-heading">
                                 <div class="pull-left">Kicks</div>
                                 <div class="pull-right">
@@ -51,7 +51,7 @@
                         </a>
                     </div>
                     <div class="col-md-3">
-                        <a class="info-tiles tiles-blue has-footer info-tiles-bans" href="#">
+                        <a class="info-tiles tiles-danger has-footer info-tiles-bans" href="#">
                             <div class="tiles-heading">
                                 <div class="pull-left">Bans</div>
                                 <div class="pull-right">
@@ -69,7 +69,7 @@
                         </a>
                     </div>
                     <div class="col-md-3">
-                        <a class="info-tiles tiles-midnightblue has-footer info-tiles-online" href="#">
+                        <a class="info-tiles tiles-primary has-footer info-tiles-online" href="#">
                             <div class="tiles-heading">
                                 <div class="pull-left">Online</div>
                                 <div class="pull-right">
@@ -105,7 +105,7 @@
             <div class="container-fluid">
                 <p class="copyright pull-left"><b style="padding-right: 4px;">Theme By:</b> <span class="themeauthor">FiveMAdminPanel</span></p>
                 <p class="copyright pull-right"> &copy;
-                    <?php echo date('Y') . " " . $this->community; ?>
+                    <?php echo date('Y') ?> FiveMAdminPanel
                 </p>
             </div>
         </footer>
