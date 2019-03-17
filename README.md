@@ -1,8 +1,8 @@
 <p align="center">
   <h1 align="center">
       FiveM Admin Panel
-  </h3>
-  <h4 align="center">
+  </h1>
+  <h3 align="center">
       If you would like to report an issue or request a feature. Join our <a href="https://discord.gg/q8MSQwt">Discord</a>.
   </h3>
   <h4 align="center">
