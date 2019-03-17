@@ -11,10 +11,6 @@
 </p>
 
 <br/>
-<br/>
-
-# FiveM-AdministrationPanel
-An Administration Panel for FiveM Servers
 
 
 ### Features
