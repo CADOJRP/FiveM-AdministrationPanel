@@ -1,0 +1,8 @@
+{
+    "require": {
+        "klein/klein": "^2.1",
+		"PHPMailer/PHPMailer": "~6.0",
+        "phpmailer/phpmailer": "^6.0",
+        "stichoza/google-translate-php": "^3.2"
+    }
+}
