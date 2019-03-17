@@ -1,12 +1,12 @@
 <p align="center">
   <h1 align="center">
-      THIS IS IN BETA!
+      FiveM Admin Panel
   </h1>
   <h3 align="center">
-      This means issues will occur. Please read below to see what this can do at this time.
+      If you would like to report an issue or request a feature. Join our <a href="https://discord.gg/q8MSQwt">Discord</a>.
   </h3>
   <h4 align="center">
-      If you would like to report an issue or request a feature. Join our <a href="https://discord.gg/EgWrfBy">Discord</a> or create an issue.
+     Looking for the legacy branch? Click <a href="https://github.com/CADOJRP/FiveM-AdministrationPanel/tree/legacy">here</a>.
   </h4>
 </p>
 
@@ -21,6 +21,7 @@ An Administration Panel for FiveM Servers
 * Warning
 * Kicking
 * Commending
+* Note Players
 * Temporary Banning
 * Permanent Banning
 * Playtime Tracking
@@ -44,14 +45,15 @@ An Administration Panel for FiveM Servers
 * Recent Players
 * Per Staff Statistics
 * User Search
-* Plugin System ([Official Plugins](https://github.com/CADOJRP/FiveM-AdministrationPanel-Plugins))
 * Staff Statistics
+* Much More
 
 ### Upcoming Features
-* Have an idea? Suggest it in our [Discord](https://discord.gg/EgWrfBy) or Issues page.
+* Have an idea? Suggest it in our [Discord](https://discord.gg/q8MSQwt).
 
 ### Requirements
 * Web Server w/ PHP
+* Server Requirements: CURL, File Get Contents URL, Outbound URL Access (Some hosts block outbound requests/port 30120), BCMath
 * MySQL Database
 * Steam API Key (https://steamcommunity.com/dev/apikey)
 * Support for Cron Jobs
@@ -62,12 +64,9 @@ An Administration Panel for FiveM Servers
 
 
 ### Recommended Hosting
+* Cloud Version at <a href="https://fivemadminpanel.com">https://FiveMAdminPanel.com</a> (Free)
 * https://ELHostingServices.com offers $1.50 one-time payment web hosting that meets all of our requirements. (This is the hosting that we use while developing). From my personal experience working at ELHS for over a year I can personally say that they do not throttle or give priority to monthly hosting verses one-time; however they do limit you on certain resources such as MySQL databases, bandwidth, and storage.
 
 
-### Media
-* Coming Soon
-
-
 ### Support
-* Join our [Discord](https://discord.gg/EgWrfBy) Server for Support or open an issue via GitHub.
+* Join our [Discord](https://discord.gg/q8MSQwt) Server for Support.
