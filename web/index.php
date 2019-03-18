@@ -813,7 +813,7 @@ $klein->respond('GET', '/api/backup', function ($request, $response, $service) {
 });
 
 // API v2 (3 Params | Endpoint | Player | Community)
-$klein->respond('GET', '/api/v2/[:endpoint]/[:player]?/[:community]?', function ($request, $response, $service) {
+$klein->respond('GET', '/api/v2/[:endpoint]/[:player]/[:community]', function ($request, $response, $service) {
     header('Content-Type: application/json');
 
     // Check Community ID
@@ -858,6 +858,46 @@ $klein->respond('GET', '/api/v2/[:endpoint]/[:player]?/[:community]?', function 
             } else {
                 apiResponse(400, 'Missing Player Parameter');
             }
+            break;
+        default:
+            apiResponse(400, 'Invalid API Endpoint');
+            break;
+    }
+});
+
+// API v2 (2 Params | Endpoint | Community)
+$klein->respond('GET', '/api/v2/[:endpoint]/[:community]', function ($request, $response, $service) {
+    header('Content-Type: application/json');
+
+    // Check Community ID
+    if (!isset($request->community)) {
+        apiResponse(400, 'Invalid Community Parameter');
+        exit();
+    } else {
+        $community = escapestring($request->param('community'));
+    }
+
+    switch ($request->endpoint) {
+        case "online":
+                // Return Online Players List
+            break;
+        case "players":
+                // Return Players List
+                echo json_encode(dbquery('SELECT * FROM players WHERE community="'. $community .'"'));
+            break;
+        case "warns":
+                // Return Warns List
+                echo json_encode(dbquery('SELECT ID, license, reason, staff_name, staff_steamid, time FROM warnings WHERE community="'. $community .'"'));
+            break;
+        case "kicks":
+                // Return Kicks List
+                echo json_encode(dbquery('SELECT ID, license, reason, staff_name, staff_steamid, time FROM kicks WHERE community="'. $community .'"'));
+            break;
+        case "bans":
+                // Return Bans List
+            break;
+        case "commends":
+                // Return Commends List
             break;
         default:
             apiResponse(400, 'Invalid API Endpoint');
