@@ -106,7 +106,7 @@
                                             <select class="form-control" id="selectuser" name="steamid">
                                                 <?php
                                                     $users = 0;
-                                                    foreach (dbquery('SELECT * FROM users WHERE rank="user" AND community=""') as $user) {
+                                                    foreach (dbquery('SELECT * FROM users') as $user) {
                                                         $users++;
                                                         echo '
                                                             <option value="'.$user['steamid'].'">'.$user['name'].' (' . $user['steamid'] . ')</option>

@@ -5,9 +5,6 @@ $GLOBALS['resourceversion'] = 1.1;
 
 require 'config.php';
 
-include 'app/main/plugins.class.php';
-plugins::start('plugins/');
-
 require 'vendor/autoload.php';
 $klein = new \Klein\Klein;
 
@@ -1685,8 +1682,13 @@ $klein->respond('POST', '/api/[warn|kick|ban|commend|note|addserver|addcommunity
                     if ($request->param('steamid') == null || $request->param('rank') == null) {
                         echo json_encode(array('message' => 'Please fill in all of the fields!'));
                     } else {
-                        dbquery('UPDATE users SET rank="' . escapestring($request->param('rank')) . '", community="' . userCommunity($_SESSION['steamid']) . '" WHERE steamid="' . escapestring($request->param('steamid')) . '"', false);
-                        echo json_encode(array('success' => true, 'reload' => true));
+                        $usercomm = dbquery('SELECT * FROM users WHERE steamid="' . escapestring($request->param('steamid')) . '"')[0]['community'];
+                        if(empty($usercomm) || $usercomm === NULL) {
+                            dbquery('UPDATE users SET rank="' . escapestring($request->param('rank')) . '", community="' . userCommunity($_SESSION['steamid']) . '" WHERE steamid="' . escapestring($request->param('steamid')) . '"', false);
+                            echo json_encode(array('success' => true, 'reload' => true));
+                        } else {
+                            echo json_encode(array('success' => false, 'message' => 'User is already in another community! They must leave before you can add them.'));
+                        }
                     }
                     break;
                 case "delstaff":
