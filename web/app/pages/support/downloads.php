@@ -3,7 +3,7 @@
         <nav class="navbar navbar-default navbar-fixed">
             <div class="container-fluid">
                 <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation-example-2"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button> <a class="navbar-brand" href="#">View Ticket</a> </div>
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation-example-2"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button> <a class="navbar-brand" href="#">View Downloads</a> </div>
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav navbar-right">
                         <li> <a href="?logout">Logout</a></li>
@@ -16,7 +16,7 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="header">
-                            <h4 class="title">Your Tickets</h4>
+                            <h4 class="title">Downloads</h4>
                         </div>
                         <div class="content table-full-width">
                             <table class="table table-striped">
@@ -28,12 +28,18 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>FiveM Admin Panel Resource (New)</td>
+                                        <td>FiveM Resource</td>
                                         <td>N/A</td>
-                                        <td>2/13/2019</td>
-                                        <td><a href="https://fivemadminpanel.com/resource.zip"><span class="label label-success">Download</span></a></td>
+                                        <td>3/18/2019</td>
+                                        <td><a href="https://minhaskamal.github.io/DownGit/#/home?url=https://github.com/CADOJRP/FiveM-AdministrationPanel/tree/master/fivem" target="_BLANK_"><span class="label label-success">Download</span></a></td>
                                     </tr>
                                     <tr>
+                                        <td>Panel Source</td>
+                                        <td>N/A</td>
+                                        <td>3/18/2019</td>
+                                        <td><a href="https://github.com/CADOJRP/FiveM-AdministrationPanel" target="_BLANK_"><span class="label label-success">Download</span></a></td>
+                                    </tr>
+                                    <!--<tr>
                                         <td>FiveM Admin Panel (Old)</td>
                                         <td><a href="https://github.com/CADOJRP/FiveM-AdministrationPanel">https://github.com/CADOJRP/FiveM-AdministrationPanel</a></td>
                                         <td>11/26/2018</td>
@@ -44,7 +50,7 @@
                                         <td><a href="https://github.com/CADOJRP/FiveM-AdministrationPanel">https://github.com/CADOJRP/FiveM-AdministrationPanel</a></td>
                                         <td>11/26/2018</td>
                                         <td><a href="https://github.com/CADOJRP/FiveM-AdministrationPanel/releases/download/v0.4.1-hotfix/fivem-resource.zip"><span class="label label-success">Download</span></a></td>
-                                    </tr>
+                                    </tr>-->
                                 </tbody>
                             </table>
                         </div>
