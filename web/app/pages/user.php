@@ -114,9 +114,6 @@
 									<li>
 										<a href="#panel-note" data-toggle="tab">Note</a>
 									</li>
-									<li>
-										<a href="#panel-other" data-toggle="tab">Other Actions</a>
-									</li>
 								</ul>
 								<div class="tab-content">
 								    <div class="tab-pane active" id="panel-warn">
@@ -184,11 +181,6 @@
 											<div id="message"></div>
 											<button type="submit" class="btn btn-success btn-fill" style="width: 100%;"><i class="fa fa-paper-plane"></i> &nbsp; Add Note</button>
 										</form>
-									</div>
-									<div class="tab-pane" id="panel-other">
-										<?php
-											plugins::call('playerPageOther', array($this->userinfo));
-										?>
 									</div>
 								</div>
 							</div>

@@ -24,9 +24,6 @@
         </nav>
         <div class="content">
             <div class="container-fluid">
-                <?php
-                    plugins::call('addServerPageContentBeginning', array($server));
-                ?>
                 <div class="row">
                     <div class="col-md-12">
                         <div class="card">
@@ -71,9 +68,6 @@
                 </div>
             </div>
         </div>
-        <?php
-            plugins::call('addServerPageContentEnd', array($server));
-        ?>
         <footer class="footer">
             <div class="container-fluid">
                 <p class="copyright pull-left"><b style="padding-right: 4px;">Theme By:</b> <span class="themeauthor">FiveMAdminPanel</span></p>

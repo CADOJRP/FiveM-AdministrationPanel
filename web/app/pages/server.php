@@ -72,7 +72,6 @@
 											';
 										}
                                     }
-                                    plugins::call('createServerButton')
 								?>
 							</div>
 						</div>
@@ -124,7 +123,7 @@
 														<td>'.$player->ping.'</td>
 														<td>'.$playtime.'</td>
 														<td>'.trustScore($player->identifiers[1]).'%</td>
-														<td>'. $flags . plugins::call('addUserFlags', array($playerinfo)) . '</td>
+														<td>'. $flags .'</td>
 													</tr> 
 												';
 											}
@@ -150,9 +149,6 @@
                 </div>
             </div>
         </div>
-        <?php
-            plugins::call('addServerPageContentEnd', array($server));
-        ?>
         <footer class="footer">
             <div class="container-fluid">
                 <p class="copyright pull-left"><b style="padding-right: 4px;">Theme By:</b> <span class="themeauthor">FiveMAdminPanel</span></p>
