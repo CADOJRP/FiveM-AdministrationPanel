@@ -1,2 +1,0 @@
-[17-Mar-2019 01:42:40 America/New_York] PHP Notice:  Undefined index: steamid in D:\xampp\htdocs\panel\web\index.php on line 85
-[17-Mar-2019 01:42:40 America/New_York] PHP Warning:  mysqli::__construct(): (HY000/1045): Access denied for user 'fivemad1_panel'@'localhost' (using password: YES) in D:\xampp\htdocs\panel\web\index.php on line 32
