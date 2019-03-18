@@ -196,11 +196,11 @@
 										<span class="sidebar-normal">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Downloads</span>
 									</a>
 								</li>
-								<li class="nav-item">
+								<!--<li class="nav-item">
 									<a class="nav-link" href="<?php echo $GLOBALS['domainname']; ?>support/tickets">
 										<span class="sidebar-normal">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Support Tickets</span>
 									</a>
-								</li>
+								</li>-->
 								<li class="nav-item">
 									<a class="nav-link" href="https://discord.gg/q8MSQwt" target="_BLANK">
 										<span class="sidebar-normal">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Discord Server</span>
