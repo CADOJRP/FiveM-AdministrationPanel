@@ -22,8 +22,8 @@ $klein->respond('*', function ($request, $response, $service) {
     // CRON and Steam Auth Check
     if ($request->uri != "/api/cron") {
         session_start();
-        require (getcwd() . '/steamauth/steamauth.php');
-        require (getcwd() . '/app/main/q3query.class.php');
+        require(getcwd() . '/steamauth/steamauth.php');
+        require(getcwd() . '/app/main/q3query.class.php');
     }
 
     // MySQL Injection Prevention
@@ -56,7 +56,6 @@ $klein->respond('*', function ($request, $response, $service) {
             } else {
                 $return = array();
             }
-
         } else {
             $return = array();
         }
@@ -65,18 +64,20 @@ $klein->respond('*', function ($request, $response, $service) {
     }
 
     // Check HTTPS and Force Value
-    if((strpos($GLOBALS['domainname'], 'https://') !== false)) {
+    if ((strpos($GLOBALS['domainname'], 'https://') !== false)) {
         if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == "off") {
             header("Location: " . $GLOBALS['domainname']);
         }
     }
 
-    function userCommunity($steamid) {
+    function userCommunity($steamid)
+    {
         return dbquery('SELECT * FROM users WHERE steamid="' . escapestring($steamid) . '"')[0]['community'];
     }
 
-    function siteConfig($option, $community = NULL) { 
-        if($community == NULL) {
+    function siteConfig($option, $community = null)
+    {
+        if ($community == null) {
             $community = userCommunity($_SESSION['steamid']);
         }
         return dbquery('SELECT * FROM config WHERE community="' . $community . '"')[0][$option];
@@ -85,10 +86,11 @@ $klein->respond('*', function ($request, $response, $service) {
     $GLOBALS['serveractions'] = json_decode(json_encode(unserialize(dbquery('SELECT * FROM config WHERE community="' . userCommunity($_SESSION['steamid']) . '"', true)[0]['serveractions'])), true);
     $GLOBALS['permissions'] = json_decode(json_encode(unserialize(dbquery('SELECT * FROM config WHERE community="' . userCommunity($_SESSION['steamid']) . '"', true)[0]['permissions'])), true);
 
-    function checkPlugin($plugin) {
+    function checkPlugin($plugin)
+    {
         return dbquery('SELECT * FROM config WHERE community="' . escapestring(userCommunity($_SESSION['steamid'])) . '"')[0]['plugin_' . $plugin];
     }
-    
+
     // Check FiveM Server Status
     function checkOnline($site)
     {
@@ -102,8 +104,11 @@ $klein->respond('*', function ($request, $response, $service) {
         $response = curl_exec($curlInit);
         curl_close($curlInit);
 
-        if ($response) {return true;} else {return false;}
-
+        if ($response) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     // Get Dashboard Statistics
@@ -115,14 +120,22 @@ $klein->respond('*', function ($request, $response, $service) {
         $commends = 0;
         $playtime = 0;
 
-        if($community == null) {
+        if ($community == null) {
             $community = userCommunity($_SESSION['steamid']);
         }
 
-        foreach (dbquery('SELECT * FROM warnings WHERE community="' . $community . '"') as $warn) {$warns++;}
-        foreach (dbquery('SELECT * FROM kicks WHERE community="' . $community . '"') as $kick) {$kicks++;}
-        foreach (dbquery('SELECT * FROM bans WHERE community="' . $community . '"') as $ban) {$bans++;}
-        foreach (dbquery('SELECT * FROM commend WHERE community="' . $community . '"') as $commend) {$commends++;}
+        foreach (dbquery('SELECT * FROM warnings WHERE community="' . $community . '"') as $warn) {
+            $warns++;
+        }
+        foreach (dbquery('SELECT * FROM kicks WHERE community="' . $community . '"') as $kick) {
+            $kicks++;
+        }
+        foreach (dbquery('SELECT * FROM bans WHERE community="' . $community . '"') as $ban) {
+            $bans++;
+        }
+        foreach (dbquery('SELECT * FROM commend WHERE community="' . $community . '"') as $commend) {
+            $commends++;
+        }
         foreach (dbquery('SELECT * FROM players WHERE community="' . $community . '"') as $playedtime) {
             $playtime = $playtime + $playedtime['playtime'];
         }
@@ -160,7 +173,8 @@ $klein->respond('*', function ($request, $response, $service) {
     }
 
     // Return Server Details
-    function serverDetails($conn) {
+    function serverDetails($conn)
+    {
         $json = @file_get_contents('http://' . $conn . '/info.json');
         $data = json_decode($json);
 
@@ -195,7 +209,7 @@ $klein->respond('*', function ($request, $response, $service) {
     function hasPermission($steam, $perm, $community = null)
     {
         $rank = getRank($steam);
-        if($community == null) {
+        if ($community == null) {
             if (!$GLOBALS['permissions'][$rank] == null) {
                 return in_array($perm, $GLOBALS['permissions'][$rank]);
             } else {
@@ -298,10 +312,10 @@ $klein->respond('*', function ($request, $response, $service) {
     }
 
     // Get Players Trustscore
-    function trustScore($license, $community = NULL)
+    function trustScore($license, $community = null)
     {
 
-        if($community == NULL) {
+        if ($community == null) {
             $community = userCommunity($_SESSION['steamid']);
         }
 
@@ -310,17 +324,27 @@ $klein->respond('*', function ($request, $response, $service) {
 
         $info = dbquery('SELECT * FROM players WHERE license="' . $license . '" AND community="' . escapestring($community) . '"');
 
-        if (empty($info)) {return $ts;}
+        if (empty($info)) {
+            return $ts;
+        }
         $ts = $ts + floor($info[0]['playtime'] / (siteConfig('tstime', $community) * 60));
 
         if ($ts > 100) {
             $ts = 100;
         }
 
-        foreach (dbquery('SELECT * FROM warnings WHERE license="' . $license . '" AND community="' . $community . '"') as $warn) {$ts = $ts - siteConfig('tswarn', $community);}
-        foreach (dbquery('SELECT * FROM kicks WHERE license="' . $license . '" AND community="' . $community . '"') as $kick) {$ts = $ts - siteConfig('tskick', $community);}
-        foreach (dbquery('SELECT * FROM bans WHERE identifier="' . $license . '" AND community="' . $community . '"') as $ban) {$ts = $ts - siteConfig('tsban', $community);}
-        foreach (dbquery('SELECT * FROM commend WHERE license="' . $license . '" AND community="' . $community . '"') as $commend) {$ts = $ts + siteConfig('tscommend', $community);}
+        foreach (dbquery('SELECT * FROM warnings WHERE license="' . $license . '" AND community="' . $community . '"') as $warn) {
+            $ts = $ts - siteConfig('tswarn', $community);
+        }
+        foreach (dbquery('SELECT * FROM kicks WHERE license="' . $license . '" AND community="' . $community . '"') as $kick) {
+            $ts = $ts - siteConfig('tskick', $community);
+        }
+        foreach (dbquery('SELECT * FROM bans WHERE identifier="' . $license . '" AND community="' . $community . '"') as $ban) {
+            $ts = $ts - siteConfig('tsban', $community);
+        }
+        foreach (dbquery('SELECT * FROM commend WHERE license="' . $license . '" AND community="' . $community . '"') as $commend) {
+            $ts = $ts + siteConfig('tscommend', $community);
+        }
 
         if ($ts > 100) {
             $ts = 100;
@@ -366,7 +390,6 @@ $klein->respond('*', function ($request, $response, $service) {
         } else {
             return join(', ', $parts) . " and " . $last;
         }
-
     }
 
     // Seconds to Human Readable
@@ -403,32 +426,33 @@ $klein->respond('*', function ($request, $response, $service) {
         } else {
             return join(', ', $parts) . " and " . $last;
         }
-
     }
 
 
     // JSON HTTP Codes/Messages
-    function apiResponse($code, $message = null) {
+    function apiResponse($code, $message = null)
+    {
         if ($message != null) {
-            echo json_encode(array('status'=>$code,'message'=>$message));
+            echo json_encode(array('status' => $code, 'message' => $message));
         } else {
-            echo json_encode(array('status'=>$code));
+            echo json_encode(array('status' => $code));
         }
     }
 
     // Does String Contain
-    function stringContain($string, $search) {
+    function stringContain($string, $search)
+    {
         if (strpos($string, $search) !== false) {
             return true;
         } else {
             return false;
         }
     }
-    
+
     // Send Message to Discord
     function discordMessage($title, $message, $community = null)
     {
-        if($community == null) {
+        if ($community == null) {
             $webhook = siteConfig('discord_webhook');
             if (empty($webhook) || $webhook == null) {
                 return;
@@ -437,10 +461,10 @@ $klein->respond('*', function ($request, $response, $service) {
             $webhook = dbquery('SELECT * FROM config WHERE community="' . escapestring($community) . '"', true)[0]['discord_webhook'];
         }
 
-        if($webhook == "" || $webhook == null) {
-            exit();
+        if ($webhook == "" || $webhook == null) {
+            return;
         }
-        
+
         $discordMessage = '
 			{
 				"username": "' . siteConfig('community_name') . ' Bot",
@@ -501,8 +525,10 @@ $klein->respond('*', function ($request, $response, $service) {
     // Decimal to Hex
     function dec2hex($number)
     {
-        $hexvalues = array('0', '1', '2', '3', '4', '5', '6', '7',
-            '8', '9', 'A', 'B', 'C', 'D', 'E', 'F');
+        $hexvalues = array(
+            '0', '1', '2', '3', '4', '5', '6', '7',
+            '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
+        );
         $hexval = '';
         while ($number != '0') {
             $hexval = $hexvalues[bcmod($number, '16')] . $hexval;
@@ -514,16 +540,19 @@ $klein->respond('*', function ($request, $response, $service) {
     // Hex to Decimal
     function hex2dec($number)
     {
-        $decvalues = array('0' => '0', '1' => '1', '2' => '2',
+        $decvalues = array(
+            '0' => '0', '1' => '1', '2' => '2',
             '3' => '3', '4' => '4', '5' => '5',
             '6' => '6', '7' => '7', '8' => '8',
             '9' => '9', 'A' => '10', 'B' => '11',
             'C' => '12', 'D' => '13', 'E' => '14',
-            'F' => '15');
+            'F' => '15'
+        );
         $decval = '0';
         $number = strrev($number);
         for ($i = 0; $i < strlen($number); $i++) {
-            $decval = bcadd(bcmul(bcpow('16', $i, 0), $decvalues[$number{$i}]), $decval);
+            $decval = bcadd(bcmul(bcpow('16', $i, 0), $decvalues[$number {
+            $i}]), $decval);
         }
         return $decval;
     }
@@ -535,7 +564,7 @@ $klein->respond('*', function ($request, $response, $service) {
             exit();
         }
     } else {
-        include (getcwd() . '/steamauth/userInfo.php');
+        include(getcwd() . '/steamauth/userInfo.php');
         $user = dbquery('SELECT * FROM users WHERE steamid="' . $_SESSION['steamid'] . '"');
 
         if (strpos($_SERVER['REQUEST_URI'], '/api/') === false) {
@@ -548,7 +577,8 @@ $klein->respond('*', function ($request, $response, $service) {
         }
     }
 
-    function createUniqueID($lenght = 13) {
+    function createUniqueID($lenght = 13)
+    {
         if (function_exists("random_bytes")) {
             $bytes = random_bytes(ceil($lenght / 2));
         } elseif (function_exists("openssl_random_pseudo_bytes")) {
@@ -563,7 +593,6 @@ $klein->respond('*', function ($request, $response, $service) {
     if (siteConfig('debug') == "true") {
         error_log(print_r(debug_backtrace(), true));
     }
-    
 });
 
 $klein->respond('GET', '/', function ($request, $response, $service) {
@@ -579,12 +608,12 @@ $klein->respond('GET', '/', function ($request, $response, $service) {
 
 // Leave Community URL
 $klein->respond('GET', '/leave', function ($request, $response, $service) {
-    if(empty(dbquery('SELECT * FROM communities WHERE owner="' . $_SESSION['steamid'] . '" AND uniqueid="' . userCommunity($_SESSION['steamid']) . '"')[0])) {
+    if (empty(dbquery('SELECT * FROM communities WHERE owner="' . $_SESSION['steamid'] . '" AND uniqueid="' . userCommunity($_SESSION['steamid']) . '"')[0])) {
         dbquery('UPDATE users SET rank="user", community="" WHERE steamid="' . $_SESSION['steamid'] . '"', false);
         header("Location: " . $GLOBALS['domainname']);
     } else {
         header('Content-Type: application/json');
-        echo json_encode(array('error'=>'You can\'t leave a community you own. Please transfer ownership or delete the community.', 'note'=>'Better looking error page coming soon...'));
+        echo json_encode(array('error' => 'You can\'t leave a community you own. Please transfer ownership or delete the community.', 'note' => 'Better looking error page coming soon...'));
         exit();
     }
 });
@@ -629,10 +658,11 @@ $klein->respond('GET', '/support/[downloads|tickets|admin:action]', function ($r
             $service->render('app/pages/support/downloads.php', array('community' => "FiveM Admin Panel", 'title' => 'Downloads'));
             break;
         case "tickets":
-            $service->render('app/pages/support/tickets.php', array('community' => "FiveM Admin Panel", 'title' => 'Support Tickets'));
+            throw Klein\Exceptions\HttpException::createFromCode(404);
+            //$service->render('app/pages/support/tickets.php', array('community' => "FiveM Admin Panel", 'title' => 'Support Tickets'));
             break;
         case "admin":
-            if(isStaff($_SESSION['steamid'])) {
+            if (isStaff($_SESSION['steamid'])) {
                 $service->render('app/pages/support/admin/tickets.php', array('community' => "FiveM Admin Panel", 'title' => 'Admin Support Tickets'));
             } else {
                 throw Klein\Exceptions\HttpException::createFromCode(404);
@@ -642,13 +672,13 @@ $klein->respond('GET', '/support/[downloads|tickets|admin:action]', function ($r
 });
 
 $klein->respond('GET', '/support/admin/ticket/[:id]', function ($request, $response, $service) {
-    if(!isStaff($_SESSION['steamid'])) {
+    if (!isStaff($_SESSION['steamid'])) {
         throw Klein\Exceptions\HttpException::createFromCode(404);
         exit();
     }
-    if(!empty($request->id)) {
+    if (!empty($request->id)) {
         $ticketinfo = dbquery('SELECT * FROM support_tickets WHERE ticketid="' . escapestring($request->id) . '"')[0];
-        if(!empty($ticketinfo)) {
+        if (!empty($ticketinfo)) {
             $service->render('app/pages/support/admin/ticket.php', array('community' => "FiveM Admin Panel", 'title' => 'Admin View Ticket', 'ticketinfo' => $ticketinfo));
         } else {
             throw Klein\Exceptions\HttpException::createFromCode(404);
@@ -656,13 +686,12 @@ $klein->respond('GET', '/support/admin/ticket/[:id]', function ($request, $respo
     } else {
         throw Klein\Exceptions\HttpException::createFromCode(404);
     }
-    
 });
 
 $klein->respond('GET', '/support/ticket/[:id]', function ($request, $response, $service) {
-    if(!empty($request->id)) {
+    if (!empty($request->id)) {
         $ticketinfo = dbquery('SELECT * FROM support_tickets WHERE ticketid="' . escapestring($request->id) . '" AND steamid="' . escapestring($_SESSION['steamid']) . '"')[0];
-        if(!empty($ticketinfo)) {
+        if (!empty($ticketinfo)) {
             $service->render('app/pages/support/ticket.php', array('community' => "FiveM Admin Panel", 'title' => 'View Ticket', 'ticketinfo' => $ticketinfo));
         } else {
             throw Klein\Exceptions\HttpException::createFromCode(404);
@@ -670,7 +699,6 @@ $klein->respond('GET', '/support/ticket/[:id]', function ($request, $response, $
     } else {
         throw Klein\Exceptions\HttpException::createFromCode(404);
     }
-    
 });
 
 $klein->respond('POST', '/api/support/[addcomment|addticket:action]', function ($request, $response, $service) {
@@ -684,7 +712,7 @@ $klein->respond('POST', '/api/support/[addcomment|addticket:action]', function (
                     } else {
                         if ($_SESSION['steamid'] == dbquery('SELECT * FROM support_tickets WHERE ticketid="' . escapestring($request->param('ticketid')) . '"')[0]['steamid'] || isStaff($_SESSION['steamid'])) {
                             dbquery('INSERT INTO support_comments (message, ticketid, commentid, steamid, time) VALUES ("' . escapestring($request->param('message')) . '", "' . escapestring($request->param('ticketid')) . '", "' . createUniqueID(12) . '", "' . $_SESSION['steamid'] . '", "' . time() . '")', false);
-                            staffDiscordMessage('New Comment', '**Ticket ID: **' . $request->param('ticketid') . '\n**Message: **' . $request->param('message') . '\n**Author: **' . $_SESSION['steamid']);                            
+                            staffDiscordMessage('New Comment', '**Ticket ID: **' . $request->param('ticketid') . '\n**Message: **' . $request->param('message') . '\n**Author: **' . $_SESSION['steamid']);
                             echo json_encode(array('success' => true, 'reload' => true));
                         }
                     }
@@ -732,8 +760,8 @@ $klein->respond('GET', '/recent', function ($request, $response, $service) {
     $service->render('app/pages/recentplayers.php', array('community' => siteConfig('community_name'), 'title' => 'Recent Players'));
 });
 
-$klein->respond('GET', '/user/[:license]', function ($request, $response, $service) { 
-    if(!isBeta($_SESSION['steamid'])) {
+$klein->respond('GET', '/user/[:license]', function ($request, $response, $service) {
+    if (!isBeta($_SESSION['steamid'])) {
         $service->render('app/pages/user.php', array('community' => siteConfig('community_name'), 'title' => 'Server', 'userinfo' => dbquery('SELECT * FROM players WHERE license="' . escapestring($request->license) . '" AND community="' . userCommunity($_SESSION['steamid']) . '"')[0]));
     } else {
         $service->render('app/pages/beta/user.php', array('community' => siteConfig('community_name'), 'title' => 'Server', 'userinfo' => dbquery('SELECT * FROM players WHERE license="' . escapestring($request->license) . '" AND community="' . userCommunity($_SESSION['steamid']) . '"')[0]));
@@ -790,18 +818,18 @@ $klein->respond('GET', '/api/backup', function ($request, $response, $service) {
 // API v2 (3 Params | Endpoint | Player | Community)
 $klein->respond('GET', '/api/v2/[:endpoint]/[:player]?/[:community]?', function ($request, $response, $service) {
     header('Content-Type: application/json');
-    
+
     // Check Community ID
-    if(!isset($request->community)) {
+    if (!isset($request->community)) {
         apiResponse(400, 'Invalid Community Parameter');
-        exit();                
+        exit();
     } else {
         $community = escapestring($request->param('community'));
     }
 
     switch ($request->endpoint) {
         case "player":
-            if(isset($request->player)) {
+            if (isset($request->player)) {
                 $userinfo = array();
                 if (stringContain($request->player, 'license:')) {
                     // License Search
@@ -810,15 +838,15 @@ $klein->respond('GET', '/api/v2/[:endpoint]/[:player]?/[:community]?', function 
                         $userinfo = array_merge($userinfo, $query);
                     } else {
                         apiResponse(400, 'Player Not Found (Either Invalid Player Idenitifier or Invalid Community ID)');
-                        exit();                
+                        exit();
                     }
 
                     // Get Users Trust Score
                     $query = trustScore(escapestring($request->player), escapestring($request->community));
                     if ($query != null) {
-                        $userinfo = array_merge($userinfo, array("trustscore"=>$query));
+                        $userinfo = array_merge($userinfo, array("trustscore" => $query));
                     }
-                    
+
                     echo json_encode($userinfo);
                 } elseif (stringContain($request->player, 'steam:')) {
                     // Steam Search
@@ -826,17 +854,12 @@ $klein->respond('GET', '/api/v2/[:endpoint]/[:player]?/[:community]?', function 
                     // Discord Search
                 } elseif (filter_var($request->player, FILTER_VALIDATE_IP)) {
                     // IP Search
-                    apiResponse(501, 'Player Identifier \'IP Address\' is currently not implemented.'); 
-                } else {   
-                    apiResponse(400, 'Invalid Player Identifier (Accepted Types: License, Steam Hex, Discord, IP Address');                
+                    apiResponse(501, 'Player Identifier \'IP Address\' is currently not implemented.');
+                } else {
+                    apiResponse(400, 'Invalid Player Identifier (Accepted Types: License, Steam Hex, Discord, IP Address');
                 }
-
-                
-
-
-
             } else {
-                apiResponse(400, 'Missing Player Parameter');                
+                apiResponse(400, 'Missing Player Parameter');
             }
             break;
         default:
@@ -847,9 +870,9 @@ $klein->respond('GET', '/api/v2/[:endpoint]/[:player]?/[:community]?', function 
 
 $klein->respond('GET', '/api/[staff|players|playerslist|warnslist|kickslist|commendslist|banslist|servers|bans|warns|kicks|cron|userdata|adduser|trustscore|message|recentchart:action]', function ($request, $response, $service) {
     header('Content-Type: application/json');
-    if($request->param('community') == "" || is_null($request->param('community'))) {
-        if($request->action != "cron") {
-            echo json_encode(array('error'=>'Missing Parameter','details'=>'Community ID Missing'));
+    if ($request->param('community') == "" || is_null($request->param('community'))) {
+        if ($request->action != "cron") {
+            echo json_encode(array('error' => 'Missing Parameter', 'details' => 'Community ID Missing'));
             exit();
         }
     } else {
@@ -903,13 +926,13 @@ $klein->respond('GET', '/api/[staff|players|playerslist|warnslist|kickslist|comm
                 'host' => $GLOBALS['mysql_host'],
             );
 
-            require ('app/main/ssp.class.php');
+            require('app/main/ssp.class.php');
 
             echo json_encode(
                 SSP::complex($_GET, $sql_details, 'players', 'ID', $columns, null, "community='" . userCommunity($_SESSION['steamid']) . "'")
             );
             break;
-        
+
         case "trustscore":
             if ($request->param('license') == null) {
                 echo json_encode(array("response" => "400", "message" => "Missing Player Identifier"));
@@ -954,7 +977,7 @@ $klein->respond('GET', '/api/[staff|players|playerslist|warnslist|kickslist|comm
                 'host' => $GLOBALS['mysql_host'],
             );
 
-            require ('app/main/ssp.class.php');
+            require('app/main/ssp.class.php');
 
             echo json_encode(
                 SSP::complex($_GET, $sql_details, 'commend', 'ID', $columns, null, "community='" . userCommunity($_SESSION['steamid']) . "'")
@@ -988,7 +1011,7 @@ $klein->respond('GET', '/api/[staff|players|playerslist|warnslist|kickslist|comm
                 'host' => $GLOBALS['mysql_host'],
             );
 
-            require ('app/main/ssp.class.php');
+            require('app/main/ssp.class.php');
 
             echo json_encode(
                 SSP::complex($_GET, $sql_details, 'warnings', 'ID', $columns, null, "community='" . userCommunity($_SESSION['steamid']) . "'")
@@ -1022,7 +1045,7 @@ $klein->respond('GET', '/api/[staff|players|playerslist|warnslist|kickslist|comm
                 'host' => $GLOBALS['mysql_host'],
             );
 
-            require ('app/main/ssp.class.php');
+            require('app/main/ssp.class.php');
 
             echo json_encode(
                 SSP::complex($_GET, $sql_details, 'kicks', 'ID', $columns, null, "community='" . userCommunity($_SESSION['steamid']) . "'")
@@ -1044,7 +1067,7 @@ $klein->respond('GET', '/api/[staff|players|playerslist|warnslist|kickslist|comm
                     'db' => 'banned_until',
                     'dt' => 4,
                     'formatter' => function ($d, $row) {
-                        if($d == 0) {
+                        if ($d == 0) {
                             return "Permanent";
                         } else {
                             return date("m/d/Y h:i A", $d);
@@ -1061,7 +1084,7 @@ $klein->respond('GET', '/api/[staff|players|playerslist|warnslist|kickslist|comm
                 'host' => $GLOBALS['mysql_host'],
             );
 
-            require ('app/main/ssp.class.php');
+            require('app/main/ssp.class.php');
 
             echo json_encode(
                 SSP::complex($_GET, $sql_details, 'bans', 'ID', $columns, null, "community='" . userCommunity($_SESSION['steamid']) . "'")
@@ -1079,18 +1102,18 @@ $klein->respond('GET', '/api/[staff|players|playerslist|warnslist|kickslist|comm
             $playercount = 0;
             $servercount = 0;
             foreach ($servers as $server) {
-                if($servercount % 35 == 0) {
+                if ($servercount % 35 == 0) {
                     sleep(1);
                 }
-                if ( preg_match('/\s/',$server['connection']) ) {
+                if (preg_match('/\s/', $server['connection'])) {
                     // Contains Spaces - Stop Worker
                 } else {
-                    exec('/opt/cpanel/ea-php70/root/usr/bin/lsphp worker.php ' . $server['connection'] . ' ' . $server['community'] . ' > logs/workeroutput.txt 2>&1 &');
+                    exec($GLOBALS['phpbin'] . ' worker.php ' . $server['connection'] . ' ' . $server['community'] . ' > logs/workeroutput.txt 2>&1 &');
                 }
                 $servercount++;
             }
             $endtime = microtime(true);
-            echo json_encode(array('status'=>'200', 'message'=>'Successful', 'loadtime'=>($endtime - $starttime), 'servers'=>count($servers)));
+            echo json_encode(array('status' => '200', 'message' => 'Successful', 'loadtime' => ($endtime - $starttime), 'servers' => count($servers)));
             break;
         case "bans":
             echo json_encode(dbquery('SELECT name, identifier, reason, ban_issued, banned_until, staff_name, staff_steamid FROM bans WHERE community="' . $community . '"'));
@@ -1116,9 +1139,9 @@ $klein->respond('GET', '/api/[staff|players|playerslist|warnslist|kickslist|comm
                 // Get Users Trust Score
                 $temp = trustScore(escapestring($request->param('license')), $community);
                 if ($temp != null) {
-                    $userinfo = array_merge($userinfo, array("trustscore"=>"" . $temp . ""));
+                    $userinfo = array_merge($userinfo, array("trustscore" => "" . $temp . ""));
                 }
-                
+
                 // Get Users Bans
                 $bans = dbquery('SELECT reason, ban_issued, banned_until, staff_name FROM bans WHERE identifier="' . escapestring($request->param('license')) . '" AND (banned_until >= ' . time() . ' OR banned_until = 0) AND community="' . $community . '"');
                 if (!empty($bans)) {
@@ -1137,7 +1160,7 @@ $klein->respond('GET', '/api/[staff|players|playerslist|warnslist|kickslist|comm
                 } else {
                     $userinfo = array_merge($userinfo, array("banned" => "false"));
                 }
-                
+
                 // Return User Data
                 echo json_encode($userinfo);
             }
@@ -1263,21 +1286,19 @@ $klein->respond('GET', '/api/[staff|players|playerslist|warnslist|kickslist|comm
                                                         } else {
                                                             $time = 0;
                                                         }
-    
+
                                                         $daycount = secsToStr($length[0] * $time);
                                                         if ($time == 0) {
                                                             $banned_until = 0;
-                                                            dbquery('INSERT INTO bans (name, identifier, reason, ban_issued, banned_until, staff_name, staff_steamid, community) VALUES ("' . escapestring($player->name) . '", "' . escapestring($player->identifiers[1]) . '", "' . escapestring($params[2]) . '", "' . time() . '", "' . $banned_until . '", "' . $staff[0]['name'] . '", "' . hex2dec(strtoupper(str_replace('steam:', '', $staff[0]['steam']))) . '", "' . $community . '")', false);
-                                                            removeFromSession($player->identifiers[1], "You were banned by " . $staff[0]['name'] . " for " . $params[3] . " (Relog for more info)", $server);
                                                             sendMessage('^3' . $player->name . '^0 has been permanently banned by ^2' . $staff[0]['name'] . '^0 for ^3' . $params[2], $server);
                                                             discordMessage('Player Banned', '**Player: **' . $player->name . '\r\n**Reason: **' . $params[2] . '\r\n**Ban Length: **Permanent\r\n**Banned By: **' . $staff[0]['name'], $community);
                                                         } else {
                                                             $banned_until = time() + ($length[0] * $time);
-                                                            dbquery('INSERT INTO bans (name, identifier, reason, ban_issued, banned_until, staff_name, staff_steamid, community) VALUES ("' . escapestring($player->name) . '", "' . escapestring($player->identifiers[1]) . '", "' . escapestring($params[2]) . '", "' . time() . '", "' . $banned_until . '", "' . $staff[0]['name'] . '", "' . hex2dec(strtoupper(str_replace('steam:', '', $staff[0]['steam']))) . '", "' . $community . '")', false);
-                                                            removeFromSession($player->identifiers[1], "You were banned by " . $staff[0]['name'] . " for " . $params[3] . " (Relog for more info)", $server);
                                                             sendMessage('^3' . $player->name . '^0 has been banned for ^3' . $daycount . '^0 by ^2' . $staff[0]['name'] . '^0 for ^3' . $params[2], $server);
                                                             discordMessage('Player Banned', '**Player: **' . $player->name . '\r\n**Reason: **' . $params[2] . '\r\n**Ban Length: **' . secsToStr($length[0] * $time) . '\r\n**Banned By: **' . $staff[0]['name'], $community);
                                                         }
+                                                        dbquery('INSERT INTO bans (name, identifier, reason, ban_issued, banned_until, staff_name, staff_steamid, community) VALUES ("' . escapestring($player->name) . '", "' . escapestring($player->identifiers[1]) . '", "' . escapestring($params[2]) . '", "' . time() . '", "' . $banned_until . '", "' . $staff[0]['name'] . '", "' . hex2dec(strtoupper(str_replace('steam:', '', $staff[0]['steam']))) . '", "' . $community . '")', false);
+                                                        removeFromSession($player->identifiers[1], "You were banned by " . $staff[0]['name'] . " for " . $params[3] . " (Relog for more info)", $server);
                                                     }
                                                 }
                                             }
@@ -1286,7 +1307,7 @@ $klein->respond('GET', '/api/[staff|players|playerslist|warnslist|kickslist|comm
                                 }
                             }
                         }
-                        break;       
+                        break;
                     case strpos($request->param('message'), "/trustscore ") === 0:
                         $input = str_replace('/trustscore ', '', $request->param('message'));
                         foreach (dbquery('SELECT * FROM servers WHERE community="' . $community . '"') as $server) {
@@ -1531,7 +1552,7 @@ $klein->respond('POST', '/api/[warn|kick|ban|commend|note|addserver|addcommunity
 
                         // Create Community
                         dbquery('INSERT INTO communities (name, owner, time, uniqueid) VALUES ("' . escapestring($request->param('communityname')) . '", "' . escapestring($_SESSION['steamid']) . '", "' . time() . '", "' . $communityid . '")', false);
-                        
+
                         // Set Default Panel Config
                         dbquery('INSERT INTO config (
                             community_name,
@@ -1571,7 +1592,7 @@ $klein->respond('POST', '/api/[warn|kick|ban|commend|note|addserver|addcommunity
                         staffDiscordMessage('New Community', '**Community Name: **' . $request->param('communityname') . '\n**Community ID: **' . $communityid);
 
                         // Set Creator as Owner
-                        dbquery('UPDATE users SET rank="owner", community="' . $communityid . '" WHERE steamid="' . $_SESSION['steamid'] . '"', false);                        
+                        dbquery('UPDATE users SET rank="owner", community="' . $communityid . '" WHERE steamid="' . $_SESSION['steamid'] . '"', false);
                         echo json_encode(array('success' => true, 'reload' => true));
                     }
                     break;
@@ -1581,27 +1602,27 @@ $klein->respond('POST', '/api/[warn|kick|ban|commend|note|addserver|addcommunity
                         exit();
                     } else {
 
-                        if(escapestring(serialize(json_decode($_POST['permissions']))) == "N;") {
+                        if (escapestring(serialize(json_decode($_POST['permissions']))) == "N;") {
                             echo json_encode(array('success' => false, 'message' => 'Your permissions field failed to validate (Check Syntax)'));
                             exit();
                         }
 
-                        if(escapestring(serialize(json_decode($_POST['serveractions']))) == "N;") {
+                        if (escapestring(serialize(json_decode($_POST['serveractions']))) == "N;") {
                             echo json_encode(array('success' => false, 'message' => 'Your server buttons field failed to validate (Check Syntax)'));
                             exit();
                         }
 
-                        if($_POST['joinmessages'] != "true" && $_POST['joinmessages'] != "false") {
+                        if ($_POST['joinmessages'] != "true" && $_POST['joinmessages'] != "false") {
                             echo json_encode(array('success' => false, 'message' => 'Join Messages field incorrect input. (true/false)'));
                             exit();
                         }
 
-                        if($_POST['chatcommands'] != "true" && $_POST['chatcommands'] != "false") {
+                        if ($_POST['chatcommands'] != "true" && $_POST['chatcommands'] != "false") {
                             echo json_encode(array('success' => false, 'message' => 'Chat Commands field incorrect input. (true/false)'));
                             exit();
                         }
 
-                        if($_POST['checktimeout'] > 25) {
+                        if ($_POST['checktimeout'] > 25) {
                             echo json_encode(array('success' => false, 'message' => 'Timeout larger than 25 seconds.'));
                             exit();
                         }
@@ -1622,10 +1643,10 @@ $klein->respond('POST', '/api/[warn|kick|ban|commend|note|addserver|addcommunity
                         checktimeout = "' . escapestring($_POST['checktimeout']) . '",
                         permissions = \'' . escapestring(serialize(json_decode($_POST['permissions']))) . '\',
                         serveractions = \'' . escapestring(serialize(json_decode($_POST['serveractions']))) . '\'
-                         WHERE community="' . userCommunity($_SESSION['steamid']) . '"', false);                    
-                         
+                         WHERE community="' . userCommunity($_SESSION['steamid']) . '"', false);
+
                         $temppermissions = json_decode($_POST['permissions'], JSON_PRETTY_PRINT);
-                        if(array_keys($temppermissions)[0] != "owner") {
+                        if (array_keys($temppermissions)[0] != "owner") {
                             dbquery('UPDATE users SET rank="' . escapestring(array_keys($temppermissions)[0]) . '" WHERE steamid="' . $_SESSION['steamid'] . '"');
                         }
 
@@ -1644,10 +1665,10 @@ $klein->respond('POST', '/api/[warn|kick|ban|commend|note|addserver|addcommunity
                     break;
                 case "delcommunity":
                     if ($request->param('securitycheck') != null) {
-                        if(strtolower($request->param('securitycheck')) == "i wish to delete my community") {
+                        if (strtolower($request->param('securitycheck')) == "i wish to delete my community") {
                             dbquery('UPDATE communities SET owner="deleted_' . escapestring($_SESSION['steamid']) . '" WHERE uniqueid="' . userCommunity($_SESSION['steamid']) . '"', false);
                             dbquery('UPDATE users SET rank="user", community="" WHERE steamid="' . escapestring($_SESSION['steamid']) . '"', false);
-                            echo json_encode(array('success' => true, 'reload' => true));                            
+                            echo json_encode(array('success' => true, 'reload' => true));
                         } else {
                             echo json_encode(array('success' => false, 'message' => 'Please type "I wish to delete my community" in the text-box above.'));
                         }
@@ -1725,7 +1746,6 @@ $klein->respond('POST', '/api/[warn|kick|ban|commend|note|addserver|addcommunity
     } else {
         echo json_encode(array("response" => "401", "message" => "Unauthenticated API request."));
     }
-
 });
 
 
