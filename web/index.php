@@ -880,6 +880,37 @@ $klein->respond('GET', '/api/v2/[:endpoint]/[:community]', function ($request, $
     switch ($request->endpoint) {
         case "online":
                 // Return Online Players List
+                $array = array();
+                foreach(dbquery('SELECT * FROM servers WHERE community="'. $community .'"') as $server) {
+                    $serverinfo = serverInfo($server['connection']);
+                    foreach($serverinfo['players'] as $player) {
+                        $playerinfo = dbquery('SELECT * FROM players WHERE license="'.$player->identifiers[1].'" AND community="' . userCommunity($_SESSION['steamid']) . '"');
+                        $playtime = $playerinfo[0]['playtime'];
+                        if(!is_null($playerinfo[0]['playtime'])) {
+                            $playtime = secsToStr($playerinfo[0]['playtime'] * 60);
+                        } else {
+                            $playtime = secsToStr(60);
+                        }
+                        
+                        $flags = '';
+    
+                        if(dbquery('SELECT * FROM notes WHERE license="'.$player->identifiers[1].'" AND community="' . userCommunity($_SESSION['steamid']) . '"')) {
+                            $flags .= 'N ';
+                        }
+    
+                        $array[$player->identifiers[1]] = array(
+                            'ID' => $player->id,
+                            'name' => $player->name,
+                            'ping' => $player->ping,
+                            'playtime' => $playtime,
+                            'trustscore' => trustScore($player->identifiers[1]),
+                            'license' => $player->identifiers[1],
+                            'steam' => $player->identifiers[0],
+                            'flags' => $flags                            
+                        );
+                    }
+                }
+                echo json_encode($array);
             break;
         case "players":
                 // Return Players List
