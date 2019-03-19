@@ -34,7 +34,6 @@ function dbquery($sql, $returnresult = true)
         } else {
             $return = array();
         }
-
     } else {
         $return = array();
     }
@@ -47,24 +46,31 @@ $players = json_decode(@file_get_contents('http://' . $argv[1] . '/players.json'
 if (!empty($players)) {
     foreach ($players as $player) {
         $discord = 'NULL';
-        foreach($player['identifiers'] as $identifier) {
+        foreach ($player['identifiers'] as $identifier) {
             if (strpos($identifier, 'discord:') !== false) {
                 $discord = '"' . $identifier . '"';
             }
-            
+
             if (strpos($identifier, 'license:') !== false) {
                 $license = $identifier;
             }
-            
+
             if (strpos($identifier, 'steam:') !== false) {
                 $steam = $identifier;
             }
         }
 
-        if(!isset($steam)) { error_log('No Steam Found!'); break; }
-        if(!isset($license)) { error_log('No License Found!'); break; }
+        if (!isset($steam)) {
+            error_log('No Steam Found!');
+            break;
+        }
+        if (!isset($license)) {
+            error_log('No License Found!');
+            break;
+        }
         dbquery('INSERT INTO players (name, license, steam, discord, firstjoined, lastplayed, community) VALUES ("' . escapestring($player['name']) . '", "' . escapestring($license) . '", "' . escapestring($steam) . '", ' . $discord . ', "' . time() . '", "' . time() . '", "' . $argv[2] . '") ON DUPLICATE KEY UPDATE name="' . escapestring($player['name']) . '", playtime=playtime+1, steam="' . escapestring($steam) . '", discord=' . $discord . ', lastplayed="' . time() . '"', false);
     }
 }
 
 exit();
+

@@ -549,7 +549,7 @@ $klein->respond('*', function ($request, $response, $service) {
         $number = strrev($number);
         for ($i = 0; $i < strlen($number); $i++) {
             $decval = bcadd(bcmul(bcpow('16', $i, 0), $decvalues[$number {
-            $i}]), $decval);
+                $i}]), $decval);
         }
         return $decval;
     }
@@ -879,56 +879,56 @@ $klein->respond('GET', '/api/v2/[:endpoint]/[:community]', function ($request, $
 
     switch ($request->endpoint) {
         case "online":
-                // Return Online Players List
-                $array = array();
-                foreach(dbquery('SELECT * FROM servers WHERE community="'. $community .'"') as $server) {
-                    $serverinfo = serverInfo($server['connection']);
-                    foreach($serverinfo['players'] as $player) {
-                        $playerinfo = dbquery('SELECT * FROM players WHERE license="'.$player->identifiers[1].'" AND community="' . userCommunity($_SESSION['steamid']) . '"');
-                        $playtime = $playerinfo[0]['playtime'];
-                        if(!is_null($playerinfo[0]['playtime'])) {
-                            $playtime = secsToStr($playerinfo[0]['playtime'] * 60);
-                        } else {
-                            $playtime = secsToStr(60);
-                        }
-                        
-                        $flags = '';
-    
-                        if(dbquery('SELECT * FROM notes WHERE license="'.$player->identifiers[1].'" AND community="' . userCommunity($_SESSION['steamid']) . '"')) {
-                            $flags .= 'N ';
-                        }
-    
-                        $array[$player->identifiers[1]] = array(
-                            'ID' => $player->id,
-                            'name' => $player->name,
-                            'ping' => $player->ping,
-                            'playtime' => $playtime,
-                            'trustscore' => trustScore($player->identifiers[1]),
-                            'license' => $player->identifiers[1],
-                            'steam' => $player->identifiers[0],
-                            'flags' => $flags                            
-                        );
+            // Return Online Players List
+            $array = array();
+            foreach (dbquery('SELECT * FROM servers WHERE community="' . $community . '"') as $server) {
+                $serverinfo = serverInfo($server['connection']);
+                foreach ($serverinfo['players'] as $player) {
+                    $playerinfo = dbquery('SELECT * FROM players WHERE license="' . $player->identifiers[1] . '" AND community="' . userCommunity($_SESSION['steamid']) . '"');
+                    $playtime = $playerinfo[0]['playtime'];
+                    if (!is_null($playerinfo[0]['playtime'])) {
+                        $playtime = secsToStr($playerinfo[0]['playtime'] * 60);
+                    } else {
+                        $playtime = secsToStr(60);
                     }
+
+                    $flags = '';
+
+                    if (dbquery('SELECT * FROM notes WHERE license="' . $player->identifiers[1] . '" AND community="' . userCommunity($_SESSION['steamid']) . '"')) {
+                        $flags .= 'N ';
+                    }
+
+                    $array[$player->identifiers[1]] = array(
+                        'ID' => $player->id,
+                        'name' => $player->name,
+                        'ping' => $player->ping,
+                        'playtime' => $playtime,
+                        'trustscore' => trustScore($player->identifiers[1]),
+                        'license' => $player->identifiers[1],
+                        'steam' => $player->identifiers[0],
+                        'flags' => $flags
+                    );
                 }
-                echo json_encode($array);
+            }
+            echo json_encode($array);
             break;
         case "players":
-                // Return Players List
-                echo json_encode(dbquery('SELECT * FROM players WHERE community="'. $community .'"'));
+            // Return Players List
+            echo json_encode(dbquery('SELECT * FROM players WHERE community="' . $community . '"'));
             break;
         case "warns":
-                // Return Warns List
-                echo json_encode(dbquery('SELECT ID, license, reason, staff_name, staff_steamid, time FROM warnings WHERE community="'. $community .'"'));
+            // Return Warns List
+            echo json_encode(dbquery('SELECT ID, license, reason, staff_name, staff_steamid, time FROM warnings WHERE community="' . $community . '"'));
             break;
         case "kicks":
-                // Return Kicks List
-                echo json_encode(dbquery('SELECT ID, license, reason, staff_name, staff_steamid, time FROM kicks WHERE community="'. $community .'"'));
+            // Return Kicks List
+            echo json_encode(dbquery('SELECT ID, license, reason, staff_name, staff_steamid, time FROM kicks WHERE community="' . $community . '"'));
             break;
         case "bans":
-                // Return Bans List
+            // Return Bans List
             break;
         case "commends":
-                // Return Commends List
+            // Return Commends List
             break;
         default:
             apiResponse(400, 'Invalid API Endpoint');
@@ -1754,7 +1754,7 @@ $klein->respond('POST', '/api/[warn|kick|ban|commend|note|addserver|addcommunity
                         echo json_encode(array('message' => 'Please fill in all of the fields!'));
                     } else {
                         $usercomm = dbquery('SELECT * FROM users WHERE steamid="' . escapestring($request->param('steamid')) . '"')[0]['community'];
-                        if(empty($usercomm) || $usercomm === NULL) {
+                        if (empty($usercomm) || $usercomm === null) {
                             dbquery('UPDATE users SET rank="' . escapestring($request->param('rank')) . '", community="' . userCommunity($_SESSION['steamid']) . '" WHERE steamid="' . escapestring($request->param('steamid')) . '"', false);
                             echo json_encode(array('success' => true, 'reload' => true));
                         } else {
