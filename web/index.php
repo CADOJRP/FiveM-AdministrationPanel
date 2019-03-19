@@ -880,7 +880,7 @@ $klein->respond('GET', '/api/v2/[:endpoint]/[:community]', function ($request, $
     switch ($request->endpoint) {
         case "online":
             // Return Online Players List
-            $array = array();
+            $players = array();
             foreach (dbquery('SELECT * FROM servers WHERE community="' . $community . '"') as $server) {
                 $serverinfo = serverInfo($server['connection']);
                 foreach ($serverinfo['players'] as $player) {
@@ -898,7 +898,7 @@ $klein->respond('GET', '/api/v2/[:endpoint]/[:community]', function ($request, $
                         $flags .= 'N ';
                     }
 
-                    $array[$player->identifiers[1]] = array(
+                    $players[$player->identifiers[1]] = array(
                         'ID' => $player->id,
                         'name' => $player->name,
                         'ping' => $player->ping,
@@ -910,7 +910,7 @@ $klein->respond('GET', '/api/v2/[:endpoint]/[:community]', function ($request, $
                     );
                 }
             }
-            echo json_encode($array);
+            echo json_encode($players);
             break;
         case "players":
             // Return Players List
