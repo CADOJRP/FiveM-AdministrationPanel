@@ -325,12 +325,14 @@ $klein->respond('*', function ($request, $response, $service) {
     {
         if ($community == null) {
             $community = userCommunity($_SESSION['steamid']);
+        } else {
+            $community = escapestring($community);
         }
 
         $license = escapestring($license);
         $ts = $GLOBALS['siteconfig']['trustscore'];
 
-        $info = dbquery('SELECT * FROM players WHERE license="' . $license . '" AND community="' . escapestring($community) . '"');
+        $info = dbquery('SELECT * FROM players WHERE license="' . $license . '" AND community="' . $community . '"');
 
         if (empty($info)) {
             return $ts;
