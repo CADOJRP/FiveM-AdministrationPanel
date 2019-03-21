@@ -3,6 +3,9 @@
 $GLOBALS['version'] = 0.4;
 $GLOBALS['resourceversion'] = 1.1;
 
+// Execution Timer
+$GLOBALS['time_start'] = microtime(true);
+
 require 'config.php';
 
 require 'vendor/autoload.php';
@@ -82,6 +85,15 @@ $klein->respond('*', function ($request, $response, $service) {
 
     $GLOBALS['serveractions'] = json_decode(json_encode(unserialize(dbquery('SELECT * FROM config WHERE community="' . userCommunity($_SESSION['steamid']) . '"', true)[0]['serveractions'])), true);
     $GLOBALS['permissions'] = json_decode(json_encode(unserialize(dbquery('SELECT * FROM config WHERE community="' . userCommunity($_SESSION['steamid']) . '"', true)[0]['permissions'])), true);
+    $GLOBALS['siteconfig'] = array(
+        'tscommend' => siteConfig('tscommend'),
+        'tsban' => siteConfig('tsban'),
+        'tskick' => siteConfig('tskick'),
+        'tswarn' => siteConfig('tswarn'),
+        'trustscore' => siteConfig('trustscore'),
+        'tstime' => siteConfig('tstime')
+    );
+
 
     function checkPlugin($plugin)
     {
@@ -311,36 +323,35 @@ $klein->respond('*', function ($request, $response, $service) {
     // Get Players Trustscore
     function trustScore($license, $community = null)
     {
-
         if ($community == null) {
             $community = userCommunity($_SESSION['steamid']);
         }
 
         $license = escapestring($license);
-        $ts = siteConfig('trustscore', $community);
+        $ts = $GLOBALS['siteconfig']['trustscore'];
 
         $info = dbquery('SELECT * FROM players WHERE license="' . $license . '" AND community="' . escapestring($community) . '"');
 
         if (empty($info)) {
             return $ts;
         }
-        $ts = $ts + floor($info[0]['playtime'] / (siteConfig('tstime', $community) * 60));
+        $ts = $ts + floor($info[0]['playtime'] / ($GLOBALS['siteconfig']['tstime'] * 60));
 
         if ($ts > 100) {
             $ts = 100;
         }
 
         foreach (dbquery('SELECT * FROM warnings WHERE license="' . $license . '" AND community="' . $community . '"') as $warn) {
-            $ts = $ts - siteConfig('tswarn', $community);
+            $ts = $ts - $GLOBALS['siteconfig']['tswarn'];
         }
         foreach (dbquery('SELECT * FROM kicks WHERE license="' . $license . '" AND community="' . $community . '"') as $kick) {
-            $ts = $ts - siteConfig('tskick', $community);
+            $ts = $ts - $GLOBALS['siteconfig']['tskick'];
         }
         foreach (dbquery('SELECT * FROM bans WHERE identifier="' . $license . '" AND community="' . $community . '"') as $ban) {
-            $ts = $ts - siteConfig('tsban', $community);
+            $ts = $ts - $GLOBALS['siteconfig']['tsban'];
         }
         foreach (dbquery('SELECT * FROM commend WHERE license="' . $license . '" AND community="' . $community . '"') as $commend) {
-            $ts = $ts + siteConfig('tscommend', $community);
+            $ts = $ts + $GLOBALS['siteconfig']['tscommend'];
         }
 
         if ($ts > 100) {
@@ -898,7 +909,7 @@ $klein->respond('GET', '/api/v2/[:endpoint]/[:community]', function ($request, $
                         $flags .= 'N ';
                     }
 
-                    $players[$player->identifiers[1]] = array(
+                    $players[$server['connection']][$player->identifiers[1]] = array(
                         'ID' => $player->id,
                         'name' => $player->name,
                         'ping' => $player->ping,
