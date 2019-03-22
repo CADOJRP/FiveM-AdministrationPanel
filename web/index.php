@@ -897,7 +897,7 @@ $klein->respond('GET', '/api/v2/[:endpoint]/[:community]', function ($request, $
             foreach (dbquery('SELECT * FROM servers WHERE community="' . $community . '"') as $server) {
                 $serverinfo = serverInfo($server['connection']);
                 foreach ($serverinfo['players'] as $player) {
-                    $playerinfo = dbquery('SELECT * FROM players WHERE license="' . $player->identifiers[1] . '" AND community="' . userCommunity($_SESSION['steamid']) . '"');
+                    $playerinfo = dbquery('SELECT * FROM players WHERE license="' . $player->identifiers[1] . '" AND community="' . $community . '"');
                     $playtime = $playerinfo[0]['playtime'];
                     if (!is_null($playerinfo[0]['playtime'])) {
                         $playtime = secsToStr($playerinfo[0]['playtime'] * 60);
@@ -907,7 +907,7 @@ $klein->respond('GET', '/api/v2/[:endpoint]/[:community]', function ($request, $
 
                     $flags = '';
 
-                    if (dbquery('SELECT * FROM notes WHERE license="' . $player->identifiers[1] . '" AND community="' . userCommunity($_SESSION['steamid']) . '"')) {
+                    if (dbquery('SELECT * FROM notes WHERE license="' . $player->identifiers[1] . '" AND community="' . $community . '"')) {
                         $flags .= 'N ';
                     }
 
@@ -916,7 +916,7 @@ $klein->respond('GET', '/api/v2/[:endpoint]/[:community]', function ($request, $
                         'name' => $player->name,
                         'ping' => $player->ping,
                         'playtime' => $playtime,
-                        'trustscore' => trustScore($player->identifiers[1]),
+                        'trustscore' => trustScore($player->identifiers[1], $community),
                         'license' => $player->identifiers[1],
                         'steam' => $player->identifiers[0],
                         'flags' => $flags
