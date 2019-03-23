@@ -628,20 +628,6 @@ $klein->respond('GET', '/leave', function ($request, $response, $service) {
     }
 });
 
-// Temp Download Resource
-$klein->respond('GET', '/download', function ($request, $response, $service) {
-    $downloadfile = "resource.zip";
-
-    $downloadfile_name = basename($downloadfile);
-
-    header("Content-Type: application/zip");
-    header("Content-Disposition: attachment; filename=$downloadfile_name");
-    header("Content-Length: " . filesize($downloadfile));
-
-    readfile($downloadfile);
-    exit;
-});
-
 $klein->respond('GET', '/data/[players|bans|warns|kicks|commends:action]', function ($request, $response, $service) {
     switch ($request->action) {
         case "players":
