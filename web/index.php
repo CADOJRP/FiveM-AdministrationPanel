@@ -939,9 +939,11 @@ $klein->respond('GET', '/api/v2/[:endpoint]/[:community]', function ($request, $
             break;
         case "bans":
             // Return Bans List
+            echo json_encode(dbquery('SELECT ID, name, identifier, reason, ban_issued, banned_until, staff_name, staff_steamid FROM bans WHERE community="' . $community . '"'));
             break;
         case "commends":
             // Return Commends List
+            echo json_encode(dbquery('SELECT ID, license, reason, staff_name, staff_steamid, time FROM commend WHERE community="' . $community . '"'));
             break;
         default:
             apiResponse(400, 'Invalid API Endpoint');
