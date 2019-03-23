@@ -107,8 +107,8 @@
                             <h4 class="title">Statistics</h4>
                         </div>
                         <div class="content" style="font-size: 14px;">
-                            <p><b>Communities: </b><?php echo count(dbquery('SELECT * FROM communities')) + 10; ?></p>
-                            <p><b>Servers: </b><?php echo count(dbquery('SELECT * FROM servers')) + 13; ?></p>
+                            <p><b>Communities: </b><?php echo count(dbquery('SELECT * FROM communities')); ?></p>
+                            <p><b>Servers: </b><?php echo count(dbquery('SELECT * FROM servers')); ?></p>
                             <p><b>Support Staff: </b><?php echo count(dbquery('SELECT * FROM users WHERE staff="1"')); ?></p>
                         </div>
                     </div>
