@@ -139,25 +139,19 @@
                                             <input type="hidden" name="serveractions" id="serveractionshidden" value='<?php print_r($buttons) ?>'/>
                                         </div>
                                     </div>
-                                    <?php  
-                                        if(isBeta($_SESSION['steamid'])) {
-                                    ?>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <label>Panel Theme (CSS)</label>
-                                                <?php
-                                                    $theme = siteConfig('themecss');
-                                                    if($theme == "false") {
-                                                        $theme = "";
-                                                    }
-                                                ?>
-                                                <textarea rows="20" cols="80" class="form-control" id="paneltheme"><?php print_r($theme); ?></textarea>
-                                                <input type="hidden" name="paneltheme" id="panelthemehidden" value='<?php print_r($theme) ?>'/>
-                                            </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label>Panel Theme (CSS)</label>
+                                            <?php
+                                                $theme = siteConfig('themecss');
+                                                if($theme == "false") {
+                                                    $theme = "";
+                                                }
+                                            ?>
+                                            <textarea rows="20" cols="80" class="form-control" id="paneltheme"><?php print_r($theme); ?></textarea>
+                                            <input type="hidden" name="paneltheme" id="panelthemehidden" value='<?php print_r($theme) ?>'/>
                                         </div>
-                                    <?php
-                                        }
-                                    ?>
+                                    </div>
                                     <div id="message"></div>
                                     <button type="submit" class="btn btn-info btn-fill" style="width: 100%;">Update Settings</button>
                                     <div class="clearfix"></div>
