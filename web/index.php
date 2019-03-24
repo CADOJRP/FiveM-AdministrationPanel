@@ -594,7 +594,8 @@ $klein->respond('*', function ($request, $response, $service) {
         } elseif (function_exists("openssl_random_pseudo_bytes")) {
             $bytes = openssl_random_pseudo_bytes(ceil($lenght / 2));
         } else {
-            throw new Exception("no cryptographically secure random function available");
+            error_log('Function createUniqueID, no cryptographically secure random function available. FATAL ERROR');
+            exit();
         }
         return strtoupper(substr(bin2hex($bytes), 0, $lenght));
     }
