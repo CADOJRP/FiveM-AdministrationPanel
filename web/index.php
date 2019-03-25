@@ -280,10 +280,10 @@ $klein->respond('*', function ($request, $response, $service) {
                 $con->rcon("staff_sayall " . $message);
             }
         } else {
-            foreach (dbquery('SELECT * FROM servers WHERE community="' . userCommunity($_SESSION['steamid']) . '"') as $server) {
-                if (checkOnline($server['connection']) == true) {
-                    $con = new q3query(strtok($server['connection'], ':'), str_replace(':', '', substr($server['connection'], strpos($server['connection'], ':'))), $success);
-                    $con->setRconpassword($server['rcon']);
+            foreach (dbquery('SELECT * FROM servers WHERE community="' . userCommunity($_SESSION['steamid']) . '"') as $newserver) {
+                if (checkOnline($newserver['connection']) == true) {
+                    $con = new q3query(strtok($newserver['connection'], ':'), str_replace(':', '', substr($newserver['connection'], strpos($server['connection'], ':'))), $success);
+                    $con->setRconpassword($newserver['rcon']);
                     $con->rcon("staff_sayall " . $message);
                 }
             }
