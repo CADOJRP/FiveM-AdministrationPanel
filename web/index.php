@@ -1607,6 +1607,9 @@ $klein->respond('POST', '/api/[warn|kick|ban|commend|note|addserver|addcommunity
                         if ($request->param('serverip') == "localhost" || $request->param('serverip') == "127.0.0.1" || $request->param('serverip') == "0.0.0.0") {
                             echo json_encode(array('message' => 'Invalid Server IP. Make sure you are using an external IP address.'));
                             exit();
+                        } elseif (!filter_var($request->param('serverip'), FILTER_VALIDATE_IP)) {
+                            echo json_encode(array('message' => 'Invalid Server IP. Make sure you are using an external IP address. (IP Address Not Detected)'));
+                            exit();
                         }
                         dbquery('INSERT INTO servers (name, connection, rcon, community) VALUES ("' . $request->param('servername') . '", "' . $request->param('serverip') . ':' . $request->param('serverport') . '", "' . $request->param('serverrcon') . '", "' . userCommunity($_SESSION['steamid']) . '")', false);
                         staffDiscordMessage('New Server', '**Server Name: **' . $request->param('servername') . '\nServer: ' . $request->param('serverip') . ':' . $request->param('serverport'));
