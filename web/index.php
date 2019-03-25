@@ -1604,6 +1604,7 @@ $klein->respond('POST', '/api/[warn|kick|ban|commend|note|addserver|addcommunity
                     if ($request->param('servername') == null || $request->param('serverip') == null || $request->param('serverport') == null || $request->param('serverrcon') == null) {
                         echo json_encode(array('message' => 'Please fill in all of the fields!'));
                     } else {
+                        // IP Validation
                         if ($request->param('serverip') == "localhost" || $request->param('serverip') == "127.0.0.1" || $request->param('serverip') == "0.0.0.0") {
                             echo json_encode(array('message' => 'Invalid Server IP. Make sure you are using an external IP address.'));
                             exit();
@@ -1611,6 +1612,13 @@ $klein->respond('POST', '/api/[warn|kick|ban|commend|note|addserver|addcommunity
                             echo json_encode(array('message' => 'Invalid Server IP. Make sure you are using an external IP address. (IP Address Not Detected)'));
                             exit();
                         }
+                        
+                        // Port Validation
+                        if (!is_numeric($request->param('serverport'))) {
+                            echo json_encode(array('message' => 'Invalid Server Port. Make sure you are your FiveM server port. (Default: 30120)'));
+                            exit();
+                        }
+                        
                         dbquery('INSERT INTO servers (name, connection, rcon, community) VALUES ("' . $request->param('servername') . '", "' . $request->param('serverip') . ':' . $request->param('serverport') . '", "' . $request->param('serverrcon') . '", "' . userCommunity($_SESSION['steamid']) . '")', false);
                         staffDiscordMessage('New Server', '**Server Name: **' . $request->param('servername') . '\nServer: ' . $request->param('serverip') . ':' . $request->param('serverport'));
                         echo json_encode(array('success' => true, 'reload' => true));
