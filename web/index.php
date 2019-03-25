@@ -1241,7 +1241,7 @@ $klein->respond('GET', '/api/[staff|players|playerslist|warnslist|kickslist|comm
             } else {
                 dbquery('INSERT INTO players (name, license, playtime, firstjoined, lastplayed, community) VALUES ("' . escapestring($request->param('name')) . '", "' . escapestring($request->param('license')) . '", "0", "' . time() . '", "' . time() . '", "' . $community . '") ON DUPLICATE KEY UPDATE name="' . escapestring($request->param('name')) . '"', false);
                 echo json_encode(array("response" => "200", "message" => "Successfully added user into database."));
-                if (siteConfig('joinmessages') == "true") {
+                if (siteConfig('joinmessages', $community) == "true") {
                     sendMessage('^3' . $request->param('name') . '^0 is joining the server with ^2' . trustScore($request->param('license'), $community) . '%^0 trust score.');
                 }
             }
