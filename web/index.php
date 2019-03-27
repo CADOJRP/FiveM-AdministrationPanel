@@ -323,6 +323,14 @@ $klein->respond('*', function ($request, $response, $service) {
             $community = userCommunity($_SESSION['steamid']);
         } else {
             $community = escapestring($community);
+            $GLOBALS['siteconfig'] = array(
+                'tscommend' => siteConfig('tscommend', $community),
+                'tsban' => siteConfig('tsban', $community),
+                'tskick' => siteConfig('tskick', $community),
+                'tswarn' => siteConfig('tswarn', $community),
+                'trustscore' => siteConfig('trustscore', $community),
+                'tstime' => siteConfig('tstime', $community)
+            );
         }
 
         $license = escapestring($license);
