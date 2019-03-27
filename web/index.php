@@ -941,7 +941,7 @@ $klein->respond('GET', '/api/v2/[:endpoint]/[:community]', function ($request, $
 
 $klein->respond('GET', '/api/[staff|players|playerslist|warnslist|kickslist|commendslist|banslist|servers|bans|warns|kicks|cron|userdata|adduser|trustscore|message|recentchart:action]', function ($request, $response, $service) {
     header('Content-Type: application/json');
-    if ($request->param('community') == "" || is_null($request->param('community'))) {
+    if ($request->param('community') == "" || $request->param('community') == null) {
         if ($request->action != "cron") {
             echo json_encode(array('error' => 'Missing Parameter', 'details' => 'Community ID Missing'));
             exit();
@@ -949,7 +949,6 @@ $klein->respond('GET', '/api/[staff|players|playerslist|warnslist|kickslist|comm
     } else {
         $community = escapestring($request->param('community'));
     }
-    
     switch ($request->action) {
         case "staff":
             echo json_encode(dbquery('SELECT name, steamid, rank FROM users WHERE rank != "user" AND community="' . $community . '"'));
@@ -971,7 +970,7 @@ $klein->respond('GET', '/api/[staff|players|playerslist|warnslist|kickslist|comm
                     'db' => 'license',
                     'dt' => 2,
                     'formatter' => function ($d2, $row2) {
-                        return trustScore($d2, $community) . '%';
+                        return trustScore($d2) . '%';
                     },
                 ),
                 array(
@@ -1561,8 +1560,9 @@ $klein->respond('POST', '/api/[warn|kick|ban|commend|note:action]', function ($r
     } else {
         echo json_encode(array("response" => "401", "message" => "Unauthenticated API request."));
     }
-    
 });
+
+
 $klein->respond('POST', '/api/[addserver|addcommunity|delcommunity|updatepanel|delserver|addstaff|delstaff|delwarn|delcommend|delnote|delkick|delban:action]', function ($request, $response, $service) {
     header('Content-Type: application/json');
     if (isset($_SESSION['steamid'])) {
