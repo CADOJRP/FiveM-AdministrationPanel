@@ -1,10 +1,5 @@
 <?php
 
-// Debug Information
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 // Version Control
 $GLOBALS['version'] = 0.4;
 $GLOBALS['resourceversion'] = 1.1;
