@@ -12,11 +12,11 @@ class Player {
 	}
 
 	function kick($reason, $staffid) {
-		// Get Player From Database
-		$player = $this->mysql->query('SELECT * FROM players WHERE license="' . $this->license . '"')[0];
-		
 		// Get Staff From Database
 		$staff = $this->mysql->query('SELECT * FROM users WHERE steamid="' . $this->mysql->escape($staffid) . '"')[0];
+
+		// Get Player From Database
+		$player = $this->mysql->query('SELECT * FROM players WHERE license="' . $this->license . '" AND community="' . $staff['community'] . '"')[0];
 
 		// Insert Kick Into Database
 		$this->mysql->query('INSERT INTO kicks 
@@ -53,11 +53,11 @@ class Player {
 	}
 
 	function warn($reason, $staffid) {
-		// Get Player From Database
-		$player = $this->mysql->query('SELECT * FROM players WHERE license="' . $this->license . '"')[0];
-		
 		// Get Staff From Database
 		$staff = $this->mysql->query('SELECT * FROM users WHERE steamid="' . $this->mysql->escape($staffid) . '"')[0];
+
+		// Get Player From Database
+		$player = $this->mysql->query('SELECT * FROM players WHERE license="' . $this->license . '" AND community="' . $staff['community'] . '"')[0];
 
 		// Insert Warning Into Database
 		$this->mysql->query('INSERT INTO warnings 
@@ -93,11 +93,12 @@ class Player {
 	}
 
 	function ban($reason, $staffid, $time) {
-		// Get Player From Database
-		$player = $this->mysql->query('SELECT * FROM players WHERE license="' . $this->license . '"')[0];
-		
 		// Get Staff From Database
 		$staff = $this->mysql->query('SELECT * FROM users WHERE steamid="' . $this->mysql->escape($staffid) . '"')[0];
+
+		// Get Player From Database
+		$player = $this->mysql->query('SELECT * FROM players WHERE license="' . $this->license . '" AND community="' . $staff['community'] . '"')[0];
+		
 
 		if($this->mysql->escape($time) == 0) {
 			$banexpire = 0;
@@ -149,11 +150,11 @@ class Player {
 	
 
 	function commend($reason, $staffid) {
-		// Get Player From Database
-		$player = $this->mysql->query('SELECT * FROM players WHERE license="' . $this->license . '"')[0];
-		
 		// Get Staff From Database
 		$staff = $this->mysql->query('SELECT * FROM users WHERE steamid="' . $this->mysql->escape($staffid) . '"')[0];
+
+		// Get Player From Database
+		$player = $this->mysql->query('SELECT * FROM players WHERE license="' . $this->license . '" AND community="' . $staff['community'] . '"')[0];
 
 		// Insert Commend Into Database
 		$this->mysql->query('INSERT INTO commend 
@@ -190,11 +191,11 @@ class Player {
 	
 
 	function note($reason, $staffid) {
-		// Get Player From Database
-		$player = $this->mysql->query('SELECT * FROM players WHERE license="' . $this->license . '"')[0];
-		
 		// Get Staff From Database
 		$staff = $this->mysql->query('SELECT * FROM users WHERE steamid="' . $this->mysql->escape($staffid) . '"')[0];
+
+		// Get Player From Database
+		$player = $this->mysql->query('SELECT * FROM players WHERE license="' . $this->license . '" AND community="' . $staff['community'] . '"')[0];
 
 		// Insert Warning Into Database
 		$this->mysql->query('INSERT INTO notes 
