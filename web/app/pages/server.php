@@ -104,11 +104,10 @@
                                     <?php
                                     foreach ($this->info['players'] as $player) {
                                         $playerinfo = dbquery('SELECT * FROM players WHERE license="' . $player->identifiers[1] . '" AND community="' . userCommunity($_SESSION['steamid']) . '"');
-                                        $playtime = $playerinfo[0]['playtime'];
-                                        if (!is_null($playerinfo[0]['playtime'])) {
-                                            $playtime = secsToStr($playerinfo[0]['playtime'] * 60);
-                                        } else {
+                                        if($playerinfo == null) {
                                             $playtime = secsToStr(60);
+                                        } else {
+                                            $playtime = secsToStr($playerinfo[0]['playtime'] * 60);
                                         }
 
                                         $flags = '';
