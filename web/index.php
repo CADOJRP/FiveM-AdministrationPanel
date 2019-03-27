@@ -1,66 +1,58 @@
 <?php
 
+// Debug Information
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// Version Control
 $GLOBALS['version'] = 0.4;
 $GLOBALS['resourceversion'] = 1.1;
 
 // Execution Timer
 $GLOBALS['time_start'] = microtime(true);
 
+// Set Globals
+global $panel;
+global $mysql;
+
+// Require Required Scripts
 require 'config.php';
-
+require 'app/main/actions.class.php';
+require 'app/main/q3query.class.php';
 require 'vendor/autoload.php';
-$klein = new \Klein\Klein;
 
+// Load Classes
+$klein = new \Klein\Klein();
+$panel = new Panel();
+$mysql = new MySQL();
+$user = new User();
+
+// Handle All Requests
 $klein->respond('*', function ($request, $response, $service) {
-
     // Logging System
     ini_set("error_log", realpath('logs') . "/" . date('mdy') . ".log");
-
     // Set Socket Timeout
     ini_set('default_socket_timeout', 5);
-
+    
     // CRON and Steam Auth Check
     if ($request->uri != "/api/cron") {
         session_start();
         require(getcwd() . '/steamauth/steamauth.php');
-        require(getcwd() . '/app/main/q3query.class.php');
     }
 
     // MySQL Injection Prevention
     function escapestring($value)
     {
-        $conn = new mysqli($GLOBALS['mysql_host'], $GLOBALS['mysql_user'], $GLOBALS['mysql_pass'], $GLOBALS['mysql_db']);
-        if ($conn->connect_errno) {
-            die('Could not connect: ' . $conn->connect_error);
-        }
-        return strip_tags(mysqli_real_escape_string($conn, $value));
+        $mysql = new MySQL();
+        return $mysql->escape($value);
     }
 
     // Insert into Database
     function dbquery($sql, $returnresult = true)
     {
-        $conn = new mysqli($GLOBALS['mysql_host'], $GLOBALS['mysql_user'], $GLOBALS['mysql_pass'], $GLOBALS['mysql_db']);
-        if ($conn->connect_errno) {
-            error_log('MySQL could not connect: ' . $conn->connect_error);
-            return $conn->connect_error;
-        }
-
-        $return = array();
-
-        $result = mysqli_query($conn, $sql);
-        if ($returnresult) {
-            if (mysqli_num_rows($result) != 0) {
-                while ($r = $result->fetch_assoc()) {
-                    array_push($return, $r);
-                }
-            } else {
-                $return = array();
-            }
-        } else {
-            $return = array();
-        }
-
-        return $return;
+        $mysql = new MySQL();
+        return $mysql->query($sql, $returnresult);
     }
 
     // Check HTTPS and Force Value
@@ -72,7 +64,8 @@ $klein->respond('*', function ($request, $response, $service) {
 
     function userCommunity($steamid)
     {
-        return dbquery('SELECT * FROM users WHERE steamid="' . escapestring($steamid) . '"')[0]['community'];
+        $user = new User();
+        return $user->community($steamid);
     }
 
     function siteConfig($option, $community = null)
@@ -268,6 +261,14 @@ $klein->respond('*', function ($request, $response, $service) {
                 }
             }
         }
+    }
+
+    // Kick Player
+    function kickPlayer() {
+        /*dbquery('INSERT INTO kicks (license, reason, staff_name, staff_steamid, time, community) VALUES ("' . $player->identifiers[1] . '", "' . escapestring($params[1]) . '", "' . $staff[0]['name'] . '", "' . hex2dec(strtoupper(str_replace('steam:', '', $staff[0]['steam']))) . '", "' . time() . '", "' . $community . '")', false);
+        removeFromSession($player->identifiers[1], "You were kicked by " . $staff[0]['name'] . " for " . $params[1], $server);
+        sendMessage('^3' . $player->name . '^0 has been kicked by ^2' . $staff[0]['name'] . '^0 for ^3' . escapestring($params[1]), $server);
+        discordMessage('Player Kicked', '**Player: **' . $player->name . '\r\n**Reason: **' . $params[1] . '\r\n**Kicked By: **' . $staff[0]['name'], $community);*/
     }
 
     // Send Messages to FiveM Servers
@@ -948,6 +949,7 @@ $klein->respond('GET', '/api/[staff|players|playerslist|warnslist|kickslist|comm
     } else {
         $community = escapestring($request->param('community'));
     }
+    
     switch ($request->action) {
         case "staff":
             echo json_encode(dbquery('SELECT name, steamid, rank FROM users WHERE rank != "user" AND community="' . $community . '"'));
@@ -1499,103 +1501,74 @@ $klein->respond('POST', '/api/button/[restart|kickforstaff|command:action]', fun
     }
 });
 
-$klein->respond('POST', '/api/[warn|kick|ban|commend|note|addserver|addcommunity|delcommunity|updatepanel|delserver|addstaff|delstaff|delwarn|delcommend|delnote|delkick|delban:action]', function ($request, $response, $service) {
+$klein->respond('POST', '/api/[warn|kick|ban|commend|note:action]', function ($request, $response, $service) {
+    header('Content-Type: application/json');
+    if (isset($_SESSION['steamid']) && getRank($_SESSION['steamid']) != "user") {
+        if ($request->param('name') == null || $request->param('license') == null) {
+            echo json_encode(array('message' => 'Please contact the FiveM Administration Panel staff team! Error (E1001)'));            
+            exit();
+        } elseif ($request->param('reason') == null) {
+            echo json_encode(array('message' => 'Please fill in a reason.'));            
+            exit();
+        }
+        $player = new Player($request->param('license'));
+        switch ($request->action) {
+            case "warn":
+                if (hasPermission($_SESSION['steamid'], 'warn')) {
+                    $player->warn($request->param('reason'), $_SESSION['steamid']);
+                    echo json_encode(array('success' => true, 'reload' => true));
+                } else {
+                    echo json_encode(array('message' => 'You do not have permission to warn!'));
+                }
+                break;
+            case "kick":
+                if (hasPermission($_SESSION['steamid'], 'kick')) {
+                    $player->kick($request->param('reason'), $_SESSION['steamid']);
+                    echo json_encode(array('success' => true, 'reload' => true));
+                } else {
+                    echo json_encode(array('message' => 'You do not have permission to kick!'));
+                }
+                break;
+            case "ban":
+                if (hasPermission($_SESSION['steamid'], 'ban')) {
+                    if ($request->param('banlength') == null) {
+                        echo json_encode(array('message' => 'Please contact the FiveM Administration Panel staff team! Error (E1002)'));
+                        exit();
+                    }
+                    $player->ban($request->param('reason'), $_SESSION['steamid'], $request->param('banlength'));
+                    echo json_encode(array('success' => true, 'reload' => true));
+                } else {
+                    echo json_encode(array('message' => 'You do not have permission to ban!'));
+                }
+                break;
+            case "commend":
+                if (hasPermission($_SESSION['steamid'], 'commend')) {
+                    $player->commend($request->param('reason'), $_SESSION['steamid']);
+                    echo json_encode(array('success' => true, 'reload' => true));
+                } else {
+                    echo json_encode(array('message' => 'You do not have permission to warn!'));
+                }
+                break;
+            case "note":
+                if (hasPermission($_SESSION['steamid'], 'note')) {
+                    $player->note($request->param('reason'), $_SESSION['steamid']);
+                    echo json_encode(array('success' => true, 'reload' => true));
+                } else {
+                    echo json_encode(array('message' => 'You do not have permission to add notes!'));
+                }
+                break;
+        }
+    } else {
+        echo json_encode(array("response" => "401", "message" => "Unauthenticated API request."));
+    }
+    
+});
+$klein->respond('POST', '/api/[addserver|addcommunity|delcommunity|updatepanel|delserver|addstaff|delstaff|delwarn|delcommend|delnote|delkick|delban:action]', function ($request, $response, $service) {
     header('Content-Type: application/json');
     if (isset($_SESSION['steamid'])) {
         if (getRank($_SESSION['steamid']) != "user" || $request->action == "addcommunity") {
+            //$player = new Player('license:68f84646c6f38e4d5fdac2d497f62d633d67591a');
             switch ($request->action) {
-                case "warn":
-                    if (!hasPermission($_SESSION['steamid'], 'warn')) {
-                        echo json_encode(array('message' => 'You do not have permission to warn!'));
-                        exit();
-                    }
-                    if ($request->param('name') == null || $request->param('license') == null || $request->param('reason') == null) {
-                        echo json_encode(array('message' => 'Please fill in all of the fields!'));
-                    } else {
-                        dbquery('INSERT INTO warnings (license, reason, staff_name, staff_steamid, time, community) VALUES ("' . escapestring($request->param('license')) . '", "' . escapestring($request->param('reason')) . '", "' . $_SESSION['steam_personaname'] . '", "' . $_SESSION['steamid'] . '", "' . time() . '", "' . userCommunity($_SESSION['steamid']) . '")', false);
-                        sendMessage('^3' . $request->param('name') . '^0 has been warned by ^2' . $_SESSION['steam_personaname'] . '^0 for ^3' . $request->param('reason'));
-                        if (!empty(siteConfig('discord_webhook'))) {
-                            discordMessage('Player Warned', '**Player: **' . $request->param('name') . '\r\n**Reason: **' . $request->param('reason') . '\r\n**Warned By: **' . $_SESSION['steam_personaname']);
-                        }
-                        echo json_encode(array('success' => true, 'reload' => true));
-                    }
-                    break;
-                case "kick":
-                    if (!hasPermission($_SESSION['steamid'], 'kick')) {
-                        echo json_encode(array('message' => 'You do not have permission to kick!'));
-                        exit();
-                    }
-                    if ($request->param('name') == null || $request->param('license') == null || $request->param('reason') == null) {
-                        echo json_encode(array('message' => 'Please fill in all of the fields!'));
-                    } else {
-                        dbquery('INSERT INTO kicks (license, reason, staff_name, staff_steamid, time, community) VALUES ("' . escapestring($request->param('license')) . '", "' . escapestring($request->param('reason')) . '", "' . $_SESSION['steam_personaname'] . '", "' . $_SESSION['steamid'] . '", "' . time() . '", "' . userCommunity($_SESSION['steamid']) . '")', false);
-                        removeFromSession($request->param('license'), "You were kicked by " . $_SESSION['steam_personaname'] . " for " . $request->param('reason'));
-                        sendMessage('^3' . $request->param('name') . '^0 has been kicked by ^2' . $_SESSION['steam_personaname'] . '^0 for ^3' . $request->param('reason'));
-                        if (!empty(siteConfig('discord_webhook'))) {
-                            discordMessage('Player Kicked', '**Player: **' . $request->param('name') . '\r\n**Reason: **' . $request->param('reason') . '\r\n**Kicked By: **' . $_SESSION['steam_personaname']);
-                        }
-                        echo json_encode(array('success' => true, 'reload' => true));
-                    }
-                    break;
-                case "ban":
-                    if (!hasPermission($_SESSION['steamid'], 'ban')) {
-                        echo json_encode(array('message' => 'You do not have permission to ban!'));
-                        exit();
-                    }
-                    if ($request->param('name') == null || $request->param('license') == null || $request->param('reason') == null || $request->param('banlength') == null) {
-                        echo json_encode(array('message' => 'Please fill in all of the fields!'));
-                    } else {
-                        if ($request->param('banlength') == 0) {
-                            $banned_until = 0;
-                            sendMessage('^3' . $request->param('name') . '^0 has been permanently banned by ^2' . $_SESSION['steam_personaname'] . '^0 for ^3' . $request->param('reason'));
-                        } else {
-                            $banned_until = time() + $request->param('banlength');
-                            sendMessage('^3' . $request->param('name') . '^0 has been banned for ' . secsToStr($request->param('banlength')) . ' by ^2' . $_SESSION['steam_personaname'] . '^0 for ^3' . $request->param('reason'));
-                        }
-                        dbquery('INSERT INTO bans (name, identifier, reason, ban_issued, banned_until, staff_name, staff_steamid, community) VALUES ("' . escapestring($request->param('name')) . '", "' . escapestring($request->param('license')) . '", "' . escapestring($request->param('reason')) . '", "' . time() . '", "' . $banned_until . '", "' . $_SESSION['steam_personaname'] . '", "' . $_SESSION['steamid'] . '", "' . userCommunity($_SESSION['steamid']) . '")', false);
-                        removeFromSession($request->param('license'), "Banned by " . $_SESSION['steam_personaname'] . " for " . $request->param('reason') . " (Relog for more information)");
-                        if (!empty(siteConfig('discord_webhook'))) {
-                            if ($request->param('banlength') == 0) {
-                                $banlength = "Permanent";
-                            } else {
-                                $banlength = secsToStr($request->param('banlength'));
-                            }
-                            discordMessage('Player Banned', '**Player: **' . $request->param('name') . '\r\n**Reason: **' . $request->param('reason') . '\r\n**Ban Length: **' . $banlength . '\r\n**Banned By: **' . $_SESSION['steam_personaname']);
-                        }
-                        echo json_encode(array('success' => true, 'reload' => true));
-                    }
-                    break;
-                case "commend":
-                    if (!hasPermission($_SESSION['steamid'], 'commend')) {
-                        echo json_encode(array('message' => 'You do not have permission to commend!'));
-                        exit();
-                    }
-                    if ($request->param('name') == null || $request->param('license') == null || $request->param('reason') == null) {
-                        echo json_encode(array('message' => 'Please fill in all of the fields!'));
-                    } else {
-                        dbquery('INSERT INTO commend (license, reason, staff_name, staff_steamid, time, community) VALUES ("' . escapestring($request->param('license')) . '", "' . escapestring($request->param('reason')) . '", "' . $_SESSION['steam_personaname'] . '", "' . $_SESSION['steamid'] . '", "' . time() . '", "' . userCommunity($_SESSION['steamid']) . '")', false);
-                        sendMessage('^3' . $request->param('name') . '^0 has been commended by ^2' . $_SESSION['steam_personaname'] . '^0 for ^3' . $request->param('reason'));
-                        if (!empty(siteConfig('discord_webhook'))) {
-                            discordMessage('Player Commended', '**Player: **' . $request->param('name') . '\r\n**Reason: **' . $request->param('reason') . '\r\n**Commended By: **' . $_SESSION['steam_personaname']);
-                        }
-                        echo json_encode(array('success' => true, 'reload' => true));
-                    }
-                    break;
-                case "note":
-                    if (!hasPermission($_SESSION['steamid'], 'note')) {
-                        echo json_encode(array('message' => 'You do not have permission to add a note!'));
-                        exit();
-                    }
-                    if ($request->param('name') == null || $request->param('license') == null || $request->param('reason') == null) {
-                        echo json_encode(array('message' => 'Please fill in all of the fields!'));
-                    } else {
-                        dbquery('INSERT INTO notes (license, reason, staff_name, staff_steamid, time, community) VALUES ("' . escapestring($request->param('license')) . '", "' . escapestring($request->param('reason')) . '", "' . $_SESSION['steam_personaname'] . '", "' . $_SESSION['steamid'] . '", "' . time() . '", "' . userCommunity($_SESSION['steamid']) . '")', false);
-                        if (!empty(siteConfig('discord_webhook'))) {
-                            discordMessage('Player Noted', '**Player: **' . $request->param('name') . '\r\n**Note: **' . $request->param('reason') . '\r\n**Note Added By: **' . $_SESSION['steam_personaname']);
-                        }
-                        echo json_encode(array('success' => true, 'reload' => true));
-                    }
-                    break;
                 case "addserver":
                     if (!hasPermission($_SESSION['steamid'], 'editservers')) {
                         echo json_encode(array('message' => 'You do not have permission to edit servers!'));
@@ -1606,10 +1579,10 @@ $klein->respond('POST', '/api/[warn|kick|ban|commend|note|addserver|addcommunity
                     } else {
                         // IP Validation
                         if ($request->param('serverip') == "localhost" || $request->param('serverip') == "127.0.0.1" || $request->param('serverip') == "0.0.0.0") {
-                            echo json_encode(array('message' => 'Invalid Server IP. Make sure you are using an external IP address.'));
+                            echo json_encode(array('message' => 'Invalid Server IP. Make sure you are using an external IPv4 address. (Error E1004)'));
                             exit();
                         } elseif (!filter_var($request->param('serverip'), FILTER_VALIDATE_IP)) {
-                            echo json_encode(array('message' => 'Invalid Server IP. Make sure you are using an external IP address. (IP Address Not Detected)'));
+                            echo json_encode(array('message' => 'Invalid Server IP. Make sure you are using an external IPv4 address. (Error E1003)'));
                             exit();
                         }
                         
