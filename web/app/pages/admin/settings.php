@@ -237,58 +237,58 @@
             </div>
         </footer>
     <script type="text/javascript">
-        var editor = CodeMirror.fromTextArea(document.getElementById("permissions"), {
-            lineNumbers: true,
-            mode: { name: "javascript", json: true },
-            indentUnit: 4,
-            indentWithTabs: true,
-            enterMode: "keep",
-            tabMode: "shift"
+        $(document).ready(function(){
+            var editor = CodeMirror.fromTextArea(document.getElementById("permissions"), {
+                lineNumbers: true,
+                mode: { name: "javascript", json: true },
+                indentUnit: 4,
+                indentWithTabs: true,
+                enterMode: "keep",
+                tabMode: "shift"
+            });
+
+            var totalLines = editor.lineCount();
+            var totalChars = editor.getTextArea().value.length;
+            editor.autoFormatRange({line:0, ch:0}, {line:totalLines, ch:totalChars});
+
+            var editor2 = CodeMirror.fromTextArea(document.getElementById("serveractions"), {
+                lineNumbers: true,
+                mode: { name: "javascript", json: true },
+                indentUnit: 4,
+                indentWithTabs: true,
+                enterMode: "keep",
+                tabMode: "shift"
+            });
+
+            var totalLines = editor2.lineCount();
+            var totalChars = editor2.getTextArea().value.length;
+            editor2.autoFormatRange({line:0, ch:0}, {line:totalLines, ch:totalChars});
+
+
+            var editor3 = CodeMirror.fromTextArea(document.getElementById("paneltheme"), {
+                lineNumbers: true,
+                mode: "css",
+                indentUnit: 4,
+                indentWithTabs: true,
+                enterMode: "keep",
+                tabMode: "shift"
+            });
+
+            var totalLines = editor3.lineCount();
+            var totalChars = editor3.getTextArea().value.length;
+            editor3.autoFormatRange({line:0, ch:0}, {line:totalLines, ch:totalChars});
+
+            editor.on('change',function(content){
+                $("#permissionshidden").val(content.getValue());
+            });
+
+            editor2.on('change',function(content){
+                $("#serveractionshidden").val(content.getValue());
+            });
+
+            editor3.on('change',function(content){
+                $("#panelthemehidden").val(content.getValue());
+            });
         });
-
-        var totalLines = editor.lineCount();
-        var totalChars = editor.getTextArea().value.length;
-        editor.autoFormatRange({line:0, ch:0}, {line:totalLines, ch:totalChars});
-
-
-        var editor2 = CodeMirror.fromTextArea(document.getElementById("serveractions"), {
-            lineNumbers: true,
-            mode: { name: "javascript", json: true },
-            indentUnit: 4,
-            indentWithTabs: true,
-            enterMode: "keep",
-            tabMode: "shift"
-        });
-
-        var totalLines = editor2.lineCount();
-        var totalChars = editor2.getTextArea().value.length;
-        editor2.autoFormatRange({line:0, ch:0}, {line:totalLines, ch:totalChars});
-
-
-        var editor3 = CodeMirror.fromTextArea(document.getElementById("paneltheme"), {
-            lineNumbers: true,
-            mode: "css",
-            indentUnit: 4,
-            indentWithTabs: true,
-            enterMode: "keep",
-            tabMode: "shift"
-        });
-
-        var totalLines = editor3.lineCount();
-        var totalChars = editor3.getTextArea().value.length;
-        editor3.autoFormatRange({line:0, ch:0}, {line:totalLines, ch:totalChars});
-
-        editor.on('change',function(content){
-            $("#permissionshidden").val(content.getValue());
-        });
-
-        editor2.on('change',function(content){
-            $("#serveractionshidden").val(content.getValue());
-        });
-
-        editor3.on('change',function(content){
-            $("#panelthemehidden").val(content.getValue());
-        });
-
     </script>
 <?php $this->partial('app/partial/footer.php');?>
