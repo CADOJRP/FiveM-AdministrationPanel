@@ -117,15 +117,15 @@
                                         }
 
                                         echo '
-													<tr onclick="window.location.href=\'../user/' . $player->identifiers[1] . '\';" class="clickable">
-														<td>' . $player->id . '</td>
-														<td>' . $player->name . '</td>
-														<td>' . $player->ping . '</td>
-														<td>' . $playtime . '</td>
-														<td>' . trustScore($player->identifiers[1]) . '%</td>
-														<td>' . $flags . '</td>
-													</tr> 
-												';
+                                            <tr onclick="window.location.href=\'../user/' . $player->identifiers[1] . '\';" class="clickable">
+                                                <td>' . $player->id . '</td>
+                                                <td>' . $player->name . '</td>
+                                                <td>' . $player->ping . '</td>
+                                                <td>' . $playtime . '</td>
+                                                <td>' . trustScore($player->identifiers[1]) . '%</td>
+                                                <td>' . $flags . '</td>
+                                            </tr> 
+                                        ';
                                     }
                                     if ($this->info['playercount'] == 0) {
                                         echo '<tr><td colspan="6"><center>No Players Online</center></td></tr>';
