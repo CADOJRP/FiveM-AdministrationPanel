@@ -66,3 +66,4 @@
 
 ### Support
 * Join our [Discord](https://discord.gg/q8MSQwt) Server for Support.
+* Want to follow our development on this project check out our [Trello](https://trello.com/b/OfbSs9Jw/fivem-admin-panel)
