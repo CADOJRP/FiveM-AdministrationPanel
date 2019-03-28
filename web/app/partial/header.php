@@ -202,7 +202,7 @@
 									</a>
 								</li>-->
 								<li class="nav-item">
-									<a class="nav-link" href="https://discord.gg/q8MSQwt" target="_BLANK">
+									<a class="nav-link" href="https://discord.gg/vFXqGXg" target="_BLANK">
 										<span class="sidebar-normal">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Discord Server</span>
 									</a>
 								</li>

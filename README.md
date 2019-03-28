@@ -3,7 +3,7 @@
       FiveM Admin Panel
   </h1>
   <h3 align="center">
-      If you would like to report an issue or request a feature. Join our <a href="https://discord.gg/q8MSQwt">Discord</a>.
+      If you would like to report an issue or request a feature. Join our <a href="https://discord.gg/vFXqGXg">Discord</a>.
   </h3>
   <h4 align="center">
      Looking for the legacy branch? Click <a href="https://github.com/CADOJRP/FiveM-AdministrationPanel/tree/legacy">here</a>.
@@ -45,7 +45,7 @@
 * Much More
 
 ### Upcoming Features
-* Have an idea? Suggest it in our [Discord](https://discord.gg/q8MSQwt).
+* Have an idea? Suggest it in our [Discord](https://discord.gg/vFXqGXg).
 
 ### Requirements
 * Web Server w/ PHP
@@ -65,5 +65,5 @@
 
 
 ### Support
-* Join our [Discord](https://discord.gg/q8MSQwt) Server for Support.
+* Join our [Discord](https://discord.gg/vFXqGXg) Server for Support.
 * Want to follow our development on this project check out our [Trello](https://trello.com/b/OfbSs9Jw/fivem-admin-panel)

@@ -29,7 +29,7 @@ $klein->respond('*', function ($request, $response, $service) {
     ini_set("error_log", realpath('logs') . "/" . date('mdy') . ".log");
     // Set Socket Timeout
     ini_set('default_socket_timeout', 5);
-    
+
     // CRON and Steam Auth Check
     if ($request->uri != "/api/cron") {
         session_start();
@@ -1507,10 +1507,10 @@ $klein->respond('POST', '/api/[warn|kick|ban|commend|note:action]', function ($r
     header('Content-Type: application/json');
     if (isset($_SESSION['steamid']) && getRank($_SESSION['steamid']) != "user") {
         if ($request->param('name') == null || $request->param('license') == null) {
-            echo json_encode(array('message' => 'Please contact the FiveM Administration Panel staff team! Error (E1001)'));            
+            echo json_encode(array('message' => 'Please contact the FiveM Administration Panel staff team! Error (E1001) https://discord.gg/vFXqGXg'));
             exit();
         } elseif ($request->param('reason') == null) {
-            echo json_encode(array('message' => 'Please fill in a reason.'));            
+            echo json_encode(array('message' => 'Please fill in a reason.'));
             exit();
         }
         $player = new Player($request->param('license'));
@@ -1534,7 +1534,7 @@ $klein->respond('POST', '/api/[warn|kick|ban|commend|note:action]', function ($r
             case "ban":
                 if (hasPermission($_SESSION['steamid'], 'ban')) {
                     if ($request->param('banlength') == null) {
-                        echo json_encode(array('message' => 'Please contact the FiveM Administration Panel staff team! Error (E1002)'));
+                        echo json_encode(array('message' => 'Please contact the FiveM Administration Panel staff team! Error (E1002) https://discord.gg/vFXqGXg'));
                         exit();
                     }
                     $player->ban($request->param('reason'), $_SESSION['steamid'], $request->param('banlength'));
@@ -1588,13 +1588,13 @@ $klein->respond('POST', '/api/[addserver|addcommunity|delcommunity|updatepanel|d
                             echo json_encode(array('message' => 'Invalid Server IP. Make sure you are using an external IPv4 address. (Error E1003)'));
                             exit();
                         }
-                        
+
                         // Port Validation
                         if (!is_numeric($request->param('serverport'))) {
                             echo json_encode(array('message' => 'Invalid Server Port. Make sure you are your FiveM server port. (Default: 30120)'));
                             exit();
                         }
-                        
+
                         dbquery('INSERT INTO servers (name, connection, rcon, community) VALUES ("' . $request->param('servername') . '", "' . $request->param('serverip') . ':' . $request->param('serverport') . '", "' . $request->param('serverrcon') . '", "' . userCommunity($_SESSION['steamid']) . '")', false);
                         staffDiscordMessage('New Server', '**Server Name: **' . $request->param('servername') . '\nServer: ' . $request->param('serverip') . ':' . $request->param('serverport'));
                         echo json_encode(array('success' => true, 'reload' => true));
