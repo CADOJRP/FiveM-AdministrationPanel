@@ -33,6 +33,7 @@
 * Add/Remove Server Menu
 * Edit Panel Menu
 * Warnings/Kicks/Bans Logging
+* Discord Logs Via Webhooks
 * Advanced Permissions System
 * Player IP Tracking/Viewing (Permission Based)
 * In-Game Commands

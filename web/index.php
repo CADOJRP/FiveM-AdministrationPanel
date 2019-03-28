@@ -1507,7 +1507,7 @@ $klein->respond('POST', '/api/[warn|kick|ban|commend|note:action]', function ($r
     header('Content-Type: application/json');
     if (isset($_SESSION['steamid']) && getRank($_SESSION['steamid']) != "user") {
         if ($request->param('name') == null || $request->param('license') == null) {
-            echo json_encode(array('message' => 'Please contact the FiveM Administration Panel staff team! Error (E1001) https://discord.gg/vFXqGXg'));
+            echo json_encode(array('message' => 'Please contact the FiveM Administration Panel staff team! Error (E1001)'));
             exit();
         } elseif ($request->param('reason') == null) {
             echo json_encode(array('message' => 'Please fill in a reason.'));
@@ -1534,7 +1534,7 @@ $klein->respond('POST', '/api/[warn|kick|ban|commend|note:action]', function ($r
             case "ban":
                 if (hasPermission($_SESSION['steamid'], 'ban')) {
                     if ($request->param('banlength') == null) {
-                        echo json_encode(array('message' => 'Please contact the FiveM Administration Panel staff team! Error (E1002) https://discord.gg/vFXqGXg'));
+                        echo json_encode(array('message' => 'Please contact the FiveM Administration Panel staff team! Error (E1002)'));
                         exit();
                     }
                     $player->ban($request->param('reason'), $_SESSION['steamid'], $request->param('banlength'));
