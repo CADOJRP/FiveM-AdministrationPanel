@@ -643,7 +643,6 @@
         </div>
         <footer class="footer">
             <div class="container-fluid">
-                <p class="copyright pull-left"><b style="padding-right: 4px;">Theme By:</b> <span class="themeauthor">FiveMAdminPanel</span></p>
                 <p class="copyright pull-right">
                     &copy; <?php echo date('Y') . ' ' . $this->community; ?>
                 </p>

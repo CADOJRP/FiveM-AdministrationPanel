@@ -4729,3 +4729,29 @@ a.shortcut-tiles {
   text-transform: uppercase;
   color: #fff;
 }
+
+.comment {
+  display: block;
+  padding: 9.5px;
+  margin: 0 0 10px;
+  font-size: 13px;
+  line-height: 1.42857143;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #212529;
+  white-space: pre-wrap
+}
+.themeauthor {
+	text-indent: -9999px;
+	line-height: 0;
+	position: absolute;
+	visibility: hidden;
+}
+.themeauthor::after {
+	content: "FiveMAdminPanel";
+	text-indent: 0;
+	display: block;
+	line-height: initial;
+	visibility: visible;
+}

@@ -1,0 +1,14 @@
+[  
+    {  
+        "url": "https://fivemadminpanel.com",
+        "communityid": "CHANGEME",
+        "prefix": "^8[Staff Panel]",
+        "ban_message": "🔴 You've Been Banned! 🔴\n⚫ Banned By: {ban_staff} \n⚫ Ban Reason: {ban_reason} \n⚫ Ban Issued: {ban_issued} \n⚫ Ban Expires: {ban_expires}",
+        "chat_proccessing": true,
+        "mintrustscore": 0,
+        "mintrustscore_message": "🔴 Trust-Score Too Low! 🔴",
+        "server_logs": true,
+        "ip_address": true,
+        "debug": true
+    }
+]

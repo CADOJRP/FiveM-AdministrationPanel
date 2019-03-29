@@ -26,11 +26,8 @@ function steamLogin() {
 				$ProfileName = $steamprofile['personaname'];
 				$ProfileID = $steamprofile['steamid'];
 				
-				if(empty(dbquery('SELECT * FROM users'))) {
-					dbquery('INSERT INTO users (name, steamid, rank) VALUES ("'.$ProfileName.'", "'.$ProfileID.'", "owner")', false);
-				} else {
-					dbquery('INSERT INTO users (name, steamid) VALUES ("'.$ProfileName.'", "'.$ProfileID.'") ON DUPLICATE KEY UPDATE name = "'.$ProfileName.'"', false);
-				}
+				//print_r('INSERT INTO users (name, steamid) VALUES ("'.$ProfileName.'", "'.$ProfileID.'") ON DUPLICATE KEY UPDATE name = "'.$ProfileName.'"');
+				dbquery('INSERT INTO users (name, steamid) VALUES ("'.$ProfileName.'", "'.$ProfileID.'") ON DUPLICATE KEY UPDATE name = "'.$ProfileName.'"', false);
 				header('Location: '.$GLOBALS['domainname']);
 				exit;
 			} else {

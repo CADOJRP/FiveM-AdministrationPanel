@@ -24,9 +24,6 @@
         </nav>
         <div class="content">
             <div class="container-fluid">
-                <?php
-                    plugins::call('addServerPageContentBeginning', array($server));
-                ?>
                 <div class="row">
                     <div class="col-md-12">
                         <div class="card">
@@ -47,7 +44,7 @@
                                             $anyplayers = false;
                                             $minlimit = time() - 60;
                                             $maxlimit = time() - siteConfig('recent_time') * 60;
-                                            $players = dbquery('SELECT * FROM players WHERE lastplayed < ' . $minlimit  . ' AND lastplayed > ' . $maxlimit);
+                                            $players = dbquery('SELECT * FROM players WHERE lastplayed < ' . $minlimit  . ' AND lastplayed > ' . $maxlimit . ' AND community="' . userCommunity($_SESSION['steamid']) . '"');
                                             foreach($players as $player) {
                                                 $anyplayers = true;
                                                 echo '
@@ -71,11 +68,9 @@
                 </div>
             </div>
         </div>
-        <?php
-            plugins::call('addServerPageContentEnd', array($server));
-        ?>
         <footer class="footer">
             <div class="container-fluid">
+                <p class="copyright pull-left"><b style="padding-right: 4px;">Theme By:</b> <span class="themeauthor">FiveMAdminPanel</span></p>
                 <p class="copyright pull-right">
                     &copy; <?php echo date('Y') . ' ' . $this->community; ?>
                 </p>

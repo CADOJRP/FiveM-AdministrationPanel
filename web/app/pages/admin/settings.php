@@ -40,6 +40,14 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
+                                                <label>Community ID (Keep Secret)</label>
+                                                <input type="text" class="form-control" placeholder="Community ID" value="<?php echo siteConfig('community'); ?>" readonly="true" style="cursor: default; user-select: all;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
                                                 <label>Discord Webhook (Blank To Disable)</label>
                                                 <input type="text" class="form-control" placeholder="Discord Webhook Link" name="discordwebhook" value="<?php echo siteConfig('discord_webhook'); ?>">
                                             </div>
@@ -131,6 +139,19 @@
                                             <input type="hidden" name="serveractions" id="serveractionshidden" value='<?php print_r($buttons) ?>'/>
                                         </div>
                                     </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label>Panel Theme (CSS)</label>
+                                            <?php
+                                                $theme = siteConfig('themecss');
+                                                if($theme == "false") {
+                                                    $theme = "";
+                                                }
+                                            ?>
+                                            <textarea rows="20" cols="80" class="form-control" id="paneltheme"><?php print_r($theme); ?></textarea>
+                                            <input type="hidden" name="paneltheme" id="panelthemehidden" value='<?php print_r($theme) ?>'/>
+                                        </div>
+                                    </div>
                                     <div id="message"></div>
                                     <button type="submit" class="btn btn-info btn-fill" style="width: 100%;">Update Settings</button>
                                     <div class="clearfix"></div>
@@ -139,43 +160,150 @@
                         </div>
                     </div>
                 </div>
+                <?php
+                    if(dbquery('SELECT * FROM communities WHERE owner="' . $_SESSION['steamid'] . '" AND uniqueid="' . userCommunity($_SESSION['steamid']) . '"')[0]) {
+                ?>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="header">
+                                    <h4 class="title">Delete Community</h4> </div>
+                                <div class="content">
+                                    <form action="<?php echo $GLOBALS['domainname']; ?>api/delcommunity" method="post" onsubmit="return submitForm($(this));">
+                                        <label>Confirmation (Please Type: "I wish to delete my community")</label>
+                                        <input type="text" class="form-control" placeholder="Please Type 'I wish to delete my community'" name="securitycheck">
+                                        <div id="message"></div>
+                                        <button type="submit" class="btn btn-danger btn-fill" style="width: 100%;">Delete Community</button>
+                                        <div class="clearfix"></div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <?php
+                    }
+                ?>
+                <!--<div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="header">
+                                <h4 class="title">Plugins</h4> </div>
+                            <div class="content">
+                                <form action="<?php echo $GLOBALS['domainname']; ?>api/editplugins" method="post" onsubmit="return submitForm($(this));">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>More User Information</label>
+                                                <select class="form-control" name="null">
+                                                    <option value="true">Enabled</option>
+                                                    <option value="false">Disabled</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Global User Records</label>
+                                                <select class="form-control" name="null">
+                                                    <option value="true">Enabled</option>
+                                                    <option value="false">Disabled</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>More Coming Soon!</label>
+                                                <select class="form-control" name="null" disabled="true">
+                                                    <option value="Coming Soon!">Coming Soon!</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="message"></div>
+                                    <button type="submit" class="btn btn-info btn-fill" style="width: 100%;">Delete Community</button>
+                                    <div class="clearfix"></div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>-->
             </div>
         </div>
+        <footer class="footer">
+            <div class="container-fluid">
+                <p class="copyright pull-left"><b style="padding-right: 4px;">Theme By:</b> <span class="themeauthor">FiveMAdminPanel</span></p>
+                <p class="copyright pull-right">
+                    &copy; <?php echo date('Y') . ' ' . $this->community; ?>
+                </p>
+            </div>
+        </footer>
     <script type="text/javascript">
-        var editor = CodeMirror.fromTextArea(document.getElementById("permissions"), {
-            lineNumbers: true,
-            mode: { name: "javascript", json: true },
-            indentUnit: 4,
-            indentWithTabs: true,
-            enterMode: "keep",
-            tabMode: "shift"
+        $(document).ready(function(){
+            if ($('#permissions').length > 0) {
+                var editor = CodeMirror.fromTextArea(document.getElementById("permissions"), {
+                    lineNumbers: true,
+                    mode: { name: "javascript", json: true },
+                    indentUnit: 4,
+                    indentWithTabs: true,
+                    enterMode: "keep",
+                    tabMode: "shift"
+                });
+
+                var totalLines = editor.lineCount();
+                var totalChars = editor.getTextArea().value.length;
+                editor.autoFormatRange({line:0, ch:0}, {line:totalLines, ch:totalChars});
+
+                editor.on('change',function(content){
+                    $("#permissionshidden").val(content.getValue());
+                });
+            } else {
+                console.log('Error E1005. Contact FiveM Admin Panel Staff. (Details: #Permissions)');
+            }
+
+
+            if ($('#serveractions').length > 0) {
+                var editor2 = CodeMirror.fromTextArea(document.getElementById("serveractions"), {
+                    lineNumbers: true,
+                    mode: { name: "javascript", json: true },
+                    indentUnit: 4,
+                    indentWithTabs: true,
+                    enterMode: "keep",
+                    tabMode: "shift"
+                });
+
+                var totalLines = editor2.lineCount();
+                var totalChars = editor2.getTextArea().value.length;
+                editor2.autoFormatRange({line:0, ch:0}, {line:totalLines, ch:totalChars});
+
+                editor2.on('change',function(content){
+                    $("#serveractionshidden").val(content.getValue());
+                });
+            } else {
+                console.log('Error E1005. Contact FiveM Admin Panel Staff. (Details: #serveractions)');
+            }
+
+
+            if ($('#paneltheme').length > 0) {
+                var editor3 = CodeMirror.fromTextArea(document.getElementById("paneltheme"), {
+                    lineNumbers: true,
+                    mode: "css",
+                    indentUnit: 4,
+                    indentWithTabs: true,
+                    enterMode: "keep",
+                    tabMode: "shift"
+                });
+
+                var totalLines = editor3.lineCount();
+                var totalChars = editor3.getTextArea().value.length;
+                editor3.autoFormatRange({line:0, ch:0}, {line:totalLines, ch:totalChars});
+
+                editor3.on('change',function(content){
+                    $("#panelthemehidden").val(content.getValue());
+                });
+            } else {
+                console.log('Error E1005. Contact FiveM Admin Panel Staff. (Details: #paneltheme)');
+            }
+
+
         });
-
-        var totalLines = editor.lineCount();
-        var totalChars = editor.getTextArea().value.length;
-        editor.autoFormatRange({line:0, ch:0}, {line:totalLines, ch:totalChars});
-
-
-        var editor2 = CodeMirror.fromTextArea(document.getElementById("serveractions"), {
-            lineNumbers: true,
-            mode: { name: "javascript", json: true },
-            indentUnit: 4,
-            indentWithTabs: true,
-            enterMode: "keep",
-            tabMode: "shift"
-        });
-
-        var totalLines = editor2.lineCount();
-        var totalChars = editor2.getTextArea().value.length;
-        editor2.autoFormatRange({line:0, ch:0}, {line:totalLines, ch:totalChars});
-
-        editor.on('change',function(content){
-            $("#permissionshidden").val(content.getValue());
-        });
-
-        editor2.on('change',function(content){
-            $("#serveractionshidden").val(content.getValue());
-        });
-
     </script>
 <?php $this->partial('app/partial/footer.php');?>

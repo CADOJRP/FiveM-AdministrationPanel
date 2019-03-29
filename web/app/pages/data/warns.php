@@ -57,12 +57,20 @@
       </div>
     </div>
   </div>
+  <footer class="footer">
+      <div class="container-fluid">
+          <p class="copyright pull-left"><b style="padding-right: 4px;">Theme By:</b> <span class="themeauthor">FiveMAdminPanel</span></p>
+          <p class="copyright pull-right">
+              &copy; <?php echo date('Y') . ' ' . $this->community; ?>
+          </p>
+      </div>
+  </footer>
   <script type="text/javascript">
         $(document).ready(function() {
             $('#players').DataTable( {
                 "processing": true,
                 "serverSide": true,
-                "ajax": "<?php echo $GLOBALS['domainname']; ?>api/warnslist",
+                "ajax": "<?php echo $GLOBALS['domainname']; ?>api/warnslist?community=<?php echo urlencode(userCommunity($_SESSION['steamid'])); ?>",
                 "order": [[ 3, "desc" ]]
             } );
             

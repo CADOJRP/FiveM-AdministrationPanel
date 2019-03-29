@@ -28,7 +28,7 @@
         <div class="col-md-12">
           <div class="card">
             <div class="header">
-              <h4 class="title">Bans List</h4>
+              <h4 class="title">Commendations List</h4>
             </div>
             <div class="content table-responsive">
                 <table id="players" class="table table-hover table-striped table-bordered" style="width:100%;cursor:pointer;">
@@ -37,8 +37,7 @@
                             <th>Name</th>
                             <th>Reason</th>
                             <th>Staff Member</th>
-                            <th>Ban Issued</th>
-                            <th>Banned Until</th>
+                            <th>Date</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -48,8 +47,7 @@
                             <th>Name</th>
                             <th>Reason</th>
                             <th>Staff Member</th>
-                            <th>Ban Issued</th>
-                            <th>Banned Until</th>
+                            <th>Date</th>
                         </tr>
                     </tfoot>
                 </table>
@@ -72,7 +70,7 @@
             $('#players').DataTable( {
                 "processing": true,
                 "serverSide": true,
-                "ajax": "<?php echo $GLOBALS['domainname']; ?>api/banslist?community=<?php echo userCommunity($_SESSION['steamid']); ?>",
+                "ajax": "<?php echo $GLOBALS['domainname']; ?>api/commendslist?community=<?php echo userCommunity($_SESSION['steamid']); ?>",
                 "order": [[ 3, "desc" ]]
             } );
             
