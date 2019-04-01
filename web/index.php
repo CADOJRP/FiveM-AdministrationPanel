@@ -83,6 +83,7 @@ $klein->respond('*', function ($request, $response, $service) {
     );
 
 
+    // Check if Plugin Enabled
     function checkPlugin($plugin)
     {
         return dbquery('SELECT * FROM config WHERE community="' . escapestring(userCommunity($_SESSION['steamid'])) . '"')[0]['plugin_' . $plugin];
