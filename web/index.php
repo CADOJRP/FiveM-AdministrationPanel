@@ -89,7 +89,7 @@ $klein->respond('*', function ($request, $response, $service) {
         return dbquery('SELECT * FROM config WHERE community="' . escapestring(userCommunity($_SESSION['steamid'])) . '"')[0]['plugin_' . $plugin];
     }
 
-    // Check FiveM Server Status
+    // Check if FiveM Server is Online
     function checkOnline($site)
     {
         $curlInit = curl_init(strtok($site, ':'));
