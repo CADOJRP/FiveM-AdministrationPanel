@@ -4,7 +4,7 @@
 $GLOBALS['version'] = 0.4;
 $GLOBALS['resourceversion'] = 1.1;
 
-// Execution Timer Start
+// Execution Timer
 $GLOBALS['time_start'] = microtime(true);
 
 // Set Globals
