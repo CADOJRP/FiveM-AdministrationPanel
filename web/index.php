@@ -71,7 +71,7 @@ $klein->respond('*', function ($request, $response, $service) {
         return dbquery('SELECT * FROM config WHERE community="' . $community . '"')[0][$option];
     }
 
-    if(isset($_SESSION['steamid'])) {
+    if($_SESSION['steamid'] != null) {
         $GLOBALS['serveractions'] = json_decode(json_encode(unserialize(dbquery('SELECT * FROM config WHERE community="' . userCommunity($_SESSION['steamid']) . '"', true)[0]['serveractions'])), true);
         $GLOBALS['permissions'] = json_decode(json_encode(unserialize(dbquery('SELECT * FROM config WHERE community="' . userCommunity($_SESSION['steamid']) . '"', true)[0]['permissions'])), true);
         $GLOBALS['siteconfig'] = array(
