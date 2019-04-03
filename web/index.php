@@ -29,13 +29,14 @@ $klein->respond('*', function ($request, $response, $service) {
     ini_set("error_log", realpath('logs') . "/" . date('mdy') . ".log");
     // Set Socket Timeout
     ini_set('default_socket_timeout', 5);
-
     // CRON and Steam Auth Check
-    if ($request->uri != "/api/cron") {
+    if ($_SERVER['REQUEST_URI'] == "/api/cron" && $_SERVER['REQUEST_URI'] == "/api/userdata") {
+        // Do Nothing
+    } else {
         session_start();
         require(getcwd() . '/steamauth/steamauth.php');
     }
-
+    
     // MySQL Injection Prevention
     function escapestring($value)
     {
@@ -67,22 +68,22 @@ $klein->respond('*', function ($request, $response, $service) {
     {
         if ($community == null) {
             if(!isset($_SESSION['steamid'])) {
-                exit();
+                return false;
             }
             $community = userCommunity($_SESSION['steamid']);
         }
         return dbquery('SELECT * FROM config WHERE community="' . $community . '"')[0][$option];
     }
 
-    @$GLOBALS['serveractions'] = json_decode(json_encode(unserialize(@dbquery('SELECT * FROM config WHERE community="' . @userCommunity($_SESSION['steamid']) . '"', true)[0]['serveractions'])), true);
-    @$GLOBALS['permissions'] = json_decode(json_encode(unserialize(@dbquery('SELECT * FROM config WHERE community="' . @userCommunity($_SESSION['steamid']) . '"', true)[0]['permissions'])), true);
-    @$GLOBALS['siteconfig'] = array(
-        'tscommend' => @siteConfig('tscommend'),
-        'tsban' => @siteConfig('tsban'),
-        'tskick' => @siteConfig('tskick'),
-        'tswarn' => @siteConfig('tswarn'),
-        'trustscore' => @siteConfig('trustscore'),
-        'tstime' => @siteConfig('tstime')
+    $GLOBALS['serveractions'] = json_decode(json_encode(unserialize(dbquery('SELECT * FROM config WHERE community="' . userCommunity($_SESSION['steamid']) . '"', true)[0]['serveractions'])), true);
+    $GLOBALS['permissions'] = json_decode(json_encode(unserialize(dbquery('SELECT * FROM config WHERE community="' . userCommunity($_SESSION['steamid']) . '"', true)[0]['permissions'])), true);
+    $GLOBALS['siteconfig'] = array(
+        'tscommend' => siteConfig('tscommend'),
+        'tsban' => siteConfig('tsban'),
+        'tskick' => siteConfig('tskick'),
+        'tswarn' => siteConfig('tswarn'),
+        'trustscore' => siteConfig('trustscore'),
+        'tstime' => siteConfig('tstime')
     );
 
 
