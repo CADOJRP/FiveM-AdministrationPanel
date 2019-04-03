@@ -1182,7 +1182,7 @@ $klein->respond('GET', '/api/[staff|players|playerslist|warnslist|kickslist|comm
             $playercount = 0;
             $servercount = 0;
             foreach ($servers as $server) {
-                if ($servercount % 35 == 0) {
+                if ($servercount % 50 == 0) {
                     sleep(1);
                 }
                 if (preg_match('/\s/', $server['connection'])) {
