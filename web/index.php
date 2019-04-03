@@ -71,16 +71,18 @@ $klein->respond('*', function ($request, $response, $service) {
         return dbquery('SELECT * FROM config WHERE community="' . $community . '"')[0][$option];
     }
 
-    $GLOBALS['serveractions'] = json_decode(json_encode(unserialize(dbquery('SELECT * FROM config WHERE community="' . userCommunity($_SESSION['steamid']) . '"', true)[0]['serveractions'])), true);
-    $GLOBALS['permissions'] = json_decode(json_encode(unserialize(dbquery('SELECT * FROM config WHERE community="' . userCommunity($_SESSION['steamid']) . '"', true)[0]['permissions'])), true);
-    $GLOBALS['siteconfig'] = array(
-        'tscommend' => siteConfig('tscommend'),
-        'tsban' => siteConfig('tsban'),
-        'tskick' => siteConfig('tskick'),
-        'tswarn' => siteConfig('tswarn'),
-        'trustscore' => siteConfig('trustscore'),
-        'tstime' => siteConfig('tstime')
-    );
+    if(isset($_SESSION['steamid'])) {
+        $GLOBALS['serveractions'] = json_decode(json_encode(unserialize(dbquery('SELECT * FROM config WHERE community="' . userCommunity($_SESSION['steamid']) . '"', true)[0]['serveractions'])), true);
+        $GLOBALS['permissions'] = json_decode(json_encode(unserialize(dbquery('SELECT * FROM config WHERE community="' . userCommunity($_SESSION['steamid']) . '"', true)[0]['permissions'])), true);
+        $GLOBALS['siteconfig'] = array(
+            'tscommend' => siteConfig('tscommend'),
+            'tsban' => siteConfig('tsban'),
+            'tskick' => siteConfig('tskick'),
+            'tswarn' => siteConfig('tswarn'),
+            'trustscore' => siteConfig('trustscore'),
+            'tstime' => siteConfig('tstime')
+        );
+    }
 
 
     // Check if Plugin Enabled
