@@ -1685,6 +1685,13 @@ $klein->respond('POST', '/api/[addserver|addcommunity|delcommunity|updatepanel|d
                             exit();
                         }
 
+                        if (empty($_POST['contactemail']) || $_POST['contactemail'] == null) {
+                            echo json_encode(array('success' => false, 'message' => 'Contact email cannot be empty!'));
+                            exit();
+                        }
+
+                        
+
                         dbquery('UPDATE config SET
                         community_name = "' . escapestring($_POST['communityname']) . '",
                         discord_webhook = "' . escapestring($_POST['discordwebhook']) . '",
@@ -1702,6 +1709,9 @@ $klein->respond('POST', '/api/[addserver|addcommunity|delcommunity|updatepanel|d
                         permissions = \'' . escapestring(serialize(json_decode($_POST['permissions']))) . '\',
                         serveractions = \'' . escapestring(serialize(json_decode($_POST['serveractions']))) . '\'
                          WHERE community="' . userCommunity($_SESSION['steamid']) . '"', false);
+
+
+                        dbquery('UPDATE communities SET email="' . escapestring($_POST['contactemail']) . '" WHERE uniqueid="' . userCommunity($_SESSION['steamid']) . '"', false);
 
                         $temppermissions = json_decode($_POST['permissions'], JSON_PRETTY_PRINT);
                         if (array_keys($temppermissions)[0] != "owner") {
@@ -1724,7 +1734,7 @@ $klein->respond('POST', '/api/[addserver|addcommunity|delcommunity|updatepanel|d
                 case "delcommunity":
                     if ($request->param('securitycheck') != null) {
                         if (strtolower($request->param('securitycheck')) == "i wish to delete my community") {
-                            dbquery('UPDATE communities SET owner="deleted_' . escapestring($_SESSION['steamid']) . '" WHERE uniqueid="' . userCommunity($_SESSION['steamid']) . '"', false);
+                            dbquery('UPDATE communities SET owner="deleted_' . escapestring($_SESSION['steamid']) . '", active=0 WHERE uniqueid="' . userCommunity($_SESSION['steamid']) . '"', false);
                             dbquery('UPDATE users SET rank="user", community="" WHERE steamid="' . escapestring($_SESSION['steamid']) . '"', false);
                             echo json_encode(array('success' => true, 'reload' => true));
                         } else {

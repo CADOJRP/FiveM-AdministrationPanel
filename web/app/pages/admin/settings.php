@@ -15,13 +15,20 @@
         </nav>
         <div class="content">
             <div class="container-fluid">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="alert alert-danger">
-                            <span><center><strong>Must Read!</strong> Saving this will rewrite <strong>ALL</strong> of the settings to the values shown below. Beware when changing!</center></span>
+                <?php
+                    $email = dbquery('SELECT * FROM communities WHERE uniqueid="' . escapestring(userCommunity($_SESSION['steamid'])) . '"')[0]['email'];
+                    if(empty($email) || $email == null) {
+                ?>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="alert alert-danger">
+                                <span><center><b>Required Action!</b> A contact email is required. In the event of abuse or an inactive server/community we will attempt to contact you via the email provided.</center></span>
+                            </div>
                         </div>
                     </div>
-                </div>
+                <?php
+                    }
+                ?>
                 <div class="row">
                     <div class="col-md-12">
                         <div class="card">
@@ -38,10 +45,16 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="col-md-6">
                                             <div class="form-group">
                                                 <label>Community ID (Keep Secret)</label>
                                                 <input type="text" class="form-control" placeholder="Community ID" value="<?php echo siteConfig('community'); ?>" readonly="true" style="cursor: default; user-select: all;">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Contact Email</label>
+                                                <input type="email" class="form-control" name="contactemail" placeholder="Contact Email Address" value="<?php echo $email; ?>">
                                             </div>
                                         </div>
                                     </div>
