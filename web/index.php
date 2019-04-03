@@ -1188,7 +1188,7 @@ $klein->respond('GET', '/api/[staff|players|playerslist|warnslist|kickslist|comm
                 if (preg_match('/\s/', $server['connection'])) {
                     // Contains Spaces - Stop Worker
                 } else {
-                    exec($GLOBALS['phpbin'] . ' worker.php ' . $server['connection'] . ' ' . $server['community']);
+                    exec($GLOBALS['phpbin'] . ' worker.php ' . $server['connection'] . ' ' . $server['community'] . ' > logs/workeroutput.txt 2>&1 &');
                 }
                 $servercount++;
             }
