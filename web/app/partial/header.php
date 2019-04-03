@@ -15,7 +15,7 @@
 		<link rel="stylesheet" href="<?php echo $GLOBALS['subfolder']; ?>/app/css/alertify.bootstrap.min.css"/>
 		<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 		<link href='//fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
-		<link rel="stylesheet" href="<?php echo $GLOBALS['subfolder']; ?>app/css/bootstrap-duration-picker.css">
+		<link rel="stylesheet" href="<?php echo $GLOBALS['subfolder']; ?>/app/css/bootstrap-duration-picker.css">
 		<script src="<?php echo $GLOBALS['subfolder']; ?>/app/js/bootstrap-duration-picker.js"></script>
 		<link href="<?php echo $GLOBALS['subfolder']; ?>/app/css/pe-icon-7-stroke.css" rel="stylesheet" />
 		<link href="<?php echo $GLOBALS['subfolder']; ?>/app/css/bootstrap.min.css" rel="stylesheet" />
