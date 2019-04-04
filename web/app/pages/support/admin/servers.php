@@ -16,7 +16,7 @@
                 <div class="col-md-9">
                     <div class="card">
                         <div class="header">
-                            <h4 class="title">All Tickets</h4>
+                            <h4 class="title">All Servers</h4>
                         </div>
                         <div class="content table-responsive">
                             <table id="servers" class="table table-hover table-striped table-bordered" style="width:100%;cursor:pointer;">
