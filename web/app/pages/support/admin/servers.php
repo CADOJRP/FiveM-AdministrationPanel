@@ -59,7 +59,6 @@
                             <p><b>Total Servers: </b><?php echo count(dbquery('SELECT * FROM servers')); ?></p>
                             <p><b>Total Communities: </b><?php echo count(dbquery('SELECT * FROM communities')); ?></p>
                             <p><b>Total Online Players: </b><?php echo number_format($onlineplayers); ?></p>
-                            <p><b>Total Players: </b><?php echo number_format(count(dbquery('SELECT * FROM players'))); ?></p>
                         </div>
                     </div>
                 </div>
