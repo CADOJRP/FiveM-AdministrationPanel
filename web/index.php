@@ -658,7 +658,7 @@ $klein->respond('GET', '/data/[players|bans|warns|kicks|commends:action]', funct
     }
 });
 
-$klein->respond('GET', '/support/[downloads|tickets|admin:action]', function ($request, $response, $service) {
+$klein->respond('GET', '/support/[downloads|tickets|servers|admin:action]', function ($request, $response, $service) {
     switch ($request->action) {
         case "downloads":
             $service->render('app/pages/support/downloads.php', array('community' => "FiveM Admin Panel", 'title' => 'Downloads'));
@@ -666,6 +666,13 @@ $klein->respond('GET', '/support/[downloads|tickets|admin:action]', function ($r
         case "tickets":
             throw Klein\Exceptions\HttpException::createFromCode(404);
             //$service->render('app/pages/support/tickets.php', array('community' => "FiveM Admin Panel", 'title' => 'Support Tickets'));
+            break;
+        case "servers":
+            if (isStaff($_SESSION['steamid'])) {
+                $service->render('app/pages/support/admin/servers.php', array('community' => "FiveM Admin Panel", 'title' => 'Admin View Servers'));
+            } else {
+                throw Klein\Exceptions\HttpException::createFromCode(404);
+            }
             break;
         case "admin":
             if (isStaff($_SESSION['steamid'])) {
@@ -947,7 +954,7 @@ $klein->respond('GET', '/api/v2/[:endpoint]/[:community]', function ($request, $
     }
 });
 
-$klein->respond('GET', '/api/[staff|players|playerslist|warnslist|kickslist|commendslist|banslist|servers|bans|warns|kicks|cron|userdata|adduser|trustscore|message|recentchart:action]', function ($request, $response, $service) {
+$klein->respond('GET', '/api/[staff|players|playerslist|warnslist|kickslist|commendslist|banslist|servers|serverslist|bans|warns|kicks|cron|userdata|adduser|trustscore|message|recentchart:action]', function ($request, $response, $service) {
     header('Content-Type: application/json');
     if ($request->param('community') == "" || $request->param('community') == null) {
         if ($request->action != "cron") {
@@ -1094,6 +1101,44 @@ $klein->respond('GET', '/api/[staff|players|playerslist|warnslist|kickslist|comm
 
             echo json_encode(
                 SSP::complex($_GET, $sql_details, 'warnings', 'ID', $columns, null, "community='" . userCommunity($_SESSION['steamid']) . "'")
+            );
+            break;
+        case "serverslist":
+            if(!isStaff($_SESSION['steamid'])) {
+                throw Klein\Exceptions\HttpException::createFromCode(404);
+                exit();
+            }
+            $columns = array(
+                array('db' => 'name', 'dt' => 0),
+                array('db' => 'connection', 'dt' => 1),
+                array(
+                    'db' => 'community',
+                    'dt' => 2,
+                    'formatter' => function ($d, $row) {
+                        return dbquery('SELECT * FROM communities WHERE uniqueid="' . $d . '"')[0]['email'];
+                    },
+                ),
+                array(
+                    'db' => 'community',
+                    'dt' => 3,
+                    'formatter' => function ($d, $row) {
+                        return count(dbquery('SELECT * FROM players WHERE community="' . $d . '" AND lastplayed="' . (time() - 1) . '"'));
+                    },
+                ),
+                array('db' => 'connection', 'dt' => -1),
+            );
+
+            $sql_details = array(
+                'user' => $GLOBALS['mysql_user'],
+                'pass' => $GLOBALS['mysql_pass'],
+                'db' => $GLOBALS['mysql_db'],
+                'host' => $GLOBALS['mysql_host'],
+            );
+
+            require('app/main/ssp.class.php');
+
+            echo json_encode(
+                SSP::complex($_GET, $sql_details, 'servers', 'ID', $columns, null, "")
             );
             break;
         case "kickslist":

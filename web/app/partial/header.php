@@ -195,6 +195,16 @@
 										<span class="sidebar-normal">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Downloads</span>
 									</a>
 								</li>
+								<?php
+									if(isStaff($_SESSION['steamid'])) {
+										echo '
+										<li class="nav-item">
+											<a class="nav-link" href="' . $GLOBALS['domainname'] . 'support/servers">
+												<span class="sidebar-normal">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;View Servers</span>
+											</a>
+										</li>';
+									}
+								?>
 								<!--<li class="nav-item">
 									<a class="nav-link" href="<?php echo $GLOBALS['domainname']; ?>support/tickets">
 										<span class="sidebar-normal">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Support Tickets</span>
