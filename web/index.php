@@ -1122,7 +1122,7 @@ $klein->respond('GET', '/api/[staff|players|playerslist|warnslist|kickslist|comm
                     'db' => 'community',
                     'dt' => 3,
                     'formatter' => function ($d, $row) {
-                        return count(dbquery('SELECT * FROM players WHERE community="' . $d . '" AND lastplayed>"' . (time() - 60) . '"'));
+                        return count(dbquery('SELECT * FROM players WHERE community="' . $d . '" AND lastplayed>"' . time() - 60 . '"'));
                     },
                 ),
                 array('db' => 'connection', 'dt' => -1),
