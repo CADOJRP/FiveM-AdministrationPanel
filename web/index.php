@@ -1108,16 +1108,15 @@ $klein->respond('GET', '/api/[staff|players|playerslist|warnslist|kickslist|comm
                 throw Klein\Exceptions\HttpException::createFromCode(404);
                 exit();
             }
-            $time = time() - 60;
             $columns = array(
-                array('db' => 'name', 'dt' => 0),
                 array(
                     'db' => 'community',
-                    'dt' => 1,
+                    'dt' => 0,
                     'formatter' => function ($d, $row) {
                         return dbquery('SELECT * FROM communities WHERE uniqueid="' . $d . '"')[0]['name'];
                     },
                 ),
+                array('db' => 'name', 'dt' => 1),
                 array('db' => 'connection', 'dt' => 2),
                 array(
                     'db' => 'community',
@@ -1135,6 +1134,7 @@ $klein->respond('GET', '/api/[staff|players|playerslist|warnslist|kickslist|comm
                     'db' => 'community',
                     'dt' => 4,
                     'formatter' => function ($d, $row) {
+                        $time = time() - 60;
                         return count(dbquery('SELECT * FROM players WHERE community="' . $d . '" AND lastplayed>="' . $time . '"'));
                     },
                 ),

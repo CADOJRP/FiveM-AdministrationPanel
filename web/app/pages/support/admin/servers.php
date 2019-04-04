@@ -16,7 +16,7 @@
                 <div class="col-md-9">
                     <div class="card">
                         <div class="header">
-                            <h4 class="title">All Tickets</h4>
+                            <h4 class="title">View Servers</h4>
                         </div>
                         <div class="content table-responsive">
                             <table id="servers" class="table table-hover table-striped table-bordered" style="width:100%;cursor:pointer;">
@@ -47,13 +47,11 @@
                 <div class="col-md-3">
                     <div class="card">
                         <div class="header">
-                            <h4 class="title">Ticket Statistics</h4>
+                            <h4 class="title">Server Statistics</h4>
                         </div>
                         <div class="content" style="font-size: 14px;">
-                            <p><b>Total Tickets: </b><?php echo count(dbquery('SELECT * FROM support_tickets')); ?></p>
-                            <p><b>Total Comments: </b><?php echo count(dbquery('SELECT * FROM support_comments')); ?></p>
-                            <p><b>Your Tickets: </b><?php echo count(dbquery('SELECT * FROM support_tickets WHERE steamid="' . $_SESSION['steamid'] . '"')); ?></p>
-                            <p><b>Your Comments: </b><?php echo count(dbquery('SELECT * FROM support_comments WHERE steamid="' . $_SESSION['steamid'] . '"')); ?></p>
+                            <p><b>Total Servers: </b><?php echo count(dbquery('SELECT * FROM servers')); ?></p>
+                            <p><b>Total Communities: </b><?php echo count(dbquery('SELECT * FROM communities')); ?></p>
                         </div>
                     </div>
                 </div>
@@ -75,6 +73,13 @@
                     "ajax": "<?php echo $GLOBALS['domainname']; ?>api/serverslist?community=NA",
                     "order": [[ 0, "desc" ]]
                 } );
+            } );
+            
+            var table = $('#servers').DataTable();
+            
+            $('#servers tbody').on('click', 'tr', function () {
+                var data = table.row( this ).data();
+                window.location = "<?php echo $GLOBALS['domainname']; ?>server/" + data[-1]
             } );
     </script>
     <?php $this->partial('app/partial/footer.php');?>

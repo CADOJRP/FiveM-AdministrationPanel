@@ -43,8 +43,10 @@ function dbquery($sql, $returnresult = true)
 
 
 $players = json_decode(@file_get_contents('http://' . $argv[1] . '/players.json'), true);
+$playercount = 0;
 if (!empty($players)) {
     foreach ($players as $player) {
+        $playercount++;
         $discord = 'NULL';
         foreach ($player['identifiers'] as $identifier) {
             if (strpos($identifier, 'discord:') !== false) {
@@ -69,7 +71,10 @@ if (!empty($players)) {
             break;
         }
         dbquery('INSERT INTO players (name, license, steam, discord, firstjoined, lastplayed, community) VALUES ("' . escapestring($player['name']) . '", "' . escapestring($license) . '", "' . escapestring($steam) . '", ' . $discord . ', "' . time() . '", "' . time() . '", "' . $argv[2] . '") ON DUPLICATE KEY UPDATE name="' . escapestring($player['name']) . '", playtime=playtime+1, steam="' . escapestring($steam) . '", discord=' . $discord . ', lastplayed="' . time() . '"', false);
+        dbquery('UPDATE servers SET players=' . $playercount . ' WHERE connection="' . escapestring($argv[1]) . '"', false);
     }
+} else {
+    dbquery('UPDATE servers SET players=' . $playercount . ' WHERE connection="' . escapestring($argv[1]) . '"', false);    
 }
 
 exit();
