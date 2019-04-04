@@ -1111,17 +1111,29 @@ $klein->respond('GET', '/api/[staff|players|playerslist|warnslist|kickslist|comm
             $time = time() - 60;
             $columns = array(
                 array('db' => 'name', 'dt' => 0),
-                array('db' => 'connection', 'dt' => 1),
                 array(
                     'db' => 'community',
-                    'dt' => 2,
+                    'dt' => 1,
                     'formatter' => function ($d, $row) {
-                        return dbquery('SELECT * FROM communities WHERE uniqueid="' . $d . '"')[0]['email'];
+                        return dbquery('SELECT * FROM communities WHERE uniqueid="' . $d . '"')[0]['name'];
+                    },
+                ),
+                array('db' => 'connection', 'dt' => 2),
+                array(
+                    'db' => 'community',
+                    'dt' => 3,
+                    'formatter' => function ($d, $row) {
+                        $email = dbquery('SELECT * FROM communities WHERE uniqueid="' . $d . '"')[0]['email'];
+                        if(!empty($email)) {
+                            return $email;
+                        } else {
+                            return 'N/A';
+                        }
                     },
                 ),
                 array(
                     'db' => 'community',
-                    'dt' => 3,
+                    'dt' => 4,
                     'formatter' => function ($d, $row) {
                         return count(dbquery('SELECT * FROM players WHERE community="' . $d . '" AND lastplayed>="' . $time . '"'));
                     },
