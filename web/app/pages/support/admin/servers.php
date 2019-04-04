@@ -22,6 +22,7 @@
                             <table id="servers" class="table table-hover table-striped table-bordered" style="width:100%;cursor:pointer;">
                                 <thead>
                                     <tr>
+                                        <th>Community</th>
                                         <th>Server</th>
                                         <th>IP:PORT</th>
                                         <th>Email</th>
@@ -32,8 +33,11 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
+                                        <th>Community</th>
                                         <th>Server</th>
                                         <th>IP:PORT</th>
+                                        <th>Email</th>
+                                        <th>Players</th>
                                     </tr>
                                 </tfoot>
                             </table>
