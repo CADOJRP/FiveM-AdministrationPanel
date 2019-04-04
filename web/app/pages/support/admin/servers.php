@@ -50,8 +50,16 @@
                             <h4 class="title">Server Statistics</h4>
                         </div>
                         <div class="content" style="font-size: 14px;">
+                            <?php
+                                $onlineplayers = 0;
+                                foreach(dbquery('SELECT * FROM servers') as $server) {
+                                    $onlineplayers = $onlineplayers + $server['players'];
+                                }
+                            ?>
                             <p><b>Total Servers: </b><?php echo count(dbquery('SELECT * FROM servers')); ?></p>
                             <p><b>Total Communities: </b><?php echo count(dbquery('SELECT * FROM communities')); ?></p>
+                            <p><b>Total Online Players: </b><?php echo number_format($onlineplayers); ?></p>
+                            <p><b>Total Players: </b><?php echo number_format(count(dbquery('SELECT * FROM players'))); ?></p>
                         </div>
                     </div>
                 </div>
@@ -73,13 +81,13 @@
                     "ajax": "<?php echo $GLOBALS['domainname']; ?>api/serverslist?community=NA",
                     "order": [[ 0, "desc" ]]
                 } );
-            } );
             
-            var table = $('#servers').DataTable();
-            
-            $('#servers tbody').on('click', 'tr', function () {
-                var data = table.row( this ).data();
-                window.location = "<?php echo $GLOBALS['domainname']; ?>server/" + data[-1]
+                var table = $('#servers').DataTable();
+                
+                $('#servers tbody').on('click', 'tr', function () {
+                    var data = table.row( this ).data();
+                    window.location = "<?php echo $GLOBALS['domainname']; ?>server/" + data[-1]
+                } );
             } );
     </script>
     <?php $this->partial('app/partial/footer.php');?>

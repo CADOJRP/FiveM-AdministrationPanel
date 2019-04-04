@@ -762,7 +762,11 @@ $klein->respond('GET', '/server/[:connection]', function ($request, $response, $
         if (!empty($server)) {
             $service->render('app/pages/server.php', array('community' => siteConfig('community_name'), 'title' => 'Server', 'server' => $server[0], 'info' => serverInfo($connection)));
         } else {
-            throw Klein\Exceptions\HttpException::createFromCode(404);
+            if(isStaff($_SESSION['steamid'])) {
+                $service->render('app/pages/server.php', array('community' => 'FiveM Admin Panel', 'title' => 'Admin View &bullet; Server', 'server' => $server[0], 'info' => serverInfo($connection)));
+            } else {
+                throw Klein\Exceptions\HttpException::createFromCode(404);
+            }
         }
     } else {
         $service->render('app/pages/offline.php', array('community' => siteConfig('community_name'), 'title' => 'Server Offline'));
@@ -1130,14 +1134,7 @@ $klein->respond('GET', '/api/[staff|players|playerslist|warnslist|kickslist|comm
                         }
                     },
                 ),
-                array(
-                    'db' => 'community',
-                    'dt' => 4,
-                    'formatter' => function ($d, $row) {
-                        $time = time() - 60;
-                        return count(dbquery('SELECT * FROM players WHERE community="' . $d . '" AND lastplayed>="' . $time . '"'));
-                    },
-                ),
+                array('db' => 'players', 'dt' => 4),
                 array('db' => 'connection', 'dt' => -1),
             );
 
