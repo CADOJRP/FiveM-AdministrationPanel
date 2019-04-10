@@ -3,36 +3,35 @@
 	<head>
 		<meta charset="utf-8" />
 		<title><?php echo $this->community . " &bullet; " . $this->title; ?></title>
-		<link rel="icon" type="image/x-icon" href="<?php echo $GLOBALS['domainname']; ?>app/img/favicon.ico"/>
+		<link rel="icon" type="image/x-icon" href="<?php echo $GLOBALS['subfolder']; ?>/app/img/favicon.ico"/>
 		<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
 		<meta name="viewport" content="width=device-width" />
-		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
-		<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-		<script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-		<script src="//code.jquery.com/jquery-1.10.2.js"></script>
-		<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.11.0/build/alertify.min.js"></script>
-		<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.11.0/build/css/alertify.min.css"/>
-		<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.11.0/build/css/themes/bootstrap.min.css"/>
+		<link rel="stylesheet" href="<?php echo $GLOBALS['subfolder']; ?>/app/css/font-awesome.min.css">
+		<link rel="stylesheet" href="<?php echo $GLOBALS['subfolder']; ?>/app/css/jquery-ui.css">
+		<script src="<?php echo $GLOBALS['subfolder']; ?>/app/js/jquery.min.js"></script>
+		<script src="<?php echo $GLOBALS['subfolder']; ?>/app/js/jquery-1.10.2.js"></script>
+		<script src="<?php echo $GLOBALS['subfolder']; ?>/app/js/alertify.min.js"></script>
+		<link rel="stylesheet" href="<?php echo $GLOBALS['subfolder']; ?>/app/css/alertify.min.css"/>
+		<link rel="stylesheet" href="<?php echo $GLOBALS['subfolder']; ?>/app/css/alertify.bootstrap.min.css"/>
 		<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 		<link href='//fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
-		<link rel="stylesheet" href="<?php echo $GLOBALS['domainname']; ?>app/css/bootstrap-duration-picker.css">
-		<script src="<?php echo $GLOBALS['domainname']; ?>app/js/bootstrap-duration-picker.js"></script>
-		<link href="<?php echo $GLOBALS['domainname']; ?>app/css/pe-icon-7-stroke.css" rel="stylesheet" />
-		<link href="<?php echo $GLOBALS['domainname']; ?>app/css/bootstrap.min.css" rel="stylesheet" />
-		<link href="<?php echo $GLOBALS['domainname']; ?>app/css/animate.min.css" rel="stylesheet"/>
-		<link href="<?php echo $GLOBALS['domainname']; ?>app/css/light-bootstrap-dashboard.css" rel="stylesheet"/>
-		<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css"/>
-		<script src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js"></script>
-		<link href="//cdn.datatables.net/1.10.18/css/dataTables.bootstrap4.min.css" rel="stylesheet">
-		<script src="//cdn.datatables.net/1.10.18/js/jquery.dataTables.min.js"></script>
-		<script src="//cdn.datatables.net/1.10.18/js/dataTables.bootstrap4.min.js"></script>
-		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.41.0/codemirror.min.css" />
-		<script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.41.0/codemirror.min.js"></script>
-		<script src="//cdn.jsdelivr.net/npm/codemirror-formatting@1.0.0/formatting.min.js"></script>
-		<script src="//esironal.github.io/cmtouch/mode/javascript/javascript.js"></script>
-		<script src="//esironal.github.io/cmtouch/mode/css/css.js"></script>
-		<link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
-		<script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+		<link rel="stylesheet" href="<?php echo $GLOBALS['subfolder']; ?>/app/css/bootstrap-duration-picker.css">
+		<script src="<?php echo $GLOBALS['subfolder']; ?>/app/js/bootstrap-duration-picker.js"></script>
+		<link href="<?php echo $GLOBALS['subfolder']; ?>/app/css/pe-icon-7-stroke.css" rel="stylesheet" />
+		<link href="<?php echo $GLOBALS['subfolder']; ?>/app/css/bootstrap.min.css" rel="stylesheet" />
+		<link href="<?php echo $GLOBALS['subfolder']; ?>/app/css/animate.min.css" rel="stylesheet"/>
+		<link href="<?php echo $GLOBALS['subfolder']; ?>/app/css/light-bootstrap-dashboard.css" rel="stylesheet"/>
+		<script src="<?php echo $GLOBALS['subfolder']; ?>/app/js/chart.bundle.min.js"></script>
+		<link href="<?php echo $GLOBALS['subfolder']; ?>/app/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+		<script src="<?php echo $GLOBALS['subfolder']; ?>/app/js/jquery.dataTables.min.js"></script>
+		<script src="<?php echo $GLOBALS['subfolder']; ?>/app/js/dataTables.bootstrap4.min.js"></script>
+		<link rel="stylesheet" href="<?php echo $GLOBALS['subfolder']; ?>/app/css/codemirror.min.css" />
+		<script src="<?php echo $GLOBALS['subfolder']; ?>/app/js/codemirror.min.js"></script>
+		<script src="<?php echo $GLOBALS['subfolder']; ?>/app/js/codemirror.formatting.min.js"></script>
+		<script src="<?php echo $GLOBALS['subfolder']; ?>/app/js/codemirror.javascript.style.js"></script>
+		<script src="<?php echo $GLOBALS['subfolder']; ?>/app/js/codemirror.css.style.js"></script>
+		<link href="<?php echo $GLOBALS['subfolder']; ?>/app/css/select2.min.css" rel="stylesheet" />
+		<script src="<?php echo $GLOBALS['subfolder']; ?>/app/js/select2.min.js"></script>
 		<?php
 			if(isset($_SESSION['steamid'])) {
 				$theme = siteConfig('themecss');
@@ -48,7 +47,7 @@
 	</head>
 	<body>
 		<div class="wrapper">
-			<div class="sidebar" data-color="blue" data-image="<?php echo $GLOBALS['domainname'] ?>app/img/sidebar-5.jpg">
+			<div class="sidebar" data-color="blue" data-image="<?php echo $GLOBALS['subfolder']; ?>/app/img/sidebar-5.jpg">
 				<div class="sidebar-wrapper">
 					<div class="logo">
 						<div class="simple-text">
@@ -196,6 +195,16 @@
 										<span class="sidebar-normal">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Downloads</span>
 									</a>
 								</li>
+								<?php
+									if(isStaff($_SESSION['steamid'])) {
+										echo '
+										<li class="nav-item">
+											<a class="nav-link" href="' . $GLOBALS['domainname'] . 'support/servers">
+												<span class="sidebar-normal">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;View Servers</span>
+											</a>
+										</li>';
+									}
+								?>
 								<!--<li class="nav-item">
 									<a class="nav-link" href="<?php echo $GLOBALS['domainname']; ?>support/tickets">
 										<span class="sidebar-normal">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Support Tickets</span>

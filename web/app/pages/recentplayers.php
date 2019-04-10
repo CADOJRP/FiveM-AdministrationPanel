@@ -32,7 +32,7 @@
                                 <p class="category">Last 10 Minutes</p>
                             </div>
                             <div class="content table-responsive table-full-width">
-                                <table class="table table-hover table-striped">
+                                <table id="recentplayers" class="table table-hover table-striped table-bordered" style="width:100%;cursor:pointer;">
                                     <thead>
                                         <th>Name</th>
                                     	<th>Playtime</th>
@@ -56,11 +56,16 @@
                                                     </tr>
                                                 ';
                                             }
-                                            if(!$anyplayers) {
-                                                echo '<tr><td colspan="4"><center>No Recently Disconnected Players</center></td></tr>';
-                                            }
 										?>
                                     </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Playtime</th>
+                                            <th>Trust Score</th>
+                                            <th>Last Played</th>
+                                        </tr>
+                                    </tfoot>
                                 </table>
                             </div>
                         </div>
@@ -77,4 +82,18 @@
             </div>
         </footer>
     </div>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#recentplayers').DataTable({
+                "paging": false,
+                "order": [
+                    [0, "asc"]
+                ],
+                "bInfo": false,
+                "language": {
+                   "emptyTable": "No Recent Players"
+                }
+            });
+        });
+    </script>
 <?php $this->partial('app/partial/footer.php');?>

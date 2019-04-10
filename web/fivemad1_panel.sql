@@ -227,130 +227,92 @@ CREATE TABLE `warnings` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Indexes for dumped tables
+-- Indexes for warnings table
 --
-
+ALTER TABLE `warnings`
+  ADD PRIMARY KEY (`ID`),
+  MODIFY `ID` int(255) NOT NULL AUTO_INCREMENT;
+  
 --
--- Indexes for table `bans`
+-- Indexes for bans table
 --
 ALTER TABLE `bans`
-  ADD PRIMARY KEY (`ID`);
-
+  ADD PRIMARY KEY (`ID`),
+  MODIFY `ID` int(255) NOT NULL AUTO_INCREMENT;
+  
 --
--- Indexes for table `commend`
+-- Indexes for commend table
 --
 ALTER TABLE `commend`
-  ADD PRIMARY KEY (`ID`);
-
+  ADD PRIMARY KEY (`ID`),
+  MODIFY `ID` int(255) NOT NULL AUTO_INCREMENT;
+  
 --
--- Indexes for table `communities`
+-- Indexes for communities table
 --
 ALTER TABLE `communities`
-  ADD PRIMARY KEY (`ID`);
-
+  ADD PRIMARY KEY (`ID`),
+  MODIFY `ID` int(255) NOT NULL AUTO_INCREMENT;
+  
 --
--- Indexes for table `config`
+-- Indexes for config table
 --
 ALTER TABLE `config`
-  ADD PRIMARY KEY (`ID`);
+  ADD PRIMARY KEY (`ID`),
+  MODIFY `ID` int(255) NOT NULL AUTO_INCREMENT;
 
 --
--- Indexes for table `kicks`
+-- Indexes for kicks table
 --
 ALTER TABLE `kicks`
-  ADD PRIMARY KEY (`ID`);
+  ADD PRIMARY KEY (`ID`),
+  MODIFY `ID` int(255) NOT NULL AUTO_INCREMENT;
 
 --
--- Indexes for table `notes`
+-- Indexes for notes table
 --
 ALTER TABLE `notes`
-  ADD PRIMARY KEY (`ID`);
+  ADD PRIMARY KEY (`ID`),
+  MODIFY `ID` int(255) NOT NULL AUTO_INCREMENT;
 
 --
--- Indexes for table `players`
+-- Indexes for players table
 --
 ALTER TABLE `players`
-  ADD PRIMARY KEY (`ID`),
-  ADD UNIQUE KEY `license` (`license`,`community`);
+  ADD PRIMARY KEY (`ID`),  
+  ADD UNIQUE KEY `license` (`license`,`community`),
+  MODIFY `ID` int(255) NOT NULL AUTO_INCREMENT;
 
 --
--- Indexes for table `servers`
+-- Indexes for servers table
 --
 ALTER TABLE `servers`
-  ADD PRIMARY KEY (`ID`);
+  ADD PRIMARY KEY (`ID`),
+  MODIFY `ID` int(255) NOT NULL AUTO_INCREMENT;
 
 --
--- Indexes for table `support_comments`
+-- Indexes for support_comments table
 --
 ALTER TABLE `support_comments`
-  ADD PRIMARY KEY (`ID`);
+  ADD PRIMARY KEY (`ID`),
+  MODIFY `ID` int(255) NOT NULL AUTO_INCREMENT;
 
 --
--- Indexes for table `support_tickets`
+-- Indexes for support_tickets table
 --
 ALTER TABLE `support_tickets`
-  ADD PRIMARY KEY (`ID`);
+  ADD PRIMARY KEY (`ID`),
+  MODIFY `ID` int(255) NOT NULL AUTO_INCREMENT;
 
 --
--- Indexes for table `users`
+-- Indexes for users table
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`ID`),
+  MODIFY `ID` int(255) NOT NULL AUTO_INCREMENT,
   ADD UNIQUE KEY `steamid` (`steamid`);
-ALTER TABLE `users` ADD FULLTEXT KEY `rank` (`rank`);
-
---
--- Indexes for table `warnings`
---
-ALTER TABLE `warnings`
-  ADD PRIMARY KEY (`ID`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `bans`
---
-ALTER TABLE `bans`
-  MODIFY `ID` int(255) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `commend`
---
-ALTER TABLE `commend`
-  MODIFY `ID` int(255) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `communities`
---
-ALTER TABLE `communities`
-  MODIFY `ID` int(255) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `config`
---
-ALTER TABLE `config`
-  MODIFY `ID` int(255) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `kicks`
---
-ALTER TABLE `kicks`
-  MODIFY `ID` int(255) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `notes`
---
-ALTER TABLE `notes`
-  MODIFY `ID` int(255) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `players`
---
-ALTER TABLE `players`
-  MODIFY `ID` int(255) NOT NULL AUTO_INCREMENT;
 COMMIT;
+
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
