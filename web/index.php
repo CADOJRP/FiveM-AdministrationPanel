@@ -885,6 +885,69 @@ $klein->respond('GET', '/api/v2/[:endpoint]/[:player]/[:community]', function ($
     }
 });
 
+// API v2
+$klein->respond('GET', '/api/[warn|kick|ban|commend|note:action]', function ($request, $response, $service) {
+    header('Content-Type: application/json');
+    if ($request->param('steamid') != null && getRank($request->param('steamid')) != "user") {
+        if ($request->param('name') == null || $request->param('license') == null) {
+            echo json_encode(array('message' => 'Please contact the FiveM Administration Panel staff team! Error (E1001)'));
+            exit();
+        } elseif ($request->param('reason') == null) {
+            echo json_encode(array('message' => 'Please fill in a reason.'));
+            exit();
+        }
+        $player = new Player($request->param('license'));
+        switch ($request->action) {
+            case "warn":
+                if (hasPermission($request->param('steamid'), 'warn')) {
+                    $player->warn($request->param('reason'), $request->param('steamid'));
+                    echo json_encode(array('success' => true, 'reload' => true));
+                } else {
+                    echo json_encode(array('message' => 'You do not have permission to warn!'));
+                }
+                break;
+            case "kick":
+                if (hasPermission($request->param('steamid'), 'kick')) {
+                    $player->kick($request->param('reason'), $request->param('steamid'));
+                    echo json_encode(array('success' => true, 'reload' => true));
+                } else {
+                    echo json_encode(array('message' => 'You do not have permission to kick!'));
+                }
+                break;
+            case "ban":
+                if (hasPermission($request->param('steamid'), 'ban')) {
+                    if ($request->param('banlength') == null) {
+                        echo json_encode(array('message' => 'Please contact the FiveM Administration Panel staff team! Error (E1002)'));
+                        exit();
+                    }
+                    $player->ban($request->param('reason'), $request->param('steamid'), $request->param('banlength'));
+                    echo json_encode(array('success' => true, 'reload' => true));
+                } else {
+                    echo json_encode(array('message' => 'You do not have permission to ban!'));
+                }
+                break;
+            case "commend":
+                if (hasPermission($request->param('steamid'), 'commend')) {
+                    $player->commend($request->param('reason'), $request->param('steamid'));
+                    echo json_encode(array('success' => true, 'reload' => true));
+                } else {
+                    echo json_encode(array('message' => 'You do not have permission to warn!'));
+                }
+                break;
+            case "note":
+                if (hasPermission($request->param('steamid'), 'note')) {
+                    $player->note($request->param('reason'), $request->param('steamid'));
+                    echo json_encode(array('success' => true, 'reload' => true));
+                } else {
+                    echo json_encode(array('message' => 'You do not have permission to add notes!'));
+                }
+                break;
+        }
+    } else {
+        echo json_encode(array("response" => "401", "message" => "Unauthenticated API request."));
+    }
+});
+
 // API v2 (2 Params | Endpoint | Community)
 $klein->respond('GET', '/api/v2/[:endpoint]/[:community]', function ($request, $response, $service) {
     header('Content-Type: application/json');
