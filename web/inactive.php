@@ -41,9 +41,14 @@ function dbquery($sql, $returnresult = true)
     return $return;
 }
 
+echo '<pre>';
+$time = time() - 604800;
 $servers = dbquery('SELECT * FROM servers WHERE active=1');
 foreach($servers as $server) {
-    echo $server['community'] . "<br>";
+    $actions = array();
+    array_push($actions, dbquery('SELECT * FROM bans WHERE community="' . escapestring($server['community']) . '" AND ban_issued >= ' . $time));
+    print_r($actions);
+    echo '<br><br>';
 }
 
 exit();
