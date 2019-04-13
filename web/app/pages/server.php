@@ -64,12 +64,12 @@
                             if ($GLOBALS['serveractions'][$this->server['connection']] != null) {
                                 foreach ($GLOBALS['serveractions'][$this->server['connection']] as $button) {
                                     echo '
-												<form action="' . $GLOBALS['domainname'] . 'api/button/' . $button['action'] . '" method="post" onsubmit="return submitForm($(this));" style="display: inline-block;">
-													<input type="hidden" name="server" value="' . $this->server['connection'] . '"/>
-													<input type="hidden" name="input" value="' . $button['input'] . '"/>
-													<button type="submit" class="btn btn-success btn-fill ' . $button['buttonstyle'] . '">' . $button['buttonname'] . '</button>
-												</form>
-											';
+                                        <form action="' . $GLOBALS['domainname'] . 'api/button/' . $button['action'] . '" method="post" onsubmit="return submitForm($(this));" style="display: inline-block;">
+                                            <input type="hidden" name="server" value="' . $this->server['connection'] . '"/>
+                                            <input type="hidden" name="input" value="' . $button['input'] . '"/>
+                                            <button type="submit" class="btn btn-success btn-fill ' . $button['buttonstyle'] . '">' . $button['buttonname'] . '</button>
+                                        </form>
+                                    ';
                                 }
                             }
                             ?>
@@ -119,7 +119,7 @@
                                         echo '
                                             <tr onclick="window.location.href=\'../user/' . $player->identifiers[1] . '\';" class="clickable">
                                                 <td>' . $player->id . '</td>
-                                                <td>' . $player->name . '</td>
+                                                <td>' . htmlspecialchars($player->name) . '</td>
                                                 <td>' . $player->ping . '</td>
                                                 <td>' . $playtime . '</td>
                                                 <td>' . trustScore($player->identifiers[1]) . '%</td>
