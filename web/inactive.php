@@ -51,7 +51,9 @@ foreach($servers as $server) {
     array_push($actions, dbquery('SELECT * FROM warnings WHERE community="' . escapestring($server['community']) . '" AND time >= ' . $time));
     array_push($actions, dbquery('SELECT * FROM kicks WHERE community="' . escapestring($server['community']) . '" AND time >= ' . $time));
     array_push($actions, dbquery('SELECT * FROM notes WHERE community="' . escapestring($server['community']) . '" AND time >= ' . $time));
-    print_r($actions);
+    foreach($actions as $server2) {
+        print_r($server2);
+    }
     echo '<br><br>';
 }
 
