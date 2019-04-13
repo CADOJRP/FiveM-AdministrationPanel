@@ -53,7 +53,7 @@ foreach($servers as $server) {
     array_push($actions, dbquery('SELECT * FROM kicks WHERE community="' . escapestring($server['community']) . '" AND time >= ' . $time));
     array_push($actions, dbquery('SELECT * FROM notes WHERE community="' . escapestring($server['community']) . '" AND time >= ' . $time));
     foreach($actions as $server2) {
-        if(count($array) > 0) {
+        if(count($server2) > 0) {
             $active = 'true';
         } else {
             $active = 'false';
