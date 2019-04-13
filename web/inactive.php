@@ -52,7 +52,11 @@ foreach($servers as $server) {
     array_push($actions, dbquery('SELECT * FROM warnings WHERE community="' . escapestring($server['community']) . '" AND time >= ' . $time));
     array_push($actions, dbquery('SELECT * FROM kicks WHERE community="' . escapestring($server['community']) . '" AND time >= ' . $time));
     array_push($actions, dbquery('SELECT * FROM notes WHERE community="' . escapestring($server['community']) . '" AND time >= ' . $time));
-    var_dump($actions);
+    foreach($actions as $server2) {
+        var_dump($server2);
+    }
+
+    echo '<br><br><br><br><br>';
     /*if(!isempty($actions)) {
         $active = true;
     }
