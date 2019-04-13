@@ -57,14 +57,9 @@ foreach($servers as $server) {
             $active = 'true';
         } else {
             $active = 'false';
+            dbquery('UPDATE servers SET active=0 WHERE connection="' . $server['connection'] . '" AND community="' . $server['community'] . '"');
         }
     }
-
-    //echo '<br><br><br><br><br>';
-    /*if(!isempty($actions)) {
-        $active = true;
-    }*/
-    echo $server['connection'] . ' • ' . $active . ' <br>';
 }
 
 exit();
