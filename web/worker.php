@@ -83,7 +83,7 @@ if (!empty($players)) {
             error_log('No License Found!');
             break;
         }
-        dbquery('INSERT INTO players (name, license, steam, discord, xbl, ip, live, firstjoined, lastplayed, community) VALUES ("' . escapestring($player['name']) . '", "' . escapestring($license) . '", "' . escapestring($steam) . '", ' . $discord . ',  ' . $xbl . ',  ' . $ip . ',  ' . $live . ', "' . time() . '", "' . time() . '", "' . $argv[2] . '") ON DUPLICATE KEY UPDATE name="' . escapestring($player['name']) . '", playtime=playtime+5, steam="' . escapestring($steam) . '", discord=' . $discord . ', lastplayed="' . time() . '"', false);
+        dbquery('INSERT INTO players (name, license, steam, discord, xbl, ip, live, firstjoined, lastplayed, community) VALUES ("' . escapestring($player['name']) . '", "' . escapestring($license) . '", "' . escapestring($steam) . '", ' . $discord . ',  ' . $xbl . ',  ' . $ip . ',  ' . $live . ', "' . time() . '", "' . time() . '", "' . $argv[2] . '") ON DUPLICATE KEY UPDATE name="' . escapestring($player['name']) . '", playtime=playtime+5, steam="' . escapestring($steam) . '", discord=' . $discord . ', xbl=' . $xbl . ', ip=' . $ip . ', live=' . $live . ', lastplayed="' . time() . '"', false);
         dbquery('UPDATE servers SET players=' . $playercount . ' WHERE connection="' . escapestring($argv[1]) . '"', false);
     }
 } else {
