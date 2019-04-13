@@ -41,7 +41,7 @@ function dbquery($sql, $returnresult = true)
     return $return;
 }
 
-$servers = dbquery('SELECT * FROM servers WHERE active=1');
+$servers = dbquery('SELECT * FROM servers WHERE active=0');
 foreach($servers as $server) {
     echo $server['connection'] . "<br>";
 }
