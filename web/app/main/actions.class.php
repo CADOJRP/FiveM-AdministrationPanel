@@ -111,6 +111,11 @@ class Player {
 			(
 				name,
 				identifier,
+				steam,
+				discord,
+				xbl,
+				ip,
+				live,
 				reason,
 				ban_issued,
 				banned_until,
@@ -120,6 +125,11 @@ class Player {
 			) VALUES (
 				"' . $player['name'] . '",
 				"' . $player['license'] . '",
+				"' . $player['steam'] . '",
+				"' . $player['discord'] . '",
+				"' . $player['xbl'] . '",
+				"' . $player['ip'] . '",
+				"' . $player['live'] . '",
 				"' . $this->mysql->escape($reason) . '",
 				"' . time() . '",
 				"' . $banexpire . '",
