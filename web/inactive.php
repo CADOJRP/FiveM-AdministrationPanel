@@ -41,6 +41,7 @@ function dbquery($sql, $returnresult = true)
     return $return;
 }
 
+// Check
 $servers = dbquery('SELECT * FROM servers WHERE active=0');
 foreach($servers as $server) {
     echo $server['connection'] . "<br>";
