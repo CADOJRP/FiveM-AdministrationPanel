@@ -2,7 +2,7 @@
 local config = json.decode(LoadResourceFile(GetCurrentResourceName(), 'config.json'))[1]
 
 -- Set Current Version
-local version = 1.1
+local version = 1.2
 
 -- URL Encode
 function urlencode(str)
