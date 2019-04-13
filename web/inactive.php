@@ -42,7 +42,7 @@ function dbquery($sql, $returnresult = true)
 }
 
 echo '<pre>';
-$time = time() - 604800;
+$time = time() - 1209600;
 $servers = dbquery('SELECT * FROM servers WHERE active=1');
 foreach($servers as $server) {
     $active = 'false';
