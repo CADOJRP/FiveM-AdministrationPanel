@@ -48,6 +48,9 @@ if (!empty($players)) {
     foreach ($players as $player) {
         $playercount++;
         $discord = 'NULL';
+        $xbl = 'NULL';
+        $ip = 'NULL';
+        $live = 'NULL';
         foreach ($player['identifiers'] as $identifier) {
             if (strpos($identifier, 'discord:') !== false) {
                 $discord = '"' . $identifier . '"';
