@@ -33,11 +33,36 @@ AddEventHandler("playerConnecting", function(name, setReason, deferrals)
 			CancelEvent()
 		end
 
-		-- Get User License
-		local license = GetPlayerIdentifiers(source)[2]
+		-- Get User Identifiers
+		local license = "NULL"
+		local steam = "NULL"
+		local discord = "NULL"
+		local xbl = "NULL"
+		local ip = "NULL"
+		local live = "NULL"
 
-		-- Get User Steam
-		local steam = GetPlayerIdentifiers(source)[1]
+		local idents = GetPlayerIdentifiers(source)
+		for identCount = 1, #idents do
+			if string.find(idents[identCount], "license:") then
+				license = idents[identCount]
+			end
+
+			if string.find(idents[identCount], "steam:") then
+				steam = idents[identCount]
+			end
+
+			if string.find(idents[identCount], "xbl:") then
+				xbl = idents[identCount]
+			end
+
+			if string.find(idents[identCount], "live:") then
+				live = idents[identCount]
+			end
+
+			if string.find(idents[identCount], "discord:") then
+				discord = idents[identCount]
+			end
+		end
 
 		-- Add User to Database
 		PerformHttpRequest(config.url .. '/api/adduser?community=' .. config.communityid .. '&license=' .. license .. '&steam=' .. steam .. '&name=' .. urlencode(GetPlayerName(source)), function(statusCode, response, headers) end)
@@ -50,7 +75,7 @@ AddEventHandler("playerConnecting", function(name, setReason, deferrals)
 		end
 
 		-- Get User Data
-		PerformHttpRequest(config.url .. '/api/userdata?community=' .. config.communityid .. '&license=' .. license, function(statusCode, response, headers)
+		PerformHttpRequest(config.url .. '/api/userdata?community=' .. config.communityid .. '&license=' .. license .. '&steam=' .. steam .. '&discord=' .. discord .. '&xbl=' .. xbl .. '&ip=' .. ip .. '&live=' .. live, function(statusCode, response, headers)
 			if response ~= nil and response ~= "null" then
 				--print('[Staff Panel] Data Received.')
 				local userinfo = json.decode(response)
