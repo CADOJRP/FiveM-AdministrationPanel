@@ -45,6 +45,7 @@ echo '<pre>';
 $time = time() - 604800;
 $servers = dbquery('SELECT * FROM servers WHERE active=1');
 foreach($servers as $server) {
+    $active = false;
     $actions = array();
     array_push($actions, dbquery('SELECT * FROM bans WHERE community="' . escapestring($server['community']) . '" AND ban_issued >= ' . $time));
     array_push($actions, dbquery('SELECT * FROM commend WHERE community="' . escapestring($server['community']) . '" AND time >= ' . $time));
@@ -52,9 +53,11 @@ foreach($servers as $server) {
     array_push($actions, dbquery('SELECT * FROM kicks WHERE community="' . escapestring($server['community']) . '" AND time >= ' . $time));
     array_push($actions, dbquery('SELECT * FROM notes WHERE community="' . escapestring($server['community']) . '" AND time >= ' . $time));
     foreach($actions as $server2) {
-        print_r($server2);
+        if(!isempty($server2)) {
+            $active = true;
+        }
     }
-    echo '<br><br>';
+    echo $server['connection'] . ' • ' . $active . ' <br>';
 }
 
 exit();
