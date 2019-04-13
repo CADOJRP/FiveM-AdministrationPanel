@@ -36,8 +36,11 @@ AddEventHandler("playerConnecting", function(name, setReason, deferrals)
 		-- Get User License
 		local license = GetPlayerIdentifiers(source)[2]
 
+		-- Get User Steam
+		local steam = GetPlayerIdentifiers(source)[1]
+
 		-- Add User to Database
-		PerformHttpRequest(config.url .. '/api/adduser?community=' .. config.communityid .. '&license=' .. license .. '&name=' .. urlencode(GetPlayerName(source)), function(statusCode, response, headers) end)
+		PerformHttpRequest(config.url .. '/api/adduser?community=' .. config.communityid .. '&license=' .. license .. '&steam=' .. steam .. '&name=' .. urlencode(GetPlayerName(source)), function(statusCode, response, headers) end)
 		Citizen.Wait(1500)
 
 
