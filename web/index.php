@@ -1299,9 +1299,9 @@ $klein->respond('GET', '/api/[staff|players|playerslist|warnslist|kickslist|comm
             $playercount = 0;
             $servercount = 0;
             foreach ($servers as $server) {
-                if ($servercount % 50 == 0) {
+                /*if ($servercount % 50 == 0) {
                     sleep(1);
-                }
+                }*/
                 if (preg_match('/\s/', $server['connection'])) {
                     // Contains Spaces - Stop Worker
                 } else {
@@ -1310,7 +1310,13 @@ $klein->respond('GET', '/api/[staff|players|playerslist|warnslist|kickslist|comm
                 $servercount++;
             }
             $endtime = microtime(true);
-            echo json_encode(array('status' => '200', 'message' => 'Successful', 'loadtime' => ($endtime - $starttime), 'servers' => count($servers)));
+            echo json_encode(array(
+                        'status' => '200',
+                        'message' => 'Successful',
+                        'loadtime' => ($endtime - $starttime),
+                        'servers' => count($servers),
+                        'phpbin' => $GLOBALS['phpbin']
+                    ));
             break;
         case "bans":
             echo json_encode(dbquery('SELECT name, identifier, reason, ban_issued, banned_until, staff_name, staff_steamid FROM bans WHERE community="' . $community . '"'));
