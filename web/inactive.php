@@ -43,7 +43,7 @@ function dbquery($sql, $returnresult = true)
 
 $servers = dbquery('SELECT * FROM servers WHERE active=1');
 foreach($servers as $server) {
-    echo $server['connection'] . "<br>";
+    echo $server['community'] . "<br>";
 }
 
 exit();
