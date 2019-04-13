@@ -62,16 +62,16 @@ if (!empty($players)) {
             }
 
             if (strpos($identifier, 'xbl:') !== false) {
-                $xbl = $identifier;
+                $xbl = '"' . $identifier . '"';
             }
 
             if (strpos($identifier, 'ip:') !== false) {
                 // Only Works on Unsecure Endpoint
-                $ip = $identifier;
+                $ip = '"' . $identifier . '"';
             }
 
             if (strpos($identifier, 'live:') !== false) {
-                $live = $identifier;
+                $live = '"' . $identifier . '"';
             }
         }
 
