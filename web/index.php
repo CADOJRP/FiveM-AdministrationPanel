@@ -1295,7 +1295,7 @@ $klein->respond('GET', '/api/[staff|players|playerslist|warnslist|kickslist|comm
                 throw Klein\Exceptions\HttpException::createFromCode(404);
             }
             $starttime = microtime(true);
-            $servers = dbquery('SELECT * FROM servers');
+            $servers = dbquery('SELECT * FROM servers WHERE active=1');
             $playercount = 0;
             $servercount = 0;
             foreach ($servers as $server) {
