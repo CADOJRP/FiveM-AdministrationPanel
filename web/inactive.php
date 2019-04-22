@@ -3,7 +3,6 @@
 require('config.php');
 
 ini_set("error_log", realpath('logs') . "/cron.log");
-
 // MySQL Injection Prevention
 function escapestring($value)
 {
