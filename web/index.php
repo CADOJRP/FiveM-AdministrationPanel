@@ -1583,7 +1583,10 @@ $klein->respond('GET', '/api/[staff|players|playerslist|warnslist|kickslist|comm
 });
 
 $klein->respond('GET', '/test', function ($request, $response, $service) {
-    print_r(serverDetails('192.223.30.195:30120'));
+    $url = '192.223.30.195:30120';
+    $url2 = file_get_contents($url);
+    $url3 = json_decode($url2);
+    print_r($url3);
 });
 
 
