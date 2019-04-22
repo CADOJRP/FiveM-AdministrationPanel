@@ -1582,6 +1582,11 @@ $klein->respond('GET', '/api/[staff|players|playerslist|warnslist|kickslist|comm
     }
 });
 
+$klein->respond('GET', '/test', function ($request, $response, $service) {
+    print_r(serverDetails('192.223.30.195:30120'));
+});
+
+
 $klein->respond('POST', '/api/button/[restart|kickforstaff|command:action]', function ($request, $response, $service) {
     header('Content-Type: application/json');
     if (isset($_SESSION['steamid'])) {
