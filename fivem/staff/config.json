@@ -9,6 +9,6 @@
         "mintrustscore_message": "🔴 Trust-Score Too Low! 🔴",
         "server_logs": true,
         "ip_address": true,
-        "debug": true
+        "debug": false
     }
 ]
