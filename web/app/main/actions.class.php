@@ -39,7 +39,7 @@ class Player {
 		// Remove From Game and Send Message
 			foreach ($this->mysql->query('SELECT * FROM servers WHERE community="' . $staff['community'] . '"') as $server) {
 				$fivem = new q3query(strtok($server['connection'], ':'), str_replace(':', '', substr($server['connection'], strpos($server['connection'], ':'))), $success);
-				foreach (json_decode(@file_get_contents('http://' . $server['connection'] . '/players.json'), true) as $playerinfo) {
+				foreach (json_decode(@file_get_contents($GLOBALS['proxy'] . 'http://' . $server['connection'] . '/players.json'), true) as $playerinfo) {
 					if ($playerinfo['identifiers'][1] == $player['license']) {
 						$fivem->setRconpassword($server['rcon']);
 						$fivem->rcon("staff_kick " . $playerinfo['id'] . " " . $this->mysql->escape($reason));
@@ -80,7 +80,7 @@ class Player {
 		// Send Message
 			foreach ($this->mysql->query('SELECT * FROM servers WHERE community="' . $staff['community'] . '"') as $server) {
 				$fivem = new q3query(strtok($server['connection'], ':'), str_replace(':', '', substr($server['connection'], strpos($server['connection'], ':'))), $success);
-				foreach (json_decode(@file_get_contents('http://' . $server['connection'] . '/players.json'), true) as $playerinfo) {
+				foreach (json_decode(@file_get_contents($GLOBALS['proxy'] . 'http://' . $server['connection'] . '/players.json'), true) as $playerinfo) {
 					if ($playerinfo['identifiers'][1] == $player['license']) {
 						$fivem->setRconpassword($server['rcon']);
 						$fivem->rcon("staff_sayall ^3" . $player['name'] . '^0 has been warned by ^2' . $staff['name'] . '^0 for ^3' . $this->mysql->escape($reason));
@@ -141,7 +141,7 @@ class Player {
 		// Remove From Game and Send Message
 			foreach ($this->mysql->query('SELECT * FROM servers WHERE community="' . $staff['community'] . '"') as $server) {
 				$fivem = new q3query(strtok($server['connection'], ':'), str_replace(':', '', substr($server['connection'], strpos($server['connection'], ':'))), $success);
-				foreach (json_decode(@file_get_contents('http://' . $server['connection'] . '/players.json'), true) as $playerinfo) {
+				foreach (json_decode(@file_get_contents($GLOBALS['proxy'] . 'http://' . $server['connection'] . '/players.json'), true) as $playerinfo) {
 					if ($playerinfo['identifiers'][1] == $player['license']) {
 						$fivem->setRconpassword($server['rcon']);
 						if ($banexpire == 0) {
@@ -187,7 +187,7 @@ class Player {
 		// Send Message
 			foreach ($this->mysql->query('SELECT * FROM servers WHERE community="' . $staff['community'] . '"') as $server) {
 				$fivem = new q3query(strtok($server['connection'], ':'), str_replace(':', '', substr($server['connection'], strpos($server['connection'], ':'))), $success);
-				foreach (json_decode(@file_get_contents('http://' . $server['connection'] . '/players.json'), true) as $playerinfo) {
+				foreach (json_decode(@file_get_contents($GLOBALS['proxy'] . 'http://' . $server['connection'] . '/players.json'), true) as $playerinfo) {
 					if ($playerinfo['identifiers'][1] == $player['license']) {
 						$fivem->setRconpassword($server['rcon']);
 						$fivem->rcon("staff_sayall ^3" . $player['name'] . '^0 has been commended by ^2' . $staff['name'] . '^0 for ^3' . $this->mysql->escape($reason));
@@ -228,7 +228,7 @@ class Player {
 		// Remove From Game and Send Message
 			foreach ($this->mysql->query('SELECT * FROM servers WHERE community="' . $staff['community'] . '"') as $server) {
 				$fivem = new q3query(strtok($server['connection'], ':'), str_replace(':', '', substr($server['connection'], strpos($server['connection'], ':'))), $success);
-				foreach (json_decode(@file_get_contents('http://' . $server['connection'] . '/players.json'), true) as $playerinfo) {
+				foreach (json_decode(@file_get_contents($GLOBALS['proxy'] . 'http://' . $server['connection'] . '/players.json'), true) as $playerinfo) {
 					if ($playerinfo['identifiers'][1] == $player['license']) {
 						$fivem->setRconpassword($server['rcon']);
 						$fivem->rcon("staff_sayall Note Added to Player");

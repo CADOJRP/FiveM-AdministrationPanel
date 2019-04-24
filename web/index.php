@@ -5,6 +5,9 @@
 $GLOBALS['version'] = 0.4;
 $GLOBALS['resourceversion'] = 1.1;
 
+// ONLY USE IF YOU KNOW WHAT YOU ARE DOING
+$GLOBALS['proxy'] = "http://192.223.30.195/proxy.php?url=";
+
 // Execution Timer
 $GLOBALS['time_start'] = microtime(true);
 
@@ -157,7 +160,7 @@ $klein->respond('*', function ($request, $response, $service) {
     // Get FiveM Server Information
     function serverInfo($conn)
     {
-        $json = @file_get_contents('http://' . $conn . '/players.json');
+        $json = @file_get_contents($GLOBALS['proxy'] . 'http://' . $conn . '/players.json');
         $data = json_decode($json);
 
         $players = 0;
@@ -178,7 +181,7 @@ $klein->respond('*', function ($request, $response, $service) {
     // Return Server Details
     function serverDetails($conn)
     {
-        $json = @file_get_contents('http://' . $conn . '/info.json');
+        $json = @file_get_contents($GLOBALS['proxy'] . 'http://' . $conn . '/info.json');
         $data = json_decode($json);
 
         return $data;
@@ -240,7 +243,7 @@ $klein->respond('*', function ($request, $response, $service) {
         if ($server != null) {
             if (checkOnline($server['connection']) == true) {
                 $con = new q3query(strtok($server['connection'], ':'), str_replace(':', '', substr($server['connection'], strpos($server['connection'], ':'))), $success);
-                foreach (json_decode(@file_get_contents('http://' . $server['connection'] . '/players.json')) as $player) {
+                foreach (json_decode(@file_get_contents($GLOBALS['proxy'] . 'http://' . $server['connection'] . '/players.json')) as $player) {
                     if ($player->identifiers[1] == $license) {
                         $userid = $player->id;
                         $con->setRconpassword($server['rcon']);
@@ -252,7 +255,7 @@ $klein->respond('*', function ($request, $response, $service) {
             foreach (dbquery('SELECT * FROM servers WHERE community="' . userCommunity($_SESSION['steamid']) . '"') as $server) {
                 if (checkOnline($server['connection']) == true) {
                     $con = new q3query(strtok($server['connection'], ':'), str_replace(':', '', substr($server['connection'], strpos($server['connection'], ':'))), $success);
-                    foreach (json_decode(@file_get_contents('http://' . $server['connection'] . '/players.json')) as $player) {
+                    foreach (json_decode(@file_get_contents($GLOBALS['proxy'] . 'http://' . $server['connection'] . '/players.json')) as $player) {
                         if ($player->identifiers[1] == $license) {
                             $userid = $player->id;
                             $con->setRconpassword($server['rcon']);
@@ -298,7 +301,7 @@ $klein->respond('*', function ($request, $response, $service) {
         if ($server != null) {
             if (checkOnline($server['connection']) == true) {
                 $con = new q3query(strtok($server['connection'], ':'), str_replace(':', '', substr($server['connection'], strpos($server['connection'], ':'))), $success);
-                foreach (json_decode(@file_get_contents('http://' . $server['connection'] . '/players.json')) as $player) {
+                foreach (json_decode(@file_get_contents($GLOBALS['proxy'] . 'http://' . $server['connection'] . '/players.json')) as $player) {
                     if ($player->identifiers[1] == $license) {
                         $userid = $player->id;
                         $con->setRconpassword($server['rcon']);
@@ -310,7 +313,7 @@ $klein->respond('*', function ($request, $response, $service) {
             foreach (dbquery('SELECT * FROM servers WHERE community="' . userCommunity($_SESSION['steamid']) . '"') as $server) {
                 if (checkOnline($server['connection']) == true) {
                     $con = new q3query(strtok($server['connection'], ':'), str_replace(':', '', substr($server['connection'], strpos($server['connection'], ':'))), $success);
-                    foreach (json_decode(@file_get_contents('http://' . $server['connection'] . '/players.json')) as $player) {
+                    foreach (json_decode(@file_get_contents($GLOBALS['proxy'] . 'http://' . $server['connection'] . '/players.json')) as $player) {
                         if ($player->identifiers[1] == $license) {
                             $userid = $player->id;
                             $con->setRconpassword($server['rcon']);
@@ -1582,16 +1585,6 @@ $klein->respond('GET', '/api/[staff|players|playerslist|warnslist|kickslist|comm
     }
 });
 
-$klein->respond('GET', '/test', function ($request, $response, $service) {
-    error_reporting(~0);
-    ini_set('display_errors', 1);
-    $url = 'http://192.223.30.195:30120/players.json';
-    $url2 = file_get_contents($url);
-    $url3 = json_decode($url2);
-    var_dump($url3);
-});
-
-
 $klein->respond('POST', '/api/button/[restart|kickforstaff|command:action]', function ($request, $response, $service) {
     header('Content-Type: application/json');
     if (isset($_SESSION['steamid'])) {
@@ -1634,7 +1627,7 @@ $klein->respond('POST', '/api/button/[restart|kickforstaff|command:action]', fun
                         $server = dbquery('SELECT * FROM servers WHERE connection="' . escapestring($request->param('server')) . '" AND community="' . userCommunity($_SESSION['steamid']) . '"');
                         if (!empty($server)) {
                             if (checkOnline($server[0]['connection']) == true) {
-                                $serverinfo = json_decode(@file_get_contents('http://' . $server[0]['connection'] . '/players.json'));
+                                $serverinfo = json_decode(@file_get_contents($GLOBALS['proxy'] . 'http://' . $server[0]['connection'] . '/players.json'));
                                 $con = new q3query(strtok($server[0]['connection'], ':'), str_replace(':', '', substr($server[0]['connection'], strpos($server[0]['connection'], ':'))), $success);
                                 sort($serverinfo);
                                 $kickplayer = null;
