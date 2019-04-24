@@ -42,7 +42,7 @@ function dbquery($sql, $returnresult = true)
 }
 
 
-$players = json_decode(@file_get_contents($GLOBALS['proxy'] . 'http://' . $argv[1] . '/players.json'), true);
+$players = json_decode(@file_get_contents('http://' . $argv[1] . '/players.json'), true);
 $playercount = 0;
 if (!empty($players)) {
     foreach ($players as $player) {
