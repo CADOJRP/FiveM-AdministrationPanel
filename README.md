@@ -6,7 +6,7 @@
       If you would like to report an issue or request a feature. Join our <a href="https://discord.gg/vFXqGXg">Discord</a>.
   </h3>
   <h4 align="center">
-     Looking for the legacy branch? Click <a href="https://github.com/CADOJRP/FiveM-AdministrationPanel/tree/legacy">here</a>.
+     Cloud Hosted Click <a href="https://fivempanel.co.uk/">here</a>.
   </h4>
 </p>
 
@@ -61,7 +61,7 @@
 
 
 ### Recommended Hosting
-* Cloud Version at <a href="https://fivemadminpanel.com">https://FiveMAdminPanel.com</a> (Free)
+* Cloud Version at <a href="https://fivempanel.co.uk/">https://fivempanel.co.uk/</a> (Free)
 * https://ELHostingServices.com offers $1.50 one-time payment web hosting that meets all of our requirements. (This is the hosting that we use while developing). From my personal experience working at ELHS for over a year I can personally say that they do not throttle or give priority to monthly hosting verses one-time; however they do limit you on certain resources such as MySQL databases, bandwidth, and storage.
 
 
