@@ -2,7 +2,7 @@
 local config = json.decode(LoadResourceFile(GetCurrentResourceName(), 'config.json'))[1]
 
 -- Set Current Version
-local version = 1.1
+local version = 1.2
 
 -- URL Encode
 function urlencode(str)
@@ -73,38 +73,17 @@ AddEventHandler("playerConnecting", function(name, setReason, deferrals)
 						ban_reason = ban_reason:gsub("{trustscore}", userinfo['trustscore'])
 						deferrals.done(ban_reason)
 					else 
-						if userinfo['banned'] == "true" then
-							print('[Staff Panel] Banned User Attempting to Connect (' .. license .. ')')
-							local ban_reason = config.ban_message
-							ban_reason = ban_reason:gsub("{ban_staff}", userinfo['staff'])
-							ban_reason = ban_reason:gsub("{ban_reason}", userinfo['reason'])
-							ban_reason = ban_reason:gsub("{ban_issued}", userinfo['ban_issued'])
-							ban_reason = ban_reason:gsub("{ban_expires}", userinfo['banned_until'])
-							ban_reason = ban_reason:gsub("{username}", userinfo['name'])
-							ban_reason = ban_reason:gsub("{license}", userinfo['license'])
-							ban_reason = ban_reason:gsub("{steam}", userinfo['steam'])
-							ban_reason = ban_reason:gsub("{playtime}", userinfo['playtime'])
-							ban_reason = ban_reason:gsub("{firstjoined}", userinfo['firstjoined'])
-							ban_reason = ban_reason:gsub("{lastplayed}", userinfo['lastplayed'])
-							ban_reason = ban_reason:gsub("{trustscore}", userinfo['trustscore'])
-							deferrals.done(ban_reason)
-						else 
-							if tonumber(userinfo['trustscore']) ~= nil then
-								if tonumber(userinfo['trustscore']) <= config.mintrustscore then
-									deferrals.done(config.mintrustscore_message)
-								else
-									deferrals.done()
-								end
-							else
-								deferrals.done()
-							end
+						if tonumber(userinfo['trustscore']) <= config.mintrustscore then
+							deferrals.done(config.mintrustscore_message)
+						else
+							deferrals.done()
 						end
 					end
 				end
 			else
 				-- No Data Fail-Safe
 				--print('[Staff Panel] No Data Received. Attempting Again in 5 Seconds.')
-				deferrals.done('🛑 SOMETHING WENT WRONG. Make Sure There isnt a slash At the end of the URL in the config 🛑')
+				deferrals.done('🛑 SOMETHING WENT WRONG. PLEASE RECONNECT 🛑')
 			end
 		end)
 	
