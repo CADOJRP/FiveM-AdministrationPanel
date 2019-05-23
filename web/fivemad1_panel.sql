@@ -287,3 +287,16 @@ CREATE TABLE `warnings` (
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2019-04-22 18:23:04
+
+ALTER TABLE `communities` 
+    ADD `active` INT(8) NOT NULL DEFAULT '0' AFTER `uniqueid`;
+
+ALTER TABLE `bans` 
+    ADD `steam` VARCHAR(255) NULL AFTER `identifier`, 
+    ADD `discord` VARCHAR(255) NULL AFTER `steam`, 
+    ADD `xbl` VARCHAR(255) NULL AFTER `discord`, 
+    ADD `ip` VARCHAR(255) NULL AFTER `xbl`, 
+    ADD `live` VARCHAR(255) NULL AFTER `ip`;
+
+ALTER TABLE `communities` 
+    ADD `email` VARCHAR(255) NULL AFTER `uniqueid`;
