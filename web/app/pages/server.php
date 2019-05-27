@@ -31,7 +31,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="alert alert-danger">
-                                        <span><center><strong>Update Required!</strong> FiveM resource update is needed. Detected Version: 0.9 (Newest Version: ' . $GLOBALS['resourceversion'] . ') </center></span>
+                                        <span><center><strong>Update Required!</strong> FiveM resource update is needed. Detected Version: ' . $GLOBALS['serverversion'] . '(Newest Version: ' . $GLOBALS['resourceversion'] . ') </center></span>
                                     </div>
                                 </div>
                             </div>
