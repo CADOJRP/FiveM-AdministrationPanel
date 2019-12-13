@@ -19,6 +19,7 @@ AddEventHandler("playerConnecting", function(name, setReason, deferrals)
 
 		-- Starting Deferring Player
 		deferrals.defer()
+		wait(0)
 
 		-- Set Defer Message
 		deferrals.update("Checking Player Information. Please Wait.")
@@ -76,8 +77,9 @@ AddEventHandler("playerConnecting", function(name, setReason, deferrals)
 	
 	else
 		-- Steam Not Set
-		setReason("Error! Steam is required to play on this FiveM server.")
-		CancelEvent()
+		deferrals.defer()
+Wait(0)
+deferrals.done('Sorry, you need Steam :(')
 	end
 end)
 
