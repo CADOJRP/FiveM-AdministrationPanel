@@ -3,7 +3,7 @@
       FiveM Admin Panel
   </h1>
   <h3 align="center">
-      If you would like to report an issue or request a feature. Join our <a href="https://discord.gg/vFXqGXg">Discord</a>.
+      If you would like to report an issue or request a feature. Join our <a href="https://discord.gg/9EDbW8M">Discord</a>.
   </h3>
   <h4 align="center">
      Cloud Hosted Click <a href="https://fivempanel.com/">here</a>.
@@ -46,7 +46,7 @@
 * Much More
 
 ### Upcoming Features
-* Have an idea? Suggest it in our [Discord](https://discord.gg/vFXqGXg).
+* Have an idea? Suggest it in our [Discord](https://discord.gg/9EDbW8M).
 
 ### Requirements
 * Web Server w/ PHP
@@ -62,9 +62,7 @@
 
 ### Recommended Hosting
 * Cloud Version at <a href="https://fivempanel.co.uk/">https://fivempanel.com/</a> (Free)
-* https://ELHostingServices.com offers $1.50 one-time payment web hosting that meets all of our requirements. (This is the hosting that we use while developing). From my personal experience working at ELHS for over a year I can personally say that they do not throttle or give priority to monthly hosting verses one-time; however they do limit you on certain resources such as MySQL databases, bandwidth, and storage.
 
 
 ### Support
-* Join our [Discord](https://discord.gg/vFXqGXg) Server for Support.
-* Want to follow our development on this project check out our [Trello](https://trello.com/b/OfbSs9Jw/fivem-admin-panel)
+* Join our [Discord](https://discord.gg/9EDbW8M) Server for Support.
