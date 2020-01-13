@@ -8,6 +8,9 @@
   <h4 align="center">
      Cloud Hosted Click <a href="https://fivempanel.com/">here</a>.
   </h4>
+  <h5 align="center">
+     Recommend Host + free installation<a href="https://orbithosting.uk/">here</a>.
+  </h5>
 </p>
 
 <br/>
