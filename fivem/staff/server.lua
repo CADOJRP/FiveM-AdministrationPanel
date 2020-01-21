@@ -2,8 +2,8 @@
 --  CONFIG  --
 --------------
 
-local website = "https://arthurmitchell.xyz/beta" 
--- Set to your staff panel URL with protocol (and with sub folder if applicable) and without trailing slash. Example: https://arthurmitchell.xyz/beta
+local website = "https://orbithosting.uk" 
+-- Set to your staff panel URL with protocol (and with sub folder if applicable) and without trailing slash. Example: https://orbithosting.uk
 
 
 
