@@ -62,7 +62,7 @@ An Administration Panel for FiveM Servers
 
 
 ### Recommended Hosting
-* https://ELHostingServices.com offers $1.50 one-time payment web hosting that meets all of our requirements. (This is the hosting that we use while developing). From my personal experience working at ELHS for over a year I can personally say that they do not throttle or give priority to monthly hosting verses one-time; however they do limit you on certain resources such as MySQL databases, bandwidth, and storage.
+* https://orbithosting.uk For $5 A Month They will Host AND install your panel for you. They Provide Unilimited Storage and Bandwidth. Autoscaled Performance so you will Never have a Slow Site. Highly Recomended From Us
 
 
 ### Media
