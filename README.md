@@ -62,7 +62,9 @@ An Administration Panel for FiveM Servers
 
 
 ### Recommended Hosting
-* https://orbithosting.uk For $5 A Month They will Host AND install your panel for you. They Provide Unilimited Storage and Bandwidth. Autoscaled Performance so you will Never have a Slow Site. Highly Recomended From Us
+
+WE HAVE TEMPORARILY Suspended our panel hosting. we are migrating our servers
+*  For $5 A Month They will Host AND install your panel for you. They Provide Unilimited Storage and Bandwidth. Autoscaled Performance so you will Never have a Slow Site. Highly Recomended From Us
 
 
 ### Media
