@@ -130,7 +130,7 @@ CREATE TABLE `servers` (
 --
 
 CREATE TABLE `users` (
-  `ID` int(255) NOT NULL,
+  `ID` int(255) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `steamid` varchar(255) NOT NULL,
   `rank` varchar(255) NOT NULL DEFAULT 'user'
