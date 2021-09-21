@@ -9,7 +9,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="#"><?php echo $this->server['name']; ?></a>
+                    <a class="navbar-brand" href="#"><?php echo $this->title; ?></a>
                 </div>
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav navbar-right">
@@ -25,7 +25,7 @@
         <div class="content">
             <div class="container-fluid">
                 <?php
-                    plugins::call('addServerPageContentBeginning', array($server));
+                    plugins::call('addServerPageContentBeginning', array($this->server));
                 ?>
                 <div class="row">
                     <div class="col-md-12">
@@ -51,7 +51,7 @@
                                             foreach($players as $player) {
                                                 $anyplayers = true;
                                                 echo '
-                                                    <tr onclick="window.location.href=\'./user/'.$player['license'].'\';" class="clickable">
+                                                    <tr onclick="window.location.href=\'../user/'.$player['license'].'\';" class="clickable">
                                                         <td>' . $player['name'] . '</td>
                                                         <td>' . secsToStr($player['playtime'] * 60) . '</td>
                                                         <td>' . trustScore($player['license']) . '%</td>
@@ -72,7 +72,7 @@
             </div>
         </div>
         <?php
-            plugins::call('addServerPageContentEnd', array($server));
+            plugins::call('addServerPageContentEnd', array($this->server));
         ?>
         <footer class="footer">
             <div class="container-fluid">
