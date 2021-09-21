@@ -25,7 +25,7 @@
         <div class="content">
             <div class="container-fluid">
                 <?php
-                    plugins::call('addServerPageContentBeginning', array($server));
+                    plugins::call('addServerPageContentBeginning', array($this->server));
                     if(isset($GLOBALS['serveractions'][$this->server['connection']])) {
                 ?>
                 <div class="row">
@@ -116,7 +116,7 @@
             </div>
         </div>
         <?php
-            plugins::call('addServerPageContentEnd', array($server));
+            plugins::call('addServerPageContentEnd', array($this->server));
         ?>
         <footer class="footer">
             <div class="container-fluid">
