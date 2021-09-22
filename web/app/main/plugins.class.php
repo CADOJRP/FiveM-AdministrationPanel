@@ -65,7 +65,7 @@ class plugins
         // go through all hooks
         foreach ($hooks as $hookName) {
             // load only hooks without underscore as first char
-            if ($hookName{0} != '_') {
+            if ($hookName[0] != '_') {
                 // put to plugins array
                 self::$plugins[$hookName][] = $pluginName;
             }
@@ -83,7 +83,7 @@ class plugins
     public static function call($hook, $params = false)
     {
         // look if hooks existing
-        if (count(self::$plugins[$hook]) != 0) {
+        if (is_countable(self::$plugins[$hook] ?? null) && count(self::$plugins[$hook] ?? 0) != 0) {
             // go throug all plugins
             foreach (self::$plugins[$hook] as $name) {
                 // check if params are given

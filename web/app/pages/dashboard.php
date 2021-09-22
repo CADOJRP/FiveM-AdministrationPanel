@@ -163,10 +163,10 @@
                 </div>
                 <?php	
                 plugins::call('addDashboardContent');
-                $version = json_decode(file_get_contents('https://raw.githubusercontent.com/CADOJRP/FiveM-AdministrationPanel/master/version.json'));if ($version->webpanel > $GLOBALS['version']) {
+                $version = json_decode(file_get_contents('https://raw.githubusercontent.com/CADOJRP/FiveM-AdministrationPanel/legacy/version.json'));if ($version->webpanel > $GLOBALS['version']) {
                     echo '<div class="row"><div class="col-md-12"><div class="alert alert-danger info-tiles"><strong>Update Needed!</strong> We strongly advise updating as we are currently in our beta stages and will be resolving major flaws. <a href="https://github.com/CADOJRP/FiveM-AdministrationPanel/releases" target="_BLANK" style="color: #FFF;"><b><u>Download Update</u></b></a></div></div></div>						';
                 }
-                echo file_get_contents('https://raw.githubusercontent.com/CADOJRP/FiveM-AdministrationPanel/master/updates');?> </div>
+                echo file_get_contents('https://raw.githubusercontent.com/CADOJRP/FiveM-AdministrationPanel/legacy/updates');?> </div>
         </div>
         <footer class="footer">
             <div class="container-fluid">

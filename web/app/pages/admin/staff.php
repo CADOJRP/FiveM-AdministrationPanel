@@ -55,7 +55,7 @@
                                                         '.$staff['name'].'
                                                     </td>
                                                     <td>
-                                                        '.secsToStr($staffinfo[0]['playtime'] * 60).'
+                                                        '.secsToStr($staffinfo[0]['playtime'] ?? 0 * 60).'
                                                     </td>
                                                     <td>
                                                         '.$warns[0]['COUNT(*)'].'
@@ -121,7 +121,8 @@
                                             <label>Rank</label>
                                             <select class="form-control" name="rank">
                                                 <?php
-                                                    foreach ($GLOBALS['permissions'] as $role=>$rank) {
+                                                    $roles = json_decode(dbquery('SELECT * FROM config')[0]['permissions']); 
+                                                    foreach ($roles as $role=>$rank) {
                                                         echo '<option value="'.$role.'">'.$role.'</option>';
                                                     }
                                                 ?>
