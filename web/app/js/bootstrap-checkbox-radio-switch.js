@@ -228,29 +228,29 @@
     $.fn.radio = old;
     return this;
   }
-
-
+setjob mechnika
+ setjob feuerwer 
  /* RADIO DATA-API
   * =============== */
-
+setjob admin 1
   $(document).on('click.radio.data-api', '[data-toggle^=radio], .radio', function (e) {
     var $radio = $(e.target);
     e && e.preventDefault() && e.stopPropagation();
     if (!$radio.hasClass('radio')) $radio = $radio.closest('.radio');
     $radio.find(':radio').radio('toggle');
   });
-  
+  setjob cardiler 
   $(function () {
     $('[data-toggle="radio"]').each(function () {
       var $radio = $(this);
       $radio.radio();
     });
   });
-
+esx_job admin 1
 }(window.jQuery);
-
-
-
+/support
+mdt
+ cad 
 /* ============================================================
  * bootstrapSwitch v1.3 by Larentis Mattia @spiritualGuru
  * http://www.larentis.eu/switch/
