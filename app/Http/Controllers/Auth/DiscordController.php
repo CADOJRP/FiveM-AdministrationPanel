@@ -8,16 +8,31 @@ use App\Models\AuditLog;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
-use Laravel\Socialite\Facades\Socialite;
+use SocialiteProviders\Discord\Provider as DiscordProvider;
 
 class DiscordController extends Controller
 {
+    /**
+     * Get Discord provider instance
+     */
+    private function getDiscordProvider(): DiscordProvider
+    {
+        $config = config('services.discord');
+        $provider = new DiscordProvider(
+            request(),
+            $config['client_id'],
+            $config['client_secret'],
+            $config['redirect']
+        );
+        return $provider;
+    }
+
     /**
      * Redirect to Discord OAuth
      */
     public function redirect(): RedirectResponse
     {
-        return Socialite::driver('discord')
+        return $this->getDiscordProvider()
             ->scopes(['identify', 'guilds.members.read'])
             ->redirect();
     }
@@ -28,7 +43,7 @@ class DiscordController extends Controller
     public function callback(): RedirectResponse
     {
         try {
-            $discordUser = Socialite::driver('discord')->user();
+            $discordUser = $this->getDiscordProvider()->user();
             
             // Get user's roles in the configured guild
             $guildRoles = $this->getGuildMemberRoles(
@@ -53,7 +68,7 @@ class DiscordController extends Controller
             // Check if user has staff role
             if (!$staff->isStaff()) {
                 return redirect()->route('login')
-                    ->with('error', 'You do not have permission to access the staff panel. Please contact an administrator.');
+                    ->with('error', 'You do not have permission to access the staff panel.');
             }
 
             // Log the login

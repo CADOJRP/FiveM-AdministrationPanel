@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Event;
+use Laravel\Socialite\Facades\Socialite;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,9 +20,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Register Discord Socialite provider
-        Event::listen(\SocialiteProviders\Manager\SocialiteWasCalled::class, function ($event) {
-            $event->extendSocialite('discord', \SocialiteProviders\Discord\Provider::class);
+        // Register Discord Socialite provider directly
+        Socialite::extend('discord', function ($app) {
+            $config = $app['config']['services.discord'];
+            return Socialite::buildProvider(
+                \SocialiteProviders\Discord\Provider::class,
+                $config
+            );
         });
     }
 }

@@ -87,15 +87,32 @@ Via Plesk Terminal or SSH:
 ```bash
 cd /var/www/vhosts/staff.jgn.gg/httpdocs
 
-# Install Composer dependencies
-composer install --optimize-autoloader --no-dev
+# IMPORTANT: On Plesk, PHP is not in PATH. Use full path:
+# Check available PHP versions:
+ls /opt/plesk/php/*/bin/php
+
+# Create required directories FIRST
+mkdir -p bootstrap/cache storage/framework/{sessions,views,cache} storage/logs
+
+# Set permissions
+chmod -R 775 storage bootstrap/cache
+chown -R www-data:www-data storage bootstrap/cache
+
+# Install Composer dependencies (use PHP 8.2 or 8.3)
+/opt/plesk/php/8.2/bin/php /usr/lib/plesk-9.0/composer.phar install --optimize-autoloader --no-dev
 
 # Copy environment file
 cp .env.example .env
 
 # Generate application key
-php artisan key:generate
+/opt/plesk/php/8.2/bin/php artisan key:generate
 ```
+
+> 💡 **Tip**: Add PHP to your PATH for easier commands:
+> ```bash
+> export PATH=/opt/plesk/php/8.2/bin:$PATH
+> ```
+
 
 ### Step 7: Configure Environment
 
@@ -167,7 +184,7 @@ DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/xxx/xxx
 
 ```bash
 cd /var/www/vhosts/staff.jgn.gg/httpdocs
-php artisan migrate
+/opt/plesk/php/8.2/bin/php artisan migrate
 ```
 
 ### Step 12: Set File Permissions
@@ -180,9 +197,9 @@ chown -R www-data:www-data storage bootstrap/cache
 ### Step 13: Cache Configuration (Production)
 
 ```bash
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
+/opt/plesk/php/8.2/bin/php artisan config:cache
+/opt/plesk/php/8.2/bin/php artisan route:cache
+/opt/plesk/php/8.2/bin/php artisan view:cache
 ```
 
 ### Step 14: Test the Panel
