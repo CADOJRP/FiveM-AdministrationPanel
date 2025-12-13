@@ -1,3 +1,20 @@
-# System Information
-news
-version.json
+/vendor/
+/node_modules/
+/.env
+/.env.backup
+/.phpunit.result.cache
+/storage/*.key
+/storage/framework/cache/data/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+/storage/logs/*
+/bootstrap/cache/*
+Homestead.yaml
+Homestead.json
+npm-debug.log
+yarn-error.log
+.phpactor.json
+.php_cs.cache
+.idea/
+.vscode/
+*.log

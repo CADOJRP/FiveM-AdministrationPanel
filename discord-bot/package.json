@@ -1,0 +1,13 @@
+{
+    "name": "jgn-admin-discord-bot",
+    "version": "1.0.0",
+    "description": "Discord bot for JGN Admin Panel",
+    "main": "bot.js",
+    "scripts": {
+        "start": "node bot.js"
+    },
+    "dependencies": {
+        "discord.js": "^14.14.0",
+        "dotenv": "^16.3.0"
+    }
+}

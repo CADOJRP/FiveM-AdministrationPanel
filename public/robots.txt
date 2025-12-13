@@ -1,0 +1,6 @@
+# Admin Panel - No public indexing
+User-agent: *
+Disallow: /
+
+# Only allow specific paths if needed
+# Allow: /login
