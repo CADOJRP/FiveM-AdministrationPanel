@@ -31,9 +31,10 @@ class Staff extends Authenticatable
     public function getAvatarUrlAttribute(): string
     {
         if ($this->discord_avatar) {
-            return "https://cdn.discordapp.com/avatars/{$this->discord_id}/{$this->discord_avatar}.png";
+            return $this->discord_avatar;
         }
-        return "https://cdn.discordapp.com/embed/avatars/0.png";
+        // Default Discord avatar
+        return "https://cdn.discordapp.com/embed/avatars/" . ($this->discord_id % 5) . ".png";
     }
 
     /**

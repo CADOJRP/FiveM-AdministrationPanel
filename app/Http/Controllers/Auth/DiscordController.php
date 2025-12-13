@@ -56,7 +56,7 @@ class DiscordController extends Controller
                 ['discord_id' => $discordUser->id],
                 [
                     'discord_username' => $discordUser->nickname ?? $discordUser->name,
-                    'discord_avatar' => $discordUser->avatar,
+                    'discord_avatar' => $discordUser->getAvatar(), // Full URL
                     'discord_roles' => $guildRoles,
                     'last_login_at' => now(),
                 ]
